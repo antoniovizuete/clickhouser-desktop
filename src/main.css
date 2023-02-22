@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100vh;
+}
+
+:root {
+  --focus-border-rgb: 236, 168, 52;
+  --focus-border: rgb(var(--focus-border-rgb));
+}
+
+:focus {
+  outline: 1px solid rgba(var(--focus-border-rgb), 0.5);
+  outline-offset: 0px;
+}
+
+.stat {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.bp4-dark .bp4-table-quadrant {
+  background-color: rgb(38, 38, 38);
+}
+
+.bp4-input {
+  height: 31px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+.bp4-dark .bp4-input {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.bp4-input:focus {
+  box-shadow: 0 0 0 1px rgba(var(--focus-border), 0.5);
+}
+
+.titlebar {
+  height: 30px;
+  background: #329ea3;
+  user-select: none;
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.titlebar-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+}
+.titlebar-button:hover {
+  background: #5bbec3;
+}
