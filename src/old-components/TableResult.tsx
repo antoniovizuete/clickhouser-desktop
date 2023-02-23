@@ -74,7 +74,6 @@ export default function TableResult({ result }: Params) {
   return (
     <div className="overflow-auto h-full">
       <Table2
-
         columnWidths={widths}
         numRows={result.rows}
         className={`h-full ${bpTheme}`}

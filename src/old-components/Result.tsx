@@ -3,7 +3,7 @@ import { useThemeContext } from "../contexts/useThemeContext";
 import {
   isMessageResult,
   isStringResult,
-  QueryResult
+  QueryResult,
 } from "../lib/clickhouse-clients";
 
 import Brand from "./Brand";
@@ -16,7 +16,7 @@ type Params = {
 };
 
 export default function Result({ result, error, loading }: Params) {
-  const { bpTheme } = useThemeContext();
+  const { theme, bpTheme } = useThemeContext();
   if (error) {
     return (
       <div className="overflow-auto h-full flex flex-col gap-5 p-5 justify-center items-center ">

@@ -1,12 +1,10 @@
 import { Alignment, Button, Navbar } from "@blueprintjs/core";
 import { Allotment } from "allotment";
 import { useMemo, useRef } from "react";
-import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 
 import { useConnectionContext } from "../contexts/useConnectionContext";
 import { useConnectionDrawer } from "../hooks/useConnectionDrawer";
 import { useQueryForm } from "../hooks/useQueryForm";
-import { useSetTitle } from "../hooks/useSetTitle";
 import { QueryResult } from "../lib/clickhouse-clients";
 import ConnectionCaption from "./ConnectionCaption";
 import Editor, { EditorRef } from "./Editor";
@@ -26,22 +24,12 @@ export default function QueryForm(props: QueryFormProps) {
   const { paramsEditorRef } = props;
   const runQueryButtonRef = useRef<Button>(null);
   const {
-    urlState: { query, jsonParams, name },
-    setUrlState,
     runQuery,
     openHelpDialog,
     HotKeysHelpDialog,
   } = useQueryForm(props);
 
   const [ConnectionsDrawer, openConnectionDrawer] = useConnectionDrawer();
-
-  const [, setTitle] = useSetTitle(name);
-
-  const handleOnChangeName = (e: ContentEditableEvent) => {
-    const name = e.target.value.split("<div><br></div>").join("");
-    setUrlState({ name });
-    setTitle(name);
-  };
 
   const { activeConnectionId } = useConnectionContext();
 
@@ -90,13 +78,6 @@ export default function QueryForm(props: QueryFormProps) {
           <Allotment>
             <Allotment.Pane>
               <div className="dark:bg-neutral-800 dark:text-neutral-400 h-full">
-                <div className="py-1 px-3 text-xs">
-                  <ContentEditable
-                    className="hover:cursor-pointer focus:cursor-text hover:focus:cursor-text"
-                    html={name}
-                    onChange={handleOnChangeName}
-                  />
-                </div>
                 <Editor
                   language="sql"
                   value={query}
@@ -108,9 +89,6 @@ export default function QueryForm(props: QueryFormProps) {
             </Allotment.Pane>
             <Allotment.Pane>
               <div className="dark:bg-neutral-800 dark:text-neutral-400 h-full">
-                <div className="py-1 px-3 text-xs cursor-default ">
-                  Parameters
-                </div>
                 <Editor
                   ref={paramsEditorRef}
                   language="json"
