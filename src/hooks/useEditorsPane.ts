@@ -1,7 +1,9 @@
-import { editor, KeyCode, KeyMod } from "monaco-editor";
-import { useEffect } from "react";
+import { editor, IDisposable, KeyCode, KeyMod } from "monaco-editor";
+import { useCallback, useEffect, useState } from "react";
 import { EditorRef } from "../components/Editor";
 import { OnExecuteQueryParams } from "../components/EditorsPane";
+import { useConnectionContext } from "../contexts/useConnectionContext";
+import { Connection } from "../lib/clickhouse-clients";
 import { addAction } from "../lib/editor-helpers/add-action.editor.helper";
 import { useMonacoConfigSupplier } from "./useMonacoConfigSupplier";
 
@@ -14,7 +16,8 @@ type Params = {
 const getExecuteQueryAction = (
   onExecuteQuery: (params: OnExecuteQueryParams) => void,
   sqlEditorRef: React.MutableRefObject<EditorRef | null>,
-  jsonEditorRef: React.MutableRefObject<EditorRef | null>
+  jsonEditorRef: React.MutableRefObject<EditorRef | null>,
+  connection?: Connection
 ): editor.IActionDescriptor => ({
   id: "execute-query",
   label: "Execute query",
@@ -23,6 +26,7 @@ const getExecuteQueryAction = (
     onExecuteQuery({
       query: sqlEditorRef.current?.getValue(),
       params: jsonEditorRef.current?.getValue(),
+      connection,
     });
   },
   contextMenuGroupId: "navigation",
@@ -34,15 +38,22 @@ export const useEditorsPane = ({
   sqlEditorRef,
   jsonEditorRef,
 }: Params) => {
+  const { activeConnectionId, getActiveConnection } = useConnectionContext();
+  const [disposables, setDisposables] = useState<(IDisposable | undefined)[]>(
+    []
+  );
+
   useMonacoConfigSupplier({
     jsonParams: jsonEditorRef.current?.getValue() ?? "{}",
   });
 
   useEffect(() => {
+    disposables.forEach((disposable) => disposable?.dispose());
     const newAction = getExecuteQueryAction(
       onExecuteQuery,
       sqlEditorRef,
-      jsonEditorRef
+      jsonEditorRef,
+      getActiveConnection()
     );
 
     if (sqlEditorRef.current) {
@@ -51,10 +62,23 @@ export const useEditorsPane = ({
     if (jsonEditorRef.current) {
       addAction(jsonEditorRef.current.getEditor(), newAction);
     }
-  }, [sqlEditorRef.current, jsonEditorRef.current, onExecuteQuery]);
+  }, [sqlEditorRef, jsonEditorRef, activeConnectionId]);
+
+  const handleEditorDidMount = useCallback(
+    (editor: editor.IStandaloneCodeEditor) => {
+      disposables.push(
+        addAction(
+          editor,
+          getExecuteQueryAction(onExecuteQuery, sqlEditorRef, jsonEditorRef)
+        )
+      );
+    },
+    [onExecuteQuery, sqlEditorRef.current, jsonEditorRef.current]
+  );
 
   return {
     sqlEditorRef,
     jsonEditorRef,
+    handleEditorDidMount,
   };
 };

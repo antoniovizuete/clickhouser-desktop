@@ -1,10 +1,12 @@
 import { Allotment } from "allotment";
 import { useEditorsPane } from "../hooks/useEditorsPane";
+import { Connection } from "../lib/clickhouse-clients";
 import Editor, { EditorRef } from "./Editor";
 
 export type OnExecuteQueryParams = {
   query: string | undefined;
   params: string | undefined;
+  connection: Connection | undefined;
 }
 
 type Props = {
@@ -14,7 +16,7 @@ type Props = {
 }
 
 const EditorsPane = (({ onExecuteQuery, jsonEditorRef, sqlEditorRef }: Props) => {
-  useEditorsPane({ onExecuteQuery, jsonEditorRef, sqlEditorRef });
+  const { handleEditorDidMount } = useEditorsPane({ onExecuteQuery, jsonEditorRef, sqlEditorRef });
 
   return (<Allotment>
     <Allotment.Pane>
@@ -22,6 +24,7 @@ const EditorsPane = (({ onExecuteQuery, jsonEditorRef, sqlEditorRef }: Props) =>
         ref={sqlEditorRef}
         defaultValue="SELECT * FROM table"
         language="sql"
+        onMount={handleEditorDidMount}
       />
     </Allotment.Pane>
     <Allotment.Pane>
@@ -29,6 +32,7 @@ const EditorsPane = (({ onExecuteQuery, jsonEditorRef, sqlEditorRef }: Props) =>
         ref={jsonEditorRef}
         defaultValue='{"key": "value"}'
         language="json"
+        onMount={handleEditorDidMount}
       />
     </Allotment.Pane>
   </Allotment>

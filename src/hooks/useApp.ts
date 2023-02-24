@@ -11,7 +11,7 @@ export const useApp = () => {
   const [error, setError] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
 
-  const { getActiveConnection } = useConnectionContext();
+  const { getActiveConnection, activeConnectionId } = useConnectionContext();
 
   const executeQuery = useCallback(
     async ({ query, params }: OnExecuteQueryParams) => {
@@ -38,7 +38,7 @@ export const useApp = () => {
       }
       setLoading(false);
     },
-    [getActiveConnection]
+    [activeConnectionId]
   );
 
   return {

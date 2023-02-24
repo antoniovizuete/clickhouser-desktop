@@ -1,4 +1,4 @@
-import { checkUrl, transformConnectionToConnectionParams } from "../helpers";
+import { transformConnectionToConnectionParams } from "../helpers";
 import { parseResponse, serializeParamValue } from "./helpers";
 import { Params, QueryResult } from "./types";
 
@@ -13,9 +13,7 @@ export async function performQuery({
   ...connection
 }: Params): Promise<ReturnType> {
   if (!query) {
-    return {
-      error: "Query is empty",
-    };
+    return { error: "Query is empty" };
   }
 
   const { serverAddress, username, password } =
