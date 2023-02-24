@@ -85,12 +85,37 @@ fn insert_connection(connection: ClickhouseConnection, context: tauri::State<'_,
     }
 }
 
-/*fn get_context_repository(context: tauri::State<'_,Context>) -> Result<&Repository, String> {
+#[tauri::command]
+fn update_connection(id: u32, connection: ClickhouseConnection, context: tauri::State<'_,Context>) -> Result<(), String> {
     match context.repository.lock().unwrap().as_ref() {
         None => Err("Not connected".to_string()),
-        Some(repository) => Ok(repository)
+        Some(repository) => {
+            match repository.update(id, connection) {
+                Ok(_) => Ok(()),
+                Err(e) => {
+                    let string_error: String = e.into();
+                    Err(string_error)
+                }
+            }
+        }
     }
-}*/
+}
+
+#[tauri::command]
+fn delete_connection(id: u32, context: tauri::State<'_,Context>) -> Result<(), String> {
+    match context.repository.lock().unwrap().as_ref() {
+        None => Err("Not connected".to_string()),
+        Some(repository) => {
+            match repository.delete(id) {
+                Ok(_) => Ok(()),
+                Err(e) => {
+                    let string_error: String = e.into();
+                    Err(string_error)
+                }
+            }
+        }
+    }
+}
 
 fn main() {
     let context = Context {
@@ -104,6 +129,8 @@ fn main() {
             get_all_connections,
             get_connection_by_id,
             insert_connection,
+            update_connection,
+            delete_connection
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

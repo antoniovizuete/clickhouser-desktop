@@ -88,6 +88,23 @@ impl Repository {
         Ok(connection)
     }
 
+    pub fn update(&self, id: u32, connection: ClickhouseConnection) -> Result<()> {
+        self.connection.execute(
+            format!("UPDATE {} SET host = ?1, port = ?2, user = ?3, password = ?4, database = ?5 WHERE id = ?6", TABLE).as_str(),
+            (connection.host, connection.port, connection.user, connection.password, connection.database, id)
+        )?;
+        
+        Ok(())
+    }
+
+    pub fn delete(&self, id: u32) -> Result<()> {
+        self.connection.execute(
+            format!("DELETE FROM {} WHERE id = ?1", TABLE).as_str(),
+            [id]
+        )?;
+        
+        Ok(())
+    }
 }
 
 fn check_database_file() -> core::result::Result<String, Error> {
