@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import ConnectionDialog, {
-  ConnectionDialogRef,
+  ConnectionDialogRef
 } from "../components/ConnectionDialog";
 
 type ReturnType = [JSX.Element, ConnectionDialogRef["open"]];
@@ -10,6 +10,6 @@ export const useConnectionDialog = (): ReturnType => {
 
   return [
     <ConnectionDialog ref={connectionsDialogRef} />,
-    connectionsDialogRef.current?.open ?? (() => {}),
+    connectionsDialogRef.current?.open ?? (() => { }),
   ];
 };

@@ -1,13 +1,13 @@
 import { Icon, NonIdealState, Spinner } from "@blueprintjs/core";
-import { useThemeContext } from "../contexts/useThemeContext";
+import { useThemeContext } from "../../contexts/useThemeContext";
 import {
   isMessageResult,
   isStringResult,
   QueryResult
-} from "../lib/clickhouse-clients";
+} from "../../lib/clickhouse-clients";
 
-import Brand from "./Brand";
-import TableResult from "./TableResult";
+import Brand from "../Brand";
+import TableResult from "./components/TableResult";
 
 type Params = {
   result: QueryResult | undefined;

@@ -1,11 +1,11 @@
 import { editor, IDisposable, KeyCode, KeyMod } from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
+import { OnExecuteQueryParams } from "..";
+import { useConnectionContext } from "../../../contexts/useConnectionContext";
+import { useMonacoConfigSupplier } from "../../../hooks/useMonacoConfigSupplier";
+import { Connection } from "../../../lib/clickhouse-clients";
+import { addAction } from "../../../lib/editor-helpers/add-action.editor.helper";
 import { EditorRef } from "../components/Editor";
-import { OnExecuteQueryParams } from "../components/EditorsPane";
-import { useConnectionContext } from "../contexts/useConnectionContext";
-import { Connection } from "../lib/clickhouse-clients";
-import { addAction } from "../lib/editor-helpers/add-action.editor.helper";
-import { useMonacoConfigSupplier } from "./useMonacoConfigSupplier";
 
 type Params = {
   onExecuteQuery: (params: OnExecuteQueryParams) => void;

@@ -1,5 +1,5 @@
-import { useConnectionContext } from "../contexts/useConnectionContext";
-import { getConnectionDisplay } from "../lib/connections-helpers";
+import { useConnectionContext } from "../../../contexts/useConnectionContext";
+import { getConnectionDisplay } from "../../../lib/connections-helpers";
 
 export default function ConnectionCaption() {
   const { getActiveConnection } = useConnectionContext();

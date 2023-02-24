@@ -1,5 +1,5 @@
-import { isJsonResult, QueryResult } from "../lib/clickhouse-clients";
-import LeftFooter from "./LeftFooter";
+import { isJsonResult, QueryResult } from "../../lib/clickhouse-clients";
+import LeftFooter from "./components/LeftFooter";
 
 type Props = {
   result?: QueryResult;

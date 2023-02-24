@@ -6,18 +6,17 @@ import {
   Icon,
   InputGroup,
   Switch,
-  Tag,
+  Tag
 } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { useConnectionContext } from "../contexts/useConnectionContext";
-import { useThemeContext } from "../contexts/useThemeContext";
+import { useConnectionContext } from "../../../contexts/useConnectionContext";
+import { useThemeContext } from "../../../contexts/useThemeContext";
 import {
-  performQuery,
-  transformConnectionToConnectionParams,
-} from "../lib/clickhouse-clients";
-import { Connection } from "../lib/clickhouse-clients/types";
-import { AppToaster } from "../lib/toaster/AppToaster";
+  performQuery
+} from "../../../lib/clickhouse-clients";
+import { Connection } from "../../../lib/clickhouse-clients/types";
+import { AppToaster } from "../../../lib/toaster/AppToaster";
 
 type Props = {};
 
@@ -25,7 +24,7 @@ export type ConnectionDialogRef = {
   open: (connection?: Connection) => void;
 };
 
-const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({}, ref) => {
+const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({ }, ref) => {
   const { bpTheme } = useThemeContext();
   const [isOpen, setIsOpen] = useState(false);
   const { insert, update } = useConnectionContext();

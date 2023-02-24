@@ -7,15 +7,15 @@ import {
   H4,
   Icon,
   IconSize,
-  Tag,
+  Tag
 } from "@blueprintjs/core";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { useConnectionContext } from "../contexts/useConnectionContext";
-import { useThemeContext } from "../contexts/useThemeContext";
+import { useConnectionContext } from "../../../contexts/useConnectionContext";
+import { useThemeContext } from "../../../contexts/useThemeContext";
+import { Connection } from "../../../lib/clickhouse-clients";
+import { getConnectionDisplay } from "../../../lib/connections-helpers";
+import { AppToaster } from "../../../lib/toaster/AppToaster";
 import { useConnectionDialog } from "../hooks/useConnectionDialog";
-import { Connection } from "../lib/clickhouse-clients";
-import { getConnectionDisplay } from "../lib/connections-helpers";
-import { AppToaster } from "../lib/toaster/AppToaster";
 
 export type ConnectionsDrawerRef = {
   open: () => void;
@@ -115,9 +115,8 @@ const ConnectionsDrawer = forwardRef<ConnectionsDrawerRef, {}>((_, ref) => {
                     onDoubleClick={() => handleEditClick(connection)}
                   >
                     <div
-                      className={`flex-grow flex flex-row justify-between items-center ${
-                        active ? "font-bold" : ""
-                      }`}
+                      className={`flex-grow flex flex-row justify-between items-center ${active ? "font-bold" : ""
+                        }`}
                     >
                       <div className="flex-grow select-none">
                         {getConnectionDisplay({ connection })}

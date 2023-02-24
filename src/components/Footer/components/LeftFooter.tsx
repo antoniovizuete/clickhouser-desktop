@@ -1,12 +1,12 @@
 import { Icon, Menu } from "@blueprintjs/core";
 import { MenuItem2, Popover2, Tooltip2 } from "@blueprintjs/popover2";
-import { useThemeContext } from "../contexts/useThemeContext";
-import { download, KindEnum } from "../lib/file-downloader";
-import { JsonResult } from "../lib/clickhouse-clients";
+import { useThemeContext } from "../../../contexts/useThemeContext";
+import { JsonResult } from "../../../lib/clickhouse-clients";
+import { download, KindEnum } from "../../../lib/file-downloader";
 import {
   formatReadableBytes,
-  formatReadableRows,
-} from "../lib/stats-helpers/format-readable";
+  formatReadableRows
+} from "../../../lib/stats-helpers/format-readable";
 
 type Props = {
   result: JsonResult;

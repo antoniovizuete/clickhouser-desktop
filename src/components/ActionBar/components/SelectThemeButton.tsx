@@ -1,4 +1,4 @@
-import { useThemeContext } from "../contexts/useThemeContext";
+import { useThemeContext } from "../../../contexts/useThemeContext";
 import ThemedButton from "./ThemedButton";
 
 export default function SelectThemeButton() {

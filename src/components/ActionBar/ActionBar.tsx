@@ -1,9 +1,9 @@
 import { Alignment, Button, Navbar } from "@blueprintjs/core";
-import { useConnectionDrawer } from "../hooks/useConnectionDrawer";
-import Brand from "./Brand";
-import ConnectionCaption from "./ConnectionCaption";
-import SelectThemeButton from "./SelectThemeButton";
-import ThemedButton from "./ThemedButton";
+import Brand from "../Brand";
+import ConnectionCaption from "./components/ConnectionCaption";
+import SelectThemeButton from "./components/SelectThemeButton";
+import ThemedButton from "./components/ThemedButton";
+import { useConnectionDrawer } from "./hooks/useConnectionDrawer";
 
 type ActionBarProps = {
   onClickRunQuery: () => void;

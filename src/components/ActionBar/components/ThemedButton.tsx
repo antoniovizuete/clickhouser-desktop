@@ -1,5 +1,5 @@
 import { Button, Icon, IconName } from "@blueprintjs/core";
-import { useThemeContext } from "../contexts/useThemeContext";
+import { useThemeContext } from "../../../contexts/useThemeContext";
 
 type Props = {
   action?: () => void;

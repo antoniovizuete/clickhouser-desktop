@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { EditorRef } from "../components/Editor";
-import { OnExecuteQueryParams } from "../components/EditorsPane";
+import { EditorRef, OnExecuteQueryParams } from "../components/EditorsPane";
 import { useConnectionContext } from "../contexts/useConnectionContext";
 import { performQuery, QueryResult } from "../lib/clickhouse-clients";
 

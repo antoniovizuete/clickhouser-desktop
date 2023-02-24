@@ -1,7 +1,7 @@
 import { Allotment } from "allotment";
-import { useEditorsPane } from "../hooks/useEditorsPane";
-import { Connection } from "../lib/clickhouse-clients";
-import Editor, { EditorRef } from "./Editor";
+import { Connection } from "../../lib/clickhouse-clients";
+import Editor, { EditorRef } from "./components/Editor";
+import { useEditorsPane } from "./hooks/useEditorsPane";
 
 export type OnExecuteQueryParams = {
   query: string | undefined;

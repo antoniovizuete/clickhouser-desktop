@@ -3,7 +3,7 @@ import {
   editor, IDisposable
 } from "monaco-editor/esm/vs/editor/editor.api";
 import { forwardRef, useImperativeHandle, useRef } from "react";
-import { useThemeContext } from "../contexts/useThemeContext";
+import { useThemeContext } from "../../../contexts/useThemeContext";
 
 type EditorProps = {
   defaultValue?: string;
