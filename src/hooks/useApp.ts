@@ -27,22 +27,46 @@ export const useApp = () => {
         query,
         jsonParams: params,
       });
+
       if (error) {
         setError(error);
         setResult(undefined);
       }
+
       if (result) {
         setResult(result);
         setError(undefined);
       }
+
       setLoading(false);
     },
     [activeConnectionId]
   );
 
+  const handelOnExecuteQuery = useCallback(
+    (param: OnExecuteQueryParams) => {
+      executeQuery(param);
+    },
+    [executeQuery, activeConnectionId]
+  );
+
+  const handleOnClickRunQuery = useCallback(() => {
+    executeQuery({
+      query: sqlEditorRef.current?.getValue(),
+      params: jsonEditorRef.current?.getValue(),
+      connection: getActiveConnection(),
+    });
+  }, [
+    sqlEditorRef.current,
+    jsonEditorRef.current,
+    executeQuery,
+    activeConnectionId,
+  ]);
+
   return {
     error,
-    executeQuery,
+    handleOnClickRunQuery,
+    handelOnExecuteQuery,
     jsonEditorRef,
     loading,
     result,
