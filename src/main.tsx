@@ -11,13 +11,17 @@ import "../node_modules/normalize.css/normalize.css";
 import App from "./components/App";
 import { ConnectionsProvider } from "./contexts/useConnectionContext";
 import { ThemeProvider } from "./contexts/useThemeContext";
+import { RustBridge } from "./lib/rust-bridge";
 import "./main.css";
+
+const isFirstTime = await RustBridge.isFirstTime();
+
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider>
       <ConnectionsProvider>
-        <App />
+        <App isFirstTime={isFirstTime} />
       </ConnectionsProvider>
     </ThemeProvider>
   </React.StrictMode>

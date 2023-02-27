@@ -1,11 +1,9 @@
-
-
 use directories::ProjectDirs; 
 use rusqlite::{Connection};
 use std::{fs, path};
 
 use crate::repository::clickhouse_connection::ClickhouseConnection;
-use crate::errors::{Result, Error};
+use crate::errors::{Result, Error, ControlledErrors};
 
 pub mod clickhouse_connection;
 
@@ -22,7 +20,7 @@ pub struct Repository {
 
 impl Repository {
     pub fn new(passphrase: &String) -> Result<Repository> {
-        let database_file = check_database_file()?;
+        let database_file = check_database_file(&false)?;
         let connection = Connection::open(&database_file)?;
 
         connection.pragma_update(None, "KEY", passphrase)?;
@@ -107,16 +105,16 @@ impl Repository {
     }
 }
 
-fn check_database_file() -> core::result::Result<String, Error> {
+pub fn check_database_file(for_first_time: &bool) -> core::result::Result<String, Error> {
     let option_project_dirs = ProjectDirs::from(QUALIFIER, ORGANIZATION, APPLICATION);
     if let None = option_project_dirs {
-        return Err(Error::ControlledError("Could not find project directories".to_string()));
+        return Err(Error::ControlledError(ControlledErrors::NoProjectDirectory));
     }
 
     let project_dirs = option_project_dirs.unwrap();
     let data_dir = project_dirs.data_dir().to_str();
     if let None = data_dir {
-        return Err(Error::ControlledError("Could not find data directory".to_string()));
+        return Err(Error::ControlledError(ControlledErrors::NoDataDirectory));
     }
     let data_dir = data_dir.unwrap();
     
@@ -128,6 +126,10 @@ fn check_database_file() -> core::result::Result<String, Error> {
     }
 
     let database_file = format!("{}/{}", &data_dir, DATABASE_NAME);
+    let is_path_database_file = path::Path::new(&database_file).is_file();
+    if !is_path_database_file & for_first_time {
+        return Err(Error::ControlledError(ControlledErrors::FirstTime));
+    }
     
     Ok(database_file)
 }

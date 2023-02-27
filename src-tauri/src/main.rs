@@ -5,7 +5,8 @@
 )]
 
 use std::sync::Mutex;
-use repository::{Repository, clickhouse_connection::ClickhouseConnection};
+use errors::{ControlledErrors, Error};
+use repository::{Repository, clickhouse_connection::ClickhouseConnection, check_database_file};
 use tauri::State;
 
 mod errors;
@@ -19,9 +20,24 @@ struct Context {
 unsafe impl Send for Context {}
 unsafe impl Sync for Context {}
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn init(passphrase: String, context: State<Context>) -> Result<(), String> {
+fn is_first_time() -> Result<bool, String> {
+    match check_database_file(&true) {
+        Ok(_) => Ok(false),
+        Err(e) => {
+            match e {
+                Error::ControlledError(ControlledErrors::FirstTime) => Ok(true),
+                _ => {
+                    let string_error: String = e.into();
+                    Err(string_error)
+                }
+            }
+        }
+    }
+}
+
+#[tauri::command]
+fn init_db(passphrase: String, context: State<Context>) -> Result<(), String> {
     let repository = Repository::new(&passphrase);
     match repository {
         Ok(repository) => {
@@ -39,7 +55,7 @@ fn init(passphrase: String, context: State<Context>) -> Result<(), String> {
 #[tauri::command]
 fn get_all_connections(context: tauri::State<'_,Context>) -> Result<Vec<ClickhouseConnection>, String> {
     match context.repository.lock().unwrap().as_ref() {
-        None => Err("Not connected".to_string()),
+        None => Err(ControlledErrors::NotConnected.into()),
         Some(repository) => {
             match repository.get_all() {
                 Ok(connections) => Ok(connections),
@@ -55,7 +71,7 @@ fn get_all_connections(context: tauri::State<'_,Context>) -> Result<Vec<Clickhou
 #[tauri::command]
 fn get_connection_by_id(id: i32, context: tauri::State<'_,Context>) -> Result<ClickhouseConnection, String> {
     match context.repository.lock().unwrap().as_ref() {
-        None => Err("Not connected".to_string()),
+        None => Err(ControlledErrors::NotConnected.into()),
         Some(repository) => {
             match repository.get_by_id(id) {
                 Ok(connection) => Ok(connection),
@@ -72,7 +88,7 @@ fn get_connection_by_id(id: i32, context: tauri::State<'_,Context>) -> Result<Cl
 fn insert_connection(connection: ClickhouseConnection, context: tauri::State<'_,Context>) -> Result<(), String> {
     //let repository = get_context_repository(context)?;
     match context.repository.lock().unwrap().as_ref() {
-        None => Err("Not connected".to_string()),
+        None => Err(ControlledErrors::NotConnected.into()),
         Some(repository) => {
             match repository.create(connection) {
                 Ok(_) => Ok(()),
@@ -88,7 +104,7 @@ fn insert_connection(connection: ClickhouseConnection, context: tauri::State<'_,
 #[tauri::command]
 fn update_connection(id: u32, connection: ClickhouseConnection, context: tauri::State<'_,Context>) -> Result<(), String> {
     match context.repository.lock().unwrap().as_ref() {
-        None => Err("Not connected".to_string()),
+        None => Err(ControlledErrors::NotConnected.into()),
         Some(repository) => {
             match repository.update(id, connection) {
                 Ok(_) => Ok(()),
@@ -104,7 +120,7 @@ fn update_connection(id: u32, connection: ClickhouseConnection, context: tauri::
 #[tauri::command]
 fn delete_connection(id: u32, context: tauri::State<'_,Context>) -> Result<(), String> {
     match context.repository.lock().unwrap().as_ref() {
-        None => Err("Not connected".to_string()),
+        None => Err(ControlledErrors::NotConnected.into()),
         Some(repository) => {
             match repository.delete(id) {
                 Ok(_) => Ok(()),
@@ -125,7 +141,8 @@ fn main() {
     tauri::Builder::default()
         .manage(context)
         .invoke_handler(tauri::generate_handler![
-            init, 
+            is_first_time,
+            init_db, 
             get_all_connections,
             get_connection_by_id,
             insert_connection,

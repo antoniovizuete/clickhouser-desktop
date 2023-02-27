@@ -9,11 +9,12 @@ import {
   IconSize,
   Tag
 } from "@blueprintjs/core";
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useConnectionContext } from "../../../contexts/useConnectionContext";
 import { useThemeContext } from "../../../contexts/useThemeContext";
 import { Connection } from "../../../lib/clickhouse-clients";
 import { getConnectionDisplay } from "../../../lib/connections-helpers";
+import { getConnections } from "../../../lib/connections-helpers/connection-repo";
 import { AppToaster } from "../../../lib/toaster/AppToaster";
 import { useConnectionDialog } from "../hooks/useConnectionDialog";
 
@@ -29,11 +30,20 @@ const ConnectionsDrawer = forwardRef<ConnectionsDrawerRef, {}>((_, ref) => {
     Connection | undefined
   >(undefined);
 
+  const [connections, setConnections] = useState<Connection[]>([])
+
+  useEffect(() => {
+    (async () => {
+      const connections = await getConnections();
+      setConnections(connections);
+    })()
+  }, [])
+
   useImperativeHandle(ref, () => ({ open }), []);
 
   const [ConnectionDialog, openConnetionDialog] = useConnectionDialog();
+
   const {
-    connections,
     remove,
     setActiveConnectionId: setActiveConnection,
     activeConnectionId: activeConnection,
