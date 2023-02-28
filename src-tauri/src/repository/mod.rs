@@ -30,8 +30,8 @@ impl Repository {
             host TEXT NOT NULL,
             port INTEGER NOT NULL,
             user TEXT NOT NULL,
-            password TEXT NOT NULL,
-            database TEXT NOT NULL
+            password TEXT,
+            database TEXT
         )", TABLE).as_str(), [])?;
 
         Ok(Repository {
