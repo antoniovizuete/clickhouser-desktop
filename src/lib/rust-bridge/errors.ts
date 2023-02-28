@@ -3,6 +3,7 @@ export enum RustBridgeControlledErrors {
   FirstTime,
   NoProjectDirectory,
   NoDataDirectory,
+  WrongPassphrase,
 }
 
 export class RustBridgeError extends Error {
@@ -35,6 +36,11 @@ export const fromStringToRustBridgeError = (error: string): RustBridgeError => {
       return new RustBridgeError(
         "No data directory",
         RustBridgeControlledErrors.NoDataDirectory
+      );
+    case "WrongPassphrase":
+      return new RustBridgeError(
+        "Wrong passphrase",
+        RustBridgeControlledErrors.WrongPassphrase
       );
     default:
       return new RustBridgeError(error, "Uncontrolled");

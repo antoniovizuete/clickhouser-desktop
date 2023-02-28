@@ -12,12 +12,14 @@ type Props = {
 export default function App({ isFirstTime }: Props) {
 
   const {
+    EnterPassphraseDialog,
     error,
     FirstTimeDialog,
     handelOnExecuteQuery,
     handleOnClickRunQuery,
     jsonEditorRef,
     loading,
+    openEnterPassphraseDialog,
     openFirstTimeDialog,
     result,
     sqlEditorRef,
@@ -25,6 +27,8 @@ export default function App({ isFirstTime }: Props) {
 
   if (isFirstTime) {
     openFirstTimeDialog();
+  } else {
+    openEnterPassphraseDialog();
   }
 
   return <>
@@ -45,5 +49,6 @@ export default function App({ isFirstTime }: Props) {
       </Allotment.Pane>
     </Allotment>
     {FirstTimeDialog}
+    {EnterPassphraseDialog}
   </>
 }

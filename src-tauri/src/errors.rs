@@ -3,8 +3,10 @@ pub type Result<T> = std::result::Result<T, Error>;
 pub enum ControlledErrors {
   NotConnected,
   FirstTime,
-  NoProjectDirectory,
+  NoDatabaseFile,
   NoDataDirectory,
+  NoProjectDirectory,
+  WrongPassphrase,
 }
 
 impl Into<String> for ControlledErrors {
@@ -12,8 +14,10 @@ impl Into<String> for ControlledErrors {
     match self {
       ControlledErrors::NotConnected => "NotConnected".to_string(),
       ControlledErrors::FirstTime => "FirstTime".to_string(),
-      ControlledErrors::NoProjectDirectory => "NoProjectDirectory".to_string(),
+      ControlledErrors::NoDatabaseFile => "NoDatabaseFile".to_string(),
       ControlledErrors::NoDataDirectory => "NoDataDirectory".to_string(),
+      ControlledErrors::NoProjectDirectory => "NoProjectDirectory".to_string(),
+      ControlledErrors::WrongPassphrase => "WrongPassphrase".to_string(),
     }
   }
 }
@@ -26,6 +30,14 @@ pub enum Error {
 
 impl From<rusqlite::Error> for Error {
   fn from(error: rusqlite::Error) -> Self {
+    match error {
+      rusqlite::Error::SqliteFailure(error, _) => {
+        if error.code == rusqlite::ErrorCode::NotADatabase {
+          return Error::ControlledError(ControlledErrors::WrongPassphrase);
+        }
+      }
+      _ => {}
+    }
     Error::SqliteError(error)
   }
 }

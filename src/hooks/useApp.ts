@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { EditorRef, OnExecuteQueryParams } from "../components/EditorsPane";
+import { useEnterPassphraseDialog } from "../components/FirstTime/EnterPassphraseDialog";
 import { useFirstTimeDialog } from "../components/FirstTime/FirstTimeDialog";
 import { useConnectionContext } from "../contexts/useConnectionContext";
 import { performQuery, QueryResult } from "../lib/clickhouse-clients";
@@ -13,14 +14,8 @@ export const useApp = () => {
 
   const { getActiveConnection, activeConnectionId } = useConnectionContext();
   const [FirstTimeDialog, openFirstTimeDialog] = useFirstTimeDialog();
-
-  useEffect(() => {
-    // (async () => {
-    //   if (result.unwrapError()?.type === RustBridgeControlledErrors.FirstTime) {
-    //     openFirstTimeDialog();
-    //   }
-    // })();
-  }, []);
+  const [EnterPassphraseDialog, openEnterPassphraseDialog] =
+    useEnterPassphraseDialog({ openFirstTimeDialog });
 
   const executeQuery = useCallback(
     async ({ query, params }: OnExecuteQueryParams) => {
@@ -74,12 +69,14 @@ export const useApp = () => {
   ]);
 
   return {
+    EnterPassphraseDialog,
     error,
     FirstTimeDialog,
     handleOnClickRunQuery,
     handelOnExecuteQuery,
     jsonEditorRef,
     loading,
+    openEnterPassphraseDialog,
     openFirstTimeDialog,
     result,
     sqlEditorRef,

@@ -4,7 +4,7 @@
     windows_subsystem = "windows"
 )]
 
-use std::sync::Mutex;
+use std::{sync::Mutex, fs};
 use errors::{ControlledErrors, Error};
 use repository::{Repository, clickhouse_connection::ClickhouseConnection, check_database_file};
 use tauri::State;
@@ -15,15 +15,20 @@ mod repository;
 
 struct Context {
     repository: Mutex<Option<Repository>>,
+    database_file: Mutex<Option<String>>,
 }
 
 unsafe impl Send for Context {}
 unsafe impl Sync for Context {}
 
 #[tauri::command]
-fn is_first_time() -> Result<bool, String> {
+fn is_first_time(context: State<Context>) -> Result<bool, String> {
     match check_database_file(&true) {
-        Ok(_) => Ok(false),
+        Ok(database_file) => {
+            let mut context_database_file = context.database_file.lock().unwrap();
+            *context_database_file = Some(database_file);
+            Ok(false)
+        },
         Err(e) => {
             match e {
                 Error::ControlledError(ControlledErrors::FirstTime) => Ok(true),
@@ -32,6 +37,18 @@ fn is_first_time() -> Result<bool, String> {
                     Err(string_error)
                 }
             }
+        }
+    }
+}
+
+#[tauri::command]
+fn delete_db(context: State<Context>) -> Result<(), String> {
+    match context.database_file.lock().unwrap().as_ref() {
+        None => Err(ControlledErrors::NoDatabaseFile.into()),
+        Some(database_file) => {
+            fs::remove_file(database_file).expect(format!("Error deleting database file: {}", database_file).as_str());
+            
+            return Ok(());
         }
     }
 }
@@ -136,13 +153,15 @@ fn delete_connection(id: u32, context: tauri::State<'_,Context>) -> Result<(), S
 fn main() {
     let context = Context {
         repository: Default::default(),
+        database_file: Default::default(),
     };
 
     tauri::Builder::default()
         .manage(context)
         .invoke_handler(tauri::generate_handler![
             is_first_time,
-            init_db, 
+            init_db,
+            delete_db,
             get_all_connections,
             get_connection_by_id,
             insert_connection,

@@ -42,7 +42,7 @@ const FirstTimeDialog = forwardRef<FirstTimeDialogRef, Props>(({ }, ref) => {
       AppToaster.top.error(result.unwrapError()?.message || "Unknown error");
       return;
     }
-    AppToaster.top.success("Passphrase saved successfully");
+    AppToaster.top.success("Your passphrase has been set successfully");
     setIsOpen(false);
 
   };
