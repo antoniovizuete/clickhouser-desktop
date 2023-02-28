@@ -33,7 +33,7 @@ impl Repository {
             password TEXT NOT NULL,
             database TEXT NOT NULL
         )", TABLE).as_str(), [])?;
-        println!("Table created");
+
         Ok(Repository {
             connection
         })

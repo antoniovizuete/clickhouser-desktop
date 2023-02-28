@@ -43,7 +43,7 @@ const FirstTimeDialog = forwardRef<FirstTimeDialogRef, Props>(({ }, ref) => {
       return;
     }
     AppToaster.top.success("Passphrase saved successfully");
-    close();
+    setIsOpen(false);
 
   };
 
@@ -51,15 +51,9 @@ const FirstTimeDialog = forwardRef<FirstTimeDialogRef, Props>(({ }, ref) => {
     setIsOpen(true);
   };
 
-  const close = () => {
-
-    setIsOpen(false);
-  };
-
   return (
     <Dialog
       isOpen={isOpen}
-      onClose={close}
       canEscapeKeyClose={false}
       canOutsideClickClose={false}
       isCloseButtonShown={false}
