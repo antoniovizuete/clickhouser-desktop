@@ -4,10 +4,7 @@ import {
   Classes,
   Drawer,
   DrawerSize,
-  H4,
-  Icon,
-  IconSize,
-  Tag
+  H4
 } from "@blueprintjs/core";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useConnectionContext } from "../../../contexts/useConnectionContext";
@@ -17,6 +14,7 @@ import { getConnectionDisplay } from "../../../lib/connections-helpers";
 import { getConnections } from "../../../lib/connections-helpers/connection-repo";
 import { AppToaster } from "../../../lib/toaster/AppToaster";
 import { useConnectionDialog } from "../hooks/useConnectionDialog";
+import ConnectionItem from "./ConnectionItem";
 
 export type ConnectionsDrawerRef = {
   open: () => void;
@@ -24,30 +22,35 @@ export type ConnectionsDrawerRef = {
 
 const ConnectionsDrawer = forwardRef<ConnectionsDrawerRef, {}>((_, ref) => {
   const { bpTheme } = useThemeContext();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const [selectedConnetionToDelete, setSelectedConnetionToDelete] = useState<
-    Connection | undefined
-  >(undefined);
-
-  const [connections, setConnections] = useState<Connection[]>([])
-
-  useEffect(() => {
-    (async () => {
-      const connections = await getConnections();
-      setConnections(connections);
-    })()
-  }, [])
+  const { remove, databaseDecrypted } = useConnectionContext();
 
   useImperativeHandle(ref, () => ({ open }), []);
 
   const [ConnectionDialog, openConnetionDialog] = useConnectionDialog();
 
-  const {
-    remove,
-    setActiveConnectionId: setActiveConnection,
-    activeConnectionId: activeConnection,
-  } = useConnectionContext();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [connections, setConnections] = useState<Connection[]>([])
+  const [selectedConnetionToDelete, setSelectedConnetionToDelete] = useState<
+    Connection | undefined
+  >(undefined);
+
+
+  useEffect(() => {
+    (async () => {
+      if (!databaseDecrypted) {
+        return;
+      }
+
+      try {
+        const connections = await getConnections();
+        setConnections(connections);
+      } catch (error) {
+        AppToaster.top.error("There was an error loading the connections");
+      }
+    })()
+  }, [databaseDecrypted])
+
 
   const close = () => setIsOpen(false);
   const open = () => setIsOpen(true);
@@ -107,55 +110,20 @@ const ConnectionsDrawer = forwardRef<ConnectionsDrawerRef, {}>((_, ref) => {
       >
         <div className={Classes.DRAWER_BODY}>
           <div className={`${Classes.DIALOG_BODY} flex flex-col gap-2`}>
-            {(connections || []).map((connection) => {
-              const active = connection.id === activeConnection?.id;
-              return (
-                <div
-                  className="flex flex-row gap-1 justify-between items-center"
-                  key={connection.id}
-                >
-                  <Tag
-                    intent={active ? "success" : "none"}
-                    interactive
-                    large
-                    minimal
-                    fill
-                    round
-                    onClick={() => setActiveConnection(connection)}
-                    onDoubleClick={() => handleEditClick(connection)}
-                  >
-                    <div
-                      className={`flex-grow flex flex-row justify-between items-center ${active ? "font-bold" : ""
-                        }`}
-                    >
-                      <div className="flex-grow select-none">
-                        {getConnectionDisplay({ connection })}
-                      </div>
-                      {connection.id === activeConnection?.id && (
-                        <Icon icon="link" className="ml-" />
-                      )}
-                    </div>
-                  </Tag>
-                  <div className="flex flex-row gap-1 justify-end">
-                    <Icon
-                      icon="edit"
-                      intent="primary"
-                      size={IconSize.STANDARD}
-                      onClick={() => handleEditClick(connection)}
-                      className="cursor-pointer"
-                    ></Icon>
-
-                    <Icon
-                      intent="danger"
-                      icon="cross"
-                      size={IconSize.STANDARD}
-                      className="cursor-pointer"
-                      onClick={() => handleRemoveClick(connection)}
-                    ></Icon>
-                  </div>
-                </div>
-              );
-            })}
+            {(connections || []).map((connection, i) =>
+              <ConnectionItem
+                key={i}
+                connection={connection}
+                onEditClick={handleEditClick}
+                onRemoveClick={handleRemoveClick}
+              />
+            )}
+            {connections.length === 0 && (
+              <div className="flex flex-col items-center gap-2 text-gray-500">
+                <p>You don't have any connections yet.</p>
+                <p>Click on the <Button icon="plus" small intent="none" disabled style={{ cursor: "default" }} /> button to add a new connection.</p>
+              </div>
+            )}
           </div>
         </div>
       </Drawer>
