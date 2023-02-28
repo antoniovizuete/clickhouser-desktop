@@ -6,6 +6,7 @@ import {
 } from "@blueprintjs/core";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { useConnectionContext } from "../../contexts/useConnectionContext";
 import { useThemeContext } from "../../contexts/useThemeContext";
 import { RustBridge } from "../../lib/rust-bridge";
 import { AppToaster } from "../../lib/toaster/AppToaster";
@@ -28,6 +29,7 @@ const EnterPassphraseDialog = forwardRef<EnterPassphraseDialogRef, Props>(({ ope
   const [isOpen, setIsOpen] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [attemps, setAttemps] = useState(MAX_ATTEMPS);
+  const { setDatabaseDecrypted } = useConnectionContext();
 
   useImperativeHandle(ref, () => ({ open }), []);
 
@@ -39,6 +41,7 @@ const EnterPassphraseDialog = forwardRef<EnterPassphraseDialogRef, Props>(({ ope
 
     if (!result.isError()) {
       AppToaster.top.success("Connections database unlocked successfully.");
+      setDatabaseDecrypted(true);
       setIsOpen(false);
       return;
     }
@@ -47,6 +50,7 @@ const EnterPassphraseDialog = forwardRef<EnterPassphraseDialogRef, Props>(({ ope
       AppToaster.top.error("You have reached the maximum number of attempts.");
       await RustBridge.deleteDb();
       AppToaster.top.warn("The connections database has been removed.");
+      setDatabaseDecrypted(false);
       openFirstTimeDialog();
       setIsOpen(false);
       return;
@@ -123,6 +127,6 @@ export const useEnterPassphraseDialog = (props: Props): ReturnType => {
 
   return [
     <EnterPassphraseDialog ref={enterPassphraseDialogRef} {...props} />,
-    enterPassphraseDialogRef.current?.open ?? (() => { }),
+    enterPassphraseDialogRef.current?.open ?? (() => enterPassphraseDialogRef.current?.open()),
   ];
 };

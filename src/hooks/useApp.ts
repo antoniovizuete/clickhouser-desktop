@@ -1,11 +1,11 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { EditorRef, OnExecuteQueryParams } from "../components/EditorsPane";
 import { useEnterPassphraseDialog } from "../components/FirstTime/EnterPassphraseDialog";
 import { useFirstTimeDialog } from "../components/FirstTime/FirstTimeDialog";
 import { useConnectionContext } from "../contexts/useConnectionContext";
 import { performQuery, QueryResult } from "../lib/clickhouse-clients";
 
-export const useApp = () => {
+export const useApp = (isFirstTime: boolean) => {
   const sqlEditorRef = useRef<EditorRef>(null);
   const jsonEditorRef = useRef<EditorRef>(null);
   const [result, setResult] = useState<QueryResult | undefined>();
@@ -68,6 +68,14 @@ export const useApp = () => {
     activeConnectionId,
   ]);
 
+  useEffect(() => {
+    if (isFirstTime) {
+      openFirstTimeDialog();
+    } else {
+      openEnterPassphraseDialog();
+    }
+  }, []);
+
   return {
     EnterPassphraseDialog,
     error,
@@ -76,8 +84,6 @@ export const useApp = () => {
     handelOnExecuteQuery,
     jsonEditorRef,
     loading,
-    openEnterPassphraseDialog,
-    openFirstTimeDialog,
     result,
     sqlEditorRef,
   };

@@ -118,6 +118,6 @@ export const useFirstTimeDialog = (): ReturnType => {
 
   return [
     <FirstTimeDialog ref={firstTimeDialogRef} />,
-    firstTimeDialogRef.current?.open ?? (() => { }),
+    firstTimeDialogRef.current?.open ?? (() => firstTimeDialogRef.current?.open()),
   ];
 };

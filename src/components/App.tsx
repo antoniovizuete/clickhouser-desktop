@@ -19,17 +19,9 @@ export default function App({ isFirstTime }: Props) {
     handleOnClickRunQuery,
     jsonEditorRef,
     loading,
-    openEnterPassphraseDialog,
-    openFirstTimeDialog,
     result,
     sqlEditorRef,
-  } = useApp();
-
-  if (isFirstTime) {
-    openFirstTimeDialog();
-  } else {
-    openEnterPassphraseDialog();
-  }
+  } = useApp(isFirstTime);
 
   return <>
     <Allotment vertical>

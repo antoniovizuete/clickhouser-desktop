@@ -1,20 +1,21 @@
-import { uniqueId } from "@blueprintjs/core/lib/esm/common/utils";
 import {
   createContext,
   PropsWithChildren,
   useContext,
   useEffect,
-  useState,
+  useState
 } from "react";
 import { useStorage } from "../hooks/useStorage";
 import {
   Connection,
   ConnectionBody,
-  ConnectionId,
+  ConnectionId
 } from "../lib/clickhouse-clients";
 import { uuid } from "../lib/uuid";
 
 type ConnectionsContextType = {
+  databaseDecrypted: boolean;
+  setDatabaseDecrypted: (databaseDecrypted: boolean) => void;
   connections: Connection[];
   activeConnectionId: ConnectionId | undefined;
   insert: (connectionBody: ConnectionBody) => void;
@@ -25,16 +26,19 @@ type ConnectionsContextType = {
 };
 
 const ConnectionsContext = createContext<ConnectionsContextType>({
+  databaseDecrypted: false,
+  setDatabaseDecrypted: () => { },
   connections: [],
   activeConnectionId: undefined,
-  insert: () => {},
-  remove: () => {},
-  update: () => {},
-  setActiveConnectionId: () => {},
+  insert: () => { },
+  remove: () => { },
+  update: () => { },
+  setActiveConnectionId: () => { },
   getActiveConnection: () => undefined,
 });
 
 export function ConnectionsProvider({ children }: PropsWithChildren<{}>) {
+  const [databaseDecrypted, setDatabaseDecrypted] = useState(false);
   //const [connections, setConnections] = useState<Connection[]>([]);
   const [connections, setConnections] = useStorage<Connection[]>(
     "localStorage"
@@ -80,6 +84,8 @@ export function ConnectionsProvider({ children }: PropsWithChildren<{}>) {
   }, [connections]);
 
   const contextValue = {
+    databaseDecrypted,
+    setDatabaseDecrypted,
     connections,
     insert,
     remove,
