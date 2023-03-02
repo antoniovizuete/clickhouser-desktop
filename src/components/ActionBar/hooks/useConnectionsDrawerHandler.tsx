@@ -5,7 +5,7 @@ import ConnectionsDrawer, {
 
 type ReturnType = [JSX.Element, () => void];
 
-export const useConnectionDrawer = (): ReturnType => {
+export const useConnectionsDrawerHandler = (): ReturnType => {
   const connectionsDrawerRef = useRef<ConnectionsDrawerRef>(null);
 
   return [

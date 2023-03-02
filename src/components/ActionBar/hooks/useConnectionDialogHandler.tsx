@@ -9,7 +9,7 @@ type Props = {
   onClose: () => void;
 };
 
-export const useConnectionDialog = ({ onClose }: Props): ReturnType => {
+export const useConnectionDialogHandler = ({ onClose }: Props): ReturnType => {
   const connectionsDialogRef = useRef<ConnectionDialogRef>(null);
 
   return [

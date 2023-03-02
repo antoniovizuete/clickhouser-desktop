@@ -6,14 +6,10 @@ import {
   DrawerSize,
   H4
 } from "@blueprintjs/core";
-import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
-import { useConnectionContext } from "../../../contexts/useConnectionContext";
+import { forwardRef } from "react";
 import { useThemeContext } from "../../../contexts/useThemeContext";
-import { Connection } from "../../../lib/clickhouse-clients";
 import { getConnectionDisplay } from "../../../lib/connections-helpers";
-import { deleteConnection, getConnections } from "../../../lib/connections-helpers/connection-repo";
-import { AppToaster } from "../../../lib/toaster/AppToaster";
-import { useConnectionDialog } from "../hooks/useConnectionDialog";
+import { useConnectionsDrawer } from "../hooks/useConnectionsDrawer";
 import ConnectionItem from "./ConnectionItem";
 
 export type ConnectionsDrawerRef = {
@@ -22,66 +18,20 @@ export type ConnectionsDrawerRef = {
 
 const ConnectionsDrawer = forwardRef<ConnectionsDrawerRef, {}>((_, ref) => {
   const { bpTheme } = useThemeContext();
-  const { databaseDecrypted } = useConnectionContext();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const [connections, setConnections] = useState<Connection[]>([])
-  const [selectedConnetionToDelete, setSelectedConnetionToDelete] = useState<
-    Connection | undefined
-  >(undefined);
-
-  useImperativeHandle(ref, () => ({ open }), []);
-
-  const retrieveConnections = useCallback(async () => {
-    if (!databaseDecrypted) {
-      return;
-    }
-
-    try {
-      const connections = await getConnections();
-      setConnections(connections);
-    } catch (error) {
-      AppToaster.top.error("There was an error loading the connections");
-    }
-  }, [databaseDecrypted])
-
-  const [ConnectionDialog, openConnetionDialog] = useConnectionDialog({
-    onClose: retrieveConnections,
-  });
-
-
-  const close = () => setIsOpen(false);
-  const open = () => setIsOpen(true);
-
-  const handleNewClick = () => {
-    openConnetionDialog();
-  };
-
-  const handleEditClick = (connection: Connection) => {
-    openConnetionDialog(connection);
-  };
-
-  const handleRemoveClick = (connection: Connection) => {
-    setSelectedConnetionToDelete(connection);
-    setIsAlertOpen(true);
-  };
-
-  const handleConfirmRemove = () => {
-    if (selectedConnetionToDelete) {
-      deleteConnection(selectedConnetionToDelete.id);
-      AppToaster.top.warn(
-        `The connection ${getConnectionDisplay({
-          connection: selectedConnetionToDelete,
-        })} was removed`
-      );
-      handleAlertClose();
-    }
-  };
-
-  const handleAlertClose = () => {
-    setIsAlertOpen(false);
-    setSelectedConnetionToDelete(undefined);
-  };
+  const {
+    close,
+    ConnectionDialog,
+    connections,
+    handleAlertClose,
+    handleConfirmRemove,
+    handleEditClick,
+    handleNewClick,
+    handleRemoveClick,
+    isAlertOpen,
+    isOpen,
+    retrieveConnections,
+    selectedConnetionToDelete,
+  } = useConnectionsDrawer({ ref });
 
   return (
     <>

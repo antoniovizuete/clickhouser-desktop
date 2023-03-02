@@ -3,14 +3,14 @@ import Brand from "../Brand";
 import ConnectionCaption from "./components/ConnectionCaption";
 import SelectThemeButton from "./components/SelectThemeButton";
 import ThemedButton from "./components/ThemedButton";
-import { useConnectionDrawer } from "./hooks/useConnectionDrawer";
+import { useConnectionsDrawerHandler } from "./hooks/useConnectionsDrawerHandler";
 
 type ActionBarProps = {
   onClickRunQuery: () => void;
 }
 
 export default function ActionBar({ onClickRunQuery }: ActionBarProps) {
-  const [ConnectionsDrawer, openConnectionDrawer] = useConnectionDrawer();
+  const [ConnectionsDrawer, openConnectionDrawer] = useConnectionsDrawerHandler();
   return (<>
     <Navbar className="bg-slate-50 dark:bg-neutral-800 dark:text-white">
       <Navbar.Group align={Alignment.LEFT}>
