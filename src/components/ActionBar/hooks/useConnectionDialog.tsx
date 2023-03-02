@@ -5,11 +5,15 @@ import ConnectionDialog, {
 
 type ReturnType = [JSX.Element, ConnectionDialogRef["open"]];
 
-export const useConnectionDialog = (): ReturnType => {
+type Props = {
+  onClose: () => void;
+};
+
+export const useConnectionDialog = ({ onClose }: Props): ReturnType => {
   const connectionsDialogRef = useRef<ConnectionDialogRef>(null);
 
   return [
-    <ConnectionDialog ref={connectionsDialogRef} />,
+    <ConnectionDialog ref={connectionsDialogRef} onClose={onClose} />,
     connectionsDialogRef.current?.open ?? (() => { }),
   ];
 };

@@ -2,32 +2,34 @@ import {
   Button,
   Classes,
   Dialog,
-  FormGroup,
-  Icon,
-  InputGroup,
-  Switch,
-  Tag
+  FormGroup, InputGroup,
+  Switch
 } from "@blueprintjs/core";
-import { Tooltip2 } from "@blueprintjs/popover2";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useConnectionContext } from "../../../contexts/useConnectionContext";
 import { useThemeContext } from "../../../contexts/useThemeContext";
 import {
   performQuery
 } from "../../../lib/clickhouse-clients";
-import { Connection } from "../../../lib/clickhouse-clients/types";
+import { Connection, ConnectionBody } from "../../../lib/clickhouse-clients/types";
+import { insertConnection, updateConnection } from "../../../lib/connections-helpers/connection-repo";
 import { AppToaster } from "../../../lib/toaster/AppToaster";
+import ShowPasswordButton from "../../core/ShowPasswordButton";
 
-type Props = {};
+type Props = {
+  onClose: () => void;
+};
 
 export type ConnectionDialogRef = {
   open: (connection?: Connection) => void;
 };
 
-const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({ }, ref) => {
+const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
+  onClose
+}, ref) => {
   const { bpTheme } = useThemeContext();
+  const { activeConnectionId, setActiveConnectionDisplay } = useConnectionContext();
   const [isOpen, setIsOpen] = useState(false);
-  const { insert, update } = useConnectionContext();
 
   const [connection, setConnection] = useState<Connection | undefined>(
     undefined
@@ -41,6 +43,8 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({ }, ref) => {
   const [username, setUsername] = useState(connection?.username || "default");
   const [password, setPassword] = useState(connection?.password || "");
   const [secure, setSecure] = useState(connection?.secure || false);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     setTested(false);
@@ -74,7 +78,9 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({ }, ref) => {
     setUsername("default");
     setPassword("");
     setSecure(false);
+    onClose();
   };
+
   const open = (connection?: Connection) => {
     setIsOpen(true);
     setConnection(connection);
@@ -93,7 +99,7 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({ }, ref) => {
     if (error) {
       AppToaster.top.error(error);
     } else {
-      AppToaster.top.success("The connection has been tested successfully");
+      AppToaster.top.success("Successfully connected");
     }
 
     setTested(!error);
@@ -101,8 +107,8 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({ }, ref) => {
 
   useImperativeHandle(ref, () => ({ open }), []);
 
-  const save = () => {
-    const connectionToSave = {
+  const save = async () => {
+    const connectionToSave: ConnectionBody = {
       name,
       host,
       port,
@@ -112,10 +118,14 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({ }, ref) => {
     };
 
     if (connection) {
-      update({ id: connection.id }, connectionToSave);
+      await updateConnection(connection.id, connectionToSave);
+      if (connection.id === activeConnectionId?.id) {
+        setActiveConnectionDisplay(connectionToSave);
+      }
     } else {
-      insert(connectionToSave);
+      await insertConnection(connectionToSave);
     }
+
     AppToaster.top.success("The connection has been saved successfully");
     close();
   };
@@ -181,21 +191,13 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({ }, ref) => {
           <FormGroup label="Password:">
             <InputGroup
               className={`flex-grow ${bpTheme}`}
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value || "")}
               size={40}
               rightElement={
-                <Tooltip2
-                  content="The password is stored on local storage as plain text. Be careful!"
-                  intent="warning"
-                  placement="top"
-                >
-                  <Tag minimal intent="warning">
-                    <Icon intent="warning" icon="warning-sign" />
-                  </Tag>
-                </Tooltip2>
+                <ShowPasswordButton showPassword={showPassword} onClick={() => setShowPassword(prev => !prev)} />
               }
             />
           </FormGroup>

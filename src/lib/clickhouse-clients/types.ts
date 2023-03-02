@@ -1,17 +1,22 @@
 export type ConnectionId = {
-  id: string;
+  id: number;
 };
 
-export type ConnectionBody = {
+export type ConnectionDisplay = {
   name: string;
   host: string;
   port: number;
   username: string;
+};
+
+export type ConnectionBody = ConnectionDisplay & {
   password: string;
   secure: boolean;
 };
 
 export type Connection = ConnectionId & ConnectionBody;
+
+export type ActiveConnection = ConnectionId & ConnectionDisplay;
 
 export type ClickhouseConnectionParams = {
   username: string;

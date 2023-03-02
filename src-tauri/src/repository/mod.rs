@@ -1,9 +1,9 @@
-use directories::ProjectDirs; 
-use rusqlite::{Connection};
+use directories::ProjectDirs;
+use rusqlite::Connection;
 use std::{fs, path};
 
+use crate::errors::{ControlledErrors, Error, Result};
 use crate::repository::clickhouse_connection::ClickhouseConnection;
-use crate::errors::{Result, Error, ControlledErrors};
 
 pub mod clickhouse_connection;
 
@@ -13,9 +13,8 @@ const QUALIFIER: &str = "com";
 const ORGANIZATION: &str = "clickmate";
 const APPLICATION: &str = "clickmate";
 
-
 pub struct Repository {
-    connection: Connection
+    connection: Connection,
 }
 
 impl Repository {
@@ -25,41 +24,46 @@ impl Repository {
 
         connection.pragma_update(None, "KEY", passphrase)?;
 
-        connection.execute(format!("CREATE TABLE IF NOT EXISTS {} (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            host TEXT NOT NULL,
-            port INTEGER NOT NULL,
-            user TEXT NOT NULL,
-            password TEXT,
-            database TEXT
-        )", TABLE).as_str(), [])?;
+        connection.execute(
+            format!(
+                "CREATE TABLE IF NOT EXISTS {} (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT,
+                    host TEXT NOT NULL,
+                    port INTEGER NOT NULL,
+                    secure BOOLEAN NOT NULL,
+                    username TEXT NOT NULL,
+                    password TEXT,
+                    database TEXT
+                )",
+                TABLE
+            )
+            .as_str(),
+            [],
+        )?;
 
-        Ok(Repository {
-            connection
-        })
-        
+        Ok(Repository { connection })
     }
 
     pub fn create(&self, connection: ClickhouseConnection) -> Result<()> {
         self.connection.execute(
-            format!("INSERT INTO {} (host, port, user, password, database) VALUES (?1, ?2, ?3, ?4, ?5)", TABLE).as_str(),
-            (connection.host, connection.port, connection.user, connection.password, connection.database)
+            format!("INSERT INTO {} (name, host, port, secure, username, password, database) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)", TABLE).as_str(),
+            (connection.name, connection.host, connection.port, connection.secure, connection.username, connection.password, connection.database)
         )?;
-        
+
         Ok(())
     }
 
     pub fn get_all(&self) -> Result<Vec<ClickhouseConnection>> {
-        let mut stmt = self.connection.prepare(format!("SELECT * FROM {}", TABLE).as_str())?;
-        let connections_iter = stmt.query_map([], |row| {
-            Ok(ClickhouseConnection {
-                host: row.get(1)?,
-                port: row.get(2)?,
-                user: row.get(3)?,
-                password: row.get(4)?,
-                database: row.get(5)?,
-            })
-        })?;
+        let mut stmt = self.connection.prepare(
+            format!(
+                "SELECT id, name, host, port, secure, username, password, database FROM {}",
+                TABLE
+            )
+            .as_str(),
+        )?;
+        let connections_iter =
+            stmt.query_map([], |row| Ok(map_row_to_clickhouse_connection(row)))?;
 
         let mut connections = Vec::new();
         for connection in connections_iter {
@@ -70,38 +74,43 @@ impl Repository {
     }
 
     pub fn get_by_id(&self, id: i32) -> Result<ClickhouseConnection> {
-        let mut stmt = self.connection.prepare(
-            format!("SELECT * FROM {} WHERE id = ?1", TABLE).as_str()
-        )?;
-        let connection = stmt.query_row([id], |row| {
-            Ok(ClickhouseConnection {
-                host: row.get(1)?,
-                port: row.get(2)?,
-                user: row.get(3)?,
-                password: row.get(4)?,
-                database: row.get(5)?,
-            })
-        })?;
+        let mut stmt = self
+            .connection
+            .prepare(format!("SELECT id, name, host, port, secure, username, password, database FROM {} WHERE id = ?1", TABLE).as_str())?;
+        let connection = stmt.query_row([id], |row| Ok(map_row_to_clickhouse_connection(row)))?;
 
         Ok(connection)
     }
 
     pub fn update(&self, id: u32, connection: ClickhouseConnection) -> Result<()> {
         self.connection.execute(
-            format!("UPDATE {} SET host = ?1, port = ?2, user = ?3, password = ?4, database = ?5 WHERE id = ?6", TABLE).as_str(),
-            (connection.host, connection.port, connection.user, connection.password, connection.database, id)
+            format!("UPDATE {} SET name = ?1, host = ?2, port = ?3, secure = ?4, username = ?5, password = ?6, database = ?7 WHERE id = ?8", TABLE).as_str(),
+            (connection.name, connection.host, connection.port, connection.secure, connection.username, connection.password, connection.database, id)
         )?;
-        
+
         Ok(())
     }
 
     pub fn delete(&self, id: u32) -> Result<()> {
         self.connection.execute(
             format!("DELETE FROM {} WHERE id = ?1", TABLE).as_str(),
-            [id]
+            [id],
         )?;
-        
+
         Ok(())
+    }
+}
+
+fn map_row_to_clickhouse_connection(row: &rusqlite::Row) -> ClickhouseConnection {
+    ClickhouseConnection {
+        id: row.get(0).unwrap_or(None),
+        name: row.get(1).unwrap_or(None),
+        host: row.get(2).unwrap(),
+        port: row.get(3).unwrap(),
+        secure: row.get(4).unwrap(),
+        username: row.get(5).unwrap(),
+        password: row.get(6).unwrap_or(None),
+        database: row.get(7).unwrap_or(None),
     }
 }
 
@@ -117,7 +126,7 @@ pub fn check_database_file(for_first_time: &bool) -> core::result::Result<String
         return Err(Error::ControlledError(ControlledErrors::NoDataDirectory));
     }
     let data_dir = data_dir.unwrap();
-    
+
     let is_path_data_dir = path::Path::new(&data_dir).is_dir();
     if !is_path_data_dir {
         if let Err(e) = fs::create_dir_all(&data_dir) {
@@ -130,6 +139,6 @@ pub fn check_database_file(for_first_time: &bool) -> core::result::Result<String
     if !is_path_database_file & for_first_time {
         return Err(Error::ControlledError(ControlledErrors::FirstTime));
     }
-    
+
     Ok(database_file)
 }

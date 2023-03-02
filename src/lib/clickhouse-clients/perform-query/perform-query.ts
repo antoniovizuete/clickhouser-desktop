@@ -49,30 +49,31 @@ export async function performQuery({
       serverAddress.indexOf("?") >= 0 ? "&" : "?"
     );
 
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
-
-    xhr.onreadystatechange = function () {
-      if (this.readyState === XMLHttpRequest.DONE) {
-        if (this.status === 200) {
-          resolve(parseResponse(this.responseText));
-        } else if (this.status === 401) {
-          reject("Unauthorized");
-        } else if (this.status === 403) {
-          reject("Forbidden");
-        } else if (this.status === 0) {
-          reject("Connection error");
-        } else {
-          reject(this.responseText);
-        }
-      }
-    };
-
-    xhr.onerror = function () {
-      reject("Network error");
-    };
-
     try {
+      const xhr = new XMLHttpRequest();
+      console.log("url", url);
+      xhr.open("POST", url, true);
+
+      xhr.onreadystatechange = function () {
+        if (this.readyState === XMLHttpRequest.DONE) {
+          if (this.status === 200) {
+            resolve(parseResponse(this.responseText));
+          } else if (this.status === 401) {
+            reject("Unauthorized");
+          } else if (this.status === 403) {
+            reject("Forbidden");
+          } else if (this.status === 0) {
+            reject("Connection error");
+          } else {
+            reject(this.responseText);
+          }
+        }
+      };
+
+      xhr.onerror = function () {
+        reject("Network error");
+      };
+
       xhr.send(query);
     } catch (e) {
       reject((e as Error).message);

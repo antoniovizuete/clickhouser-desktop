@@ -1,7 +1,11 @@
-import { Connection } from "../clickhouse-clients";
+import {
+  Connection,
+  ConnectionBody,
+  ConnectionDisplay,
+} from "../clickhouse-clients";
 
 type Params = {
-  connection?: Connection;
+  connection?: ConnectionDisplay;
   excerpt?: boolean;
   showName?: boolean;
 };
@@ -11,6 +15,7 @@ export const getConnectionDisplay = ({
   excerpt = true,
   showName = true,
 }: Params) => {
+  console.log("getConnectionDisplay", connection);
   if (!connection) {
     return "";
   }
@@ -22,3 +27,14 @@ export const getConnectionDisplay = ({
     host.length > 30 && excerpt ? host.slice(0, 30) + "..." : host
   }:${port}`;
 };
+
+export const toConnectionBody = (
+  connection: Connection | ConnectionBody
+): ConnectionBody => ({
+  name: connection.name,
+  host: connection.host,
+  port: connection.port,
+  secure: connection.secure,
+  username: connection.username,
+  password: connection.password,
+});

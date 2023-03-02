@@ -13,7 +13,7 @@ export default function ConnectionItem({
   onEditClick,
   onRemoveClick,
 }: ConnectionItemProps) {
-  const { setActiveConnectionId, activeConnectionId } = useConnectionContext();
+  const { setActiveConnection, activeConnectionId } = useConnectionContext();
   const active = connection.id === activeConnectionId?.id;
 
   return (
@@ -28,7 +28,7 @@ export default function ConnectionItem({
         minimal
         fill
         round
-        onClick={() => setActiveConnectionId(connection)}
+        onClick={() => setActiveConnection(connection)}
         onDoubleClick={() => onEditClick(connection)}
       >
         <div

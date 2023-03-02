@@ -20,7 +20,7 @@ export const useApp = (isFirstTime: boolean) => {
   const executeQuery = useCallback(
     async ({ query, params }: OnExecuteQueryParams) => {
       setLoading(true);
-      const connection = getActiveConnection();
+      const connection = await getActiveConnection();
 
       if (!connection) {
         setError("No active connection");
@@ -55,11 +55,11 @@ export const useApp = (isFirstTime: boolean) => {
     [executeQuery, activeConnectionId]
   );
 
-  const handleOnClickRunQuery = useCallback(() => {
+  const handleOnClickRunQuery = useCallback(async () => {
     executeQuery({
       query: sqlEditorRef.current?.getValue(),
       params: jsonEditorRef.current?.getValue(),
-      connection: getActiveConnection(),
+      connection: await getActiveConnection(),
     });
   }, [
     sqlEditorRef.current,

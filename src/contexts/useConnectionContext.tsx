@@ -1,99 +1,62 @@
 import {
   createContext,
   PropsWithChildren,
-  useContext,
-  useEffect,
-  useState
+  useContext, useState
 } from "react";
-import { useStorage } from "../hooks/useStorage";
 import {
-  Connection,
-  ConnectionBody,
-  ConnectionId
+  ActiveConnection,
+  Connection, ConnectionDisplay, ConnectionId
 } from "../lib/clickhouse-clients";
-import { uuid } from "../lib/uuid";
+import { getConnectionById } from "../lib/connections-helpers/connection-repo";
 
 type ConnectionsContextType = {
   databaseDecrypted: boolean;
   setDatabaseDecrypted: (databaseDecrypted: boolean) => void;
-  connections: Connection[];
   activeConnectionId: ConnectionId | undefined;
-  insert: (connectionBody: ConnectionBody) => void;
-  remove: (connectionId: ConnectionId) => void;
-  update: (connectionId: ConnectionId, connectionBody: ConnectionBody) => void;
-  setActiveConnectionId: (connection: ConnectionId) => void;
-  getActiveConnection: () => Connection | undefined;
+  activeConnectionDisplay: ConnectionDisplay | undefined;
+  setActiveConnectionDisplay: (connectionDisplay: ConnectionDisplay | undefined) => void;
+  setActiveConnection: (connection: ActiveConnection | undefined) => void;
+  getActiveConnection: () => Promise<Connection | undefined>;
 };
 
 const ConnectionsContext = createContext<ConnectionsContextType>({
   databaseDecrypted: false,
+  activeConnectionDisplay: undefined,
+  setActiveConnectionDisplay: () => { },
   setDatabaseDecrypted: () => { },
-  connections: [],
   activeConnectionId: undefined,
-  insert: () => { },
-  remove: () => { },
-  update: () => { },
-  setActiveConnectionId: () => { },
-  getActiveConnection: () => undefined,
+  setActiveConnection: () => { },
+  getActiveConnection: () => Promise.reject(),
 });
 
 export function ConnectionsProvider({ children }: PropsWithChildren<{}>) {
   const [databaseDecrypted, setDatabaseDecrypted] = useState(false);
-  //const [connections, setConnections] = useState<Connection[]>([]);
-  const [connections, setConnections] = useStorage<Connection[]>(
-    "localStorage"
-  )("connections", []);
-  const [activeConnectionId, setActiveConnectionId] = useStorage<
+  const [activeConnectionDisplay, setActiveConnectionDisplay] = useState<
+    ConnectionDisplay | undefined
+  >(undefined);
+  const [activeConnectionId, setInternalActiveConnectionId] = useState<
     ConnectionId | undefined
-  >("sessionStorage")("activeConnectionId", undefined);
+  >(undefined);
 
-  const insert = (connectionBody: ConnectionBody) => {
-    setConnections((oldConnections) => [
-      ...oldConnections,
-      {
-        id: uuid(),
-        ...connectionBody,
-      },
-    ]);
-  };
-
-  const remove = ({ id }: ConnectionId) => {
-    setConnections((oldConnections) => [
-      ...oldConnections.filter((c) => c.id !== id),
-    ]);
-  };
-
-  const update = ({ id }: ConnectionId, connectionBody: ConnectionBody) => {
-    setConnections((oldConnections) => [
-      ...oldConnections.map((c) =>
-        c.id === id ? { id, ...connectionBody } : c
-      ),
-    ]);
-  };
-
-  useEffect(() => {
-    const storedConnections = window.localStorage.getItem("connections");
-    setConnections(JSON.parse(storedConnections ?? "[]") as Connection[]);
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem("connections", JSON.stringify(connections));
-    if (connections.length === 0) {
-      setActiveConnectionId(undefined);
+  const setActiveConnection = async (activeConnection: ActiveConnection | undefined) => {
+    if (!activeConnection) {
+      setInternalActiveConnectionId(undefined);
+      setActiveConnectionDisplay(undefined);
+      return;
     }
-  }, [connections]);
+    const { id, ...display } = activeConnection;
+    setInternalActiveConnectionId({ id });
+    setActiveConnectionDisplay({ ...display });
+  };
 
   const contextValue = {
     databaseDecrypted,
+    activeConnectionDisplay,
+    setActiveConnectionDisplay,
     setDatabaseDecrypted,
-    connections,
-    insert,
-    remove,
-    update,
     activeConnectionId,
-    setActiveConnectionId,
-    getActiveConnection: () =>
-      connections.find((c) => c.id === activeConnectionId?.id),
+    setActiveConnection,
+    getActiveConnection: async () => await getConnectionById(activeConnectionId!.id)
   };
 
   return (
