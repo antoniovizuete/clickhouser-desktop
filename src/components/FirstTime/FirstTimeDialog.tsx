@@ -7,6 +7,7 @@ import {
 
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import PasswordStrengthBar from "react-password-strength-bar";
+import { useConnectionContext } from "../../contexts/useConnectionContext";
 import { useThemeContext } from "../../contexts/useThemeContext";
 import { RustBridge } from "../../lib/rust-bridge";
 import { AppToaster } from "../../lib/toaster/AppToaster";
@@ -21,6 +22,7 @@ export type FirstTimeDialogRef = {
 
 const FirstTimeDialog = forwardRef<FirstTimeDialogRef, Props>(({ }, ref) => {
   const { bpTheme } = useThemeContext();
+  const { setDatabaseDecrypted } = useConnectionContext();
   const [passphrase, setPassphrase] = useState<string | undefined>(undefined)
   const [isOpen, setIsOpen] = useState(false);
   const [saveEnabled, setSaveEnabled] = useState(false);
@@ -43,6 +45,7 @@ const FirstTimeDialog = forwardRef<FirstTimeDialogRef, Props>(({ }, ref) => {
       return;
     }
     AppToaster.top.success("Your passphrase has been set successfully");
+    setDatabaseDecrypted(true);
     setIsOpen(false);
 
   };
