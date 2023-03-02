@@ -8,10 +8,10 @@ use crate::repository::clickhouse_connection::ClickhouseConnection;
 pub mod clickhouse_connection;
 
 const TABLE: &str = "connections";
-const DATABASE_NAME: &str = "clickmate.db";
+const DATABASE_NAME: &str = "connections.db";
 const QUALIFIER: &str = "com";
-const ORGANIZATION: &str = "clickmate";
-const APPLICATION: &str = "clickmate";
+const ORGANIZATION: &str = "clickhouser";
+const APPLICATION: &str = "clickhouser-desktop";
 
 pub struct Repository {
     connection: Connection,

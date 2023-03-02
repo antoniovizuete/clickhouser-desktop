@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "clickmate",
+    "productName": "clickhouser-desktop",
     "version": "0.0.0"
   },
   "tauri": {
@@ -33,7 +33,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.clickmate",
+      "identifier": "com.clickhouser.clickhouser-desktop",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -59,11 +59,12 @@
     },
     "windows": [
       {
+        "center": true,
         "fullscreen": false,
         "resizable": true,
-        "title": "Clickmate",
-        "width": 800,
-        "height": 600,
+        "title": "Clickhouser Desktop",
+        "width": 1920,
+        "height": 1080,
         "minWidth": 800,
         "minHeight": 600
       }
