@@ -27,6 +27,7 @@ export const useConnectionsDrawer = ({ ref }: Params) => {
   const [selectedConnetionToDelete, setSelectedConnetionToDelete] = useState<
     Connection | undefined
   >(undefined);
+  const [isLoading, setIsLoading] = useState(false);
 
   useImperativeHandle(ref, () => ({ open }), []);
 
@@ -35,11 +36,14 @@ export const useConnectionsDrawer = ({ ref }: Params) => {
       return;
     }
 
+    setIsLoading(true);
     try {
       const connections = await getConnections();
       setConnections(connections);
     } catch (error) {
       AppToaster.top.error("There was an error loading the connections");
+    } finally {
+      setIsLoading(false);
     }
   }, [databaseDecrypted]);
 
@@ -90,6 +94,7 @@ export const useConnectionsDrawer = ({ ref }: Params) => {
     handleNewClick,
     handleRemoveClick,
     isAlertOpen,
+    isLoading,
     isOpen,
     retrieveConnections,
     selectedConnetionToDelete,

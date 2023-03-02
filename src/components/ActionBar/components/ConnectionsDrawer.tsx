@@ -4,7 +4,8 @@ import {
   Classes,
   Drawer,
   DrawerSize,
-  H4
+  H4,
+  Spinner
 } from "@blueprintjs/core";
 import { forwardRef } from "react";
 import { useThemeContext } from "../../../contexts/useThemeContext";
@@ -28,6 +29,7 @@ const ConnectionsDrawer = forwardRef<ConnectionsDrawerRef, {}>((_, ref) => {
     handleNewClick,
     handleRemoveClick,
     isAlertOpen,
+    isLoading,
     isOpen,
     retrieveConnections,
     selectedConnetionToDelete,
@@ -38,7 +40,7 @@ const ConnectionsDrawer = forwardRef<ConnectionsDrawerRef, {}>((_, ref) => {
       <Drawer
         className={bpTheme}
         isCloseButtonShown={false}
-        icon="data-connection"
+        icon={isLoading ? <Spinner size={18} className="mr-[10px]" /> : "data-connection"}
         isOpen={isOpen}
         onClose={close}
         onOpened={retrieveConnections}
@@ -59,9 +61,10 @@ const ConnectionsDrawer = forwardRef<ConnectionsDrawerRef, {}>((_, ref) => {
       >
         <div className={Classes.DRAWER_BODY}>
           <div className={`${Classes.DIALOG_BODY} flex flex-col gap-2`}>
-            {(connections || []).map((connection, i) =>
+
+            {(connections || []).map((connection) =>
               <ConnectionItem
-                key={i}
+                key={connection.id}
                 connection={connection}
                 onEditClick={handleEditClick}
                 onRemoveClick={handleRemoveClick}
