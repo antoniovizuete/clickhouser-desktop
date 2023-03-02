@@ -113,7 +113,7 @@ const FirstTimeDialog = forwardRef<FirstTimeDialogRef, Props>(({ }, ref) => {
 
 type ReturnType = [JSX.Element, FirstTimeDialogRef["open"]];
 
-export const useFirstTimeDialog = (): ReturnType => {
+export const useFirstTimeDialogHandler = (): ReturnType => {
   const firstTimeDialogRef = useRef<FirstTimeDialogRef>(null);
 
   return [

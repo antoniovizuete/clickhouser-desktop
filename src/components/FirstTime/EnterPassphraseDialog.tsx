@@ -25,7 +25,7 @@ export type EnterPassphraseDialogRef = {
 
 const EnterPassphraseDialog = forwardRef<EnterPassphraseDialogRef, Props>(({ openFirstTimeDialog }, ref) => {
   const { bpTheme } = useThemeContext()
-  const [passphrase, setPassphrase] = useState<string | undefined>("my-super-strong-password")
+  const [passphrase, setPassphrase] = useState<string | undefined>()
   const [isOpen, setIsOpen] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [attemps, setAttemps] = useState(MAX_ATTEMPS);
@@ -122,7 +122,7 @@ const EnterPassphraseDialog = forwardRef<EnterPassphraseDialogRef, Props>(({ ope
 
 type ReturnType = [JSX.Element, EnterPassphraseDialogRef["open"]];
 
-export const useEnterPassphraseDialog = (props: Props): ReturnType => {
+export const useEnterPassphraseDialogHandler = (props: Props): ReturnType => {
   const enterPassphraseDialogRef = useRef<EnterPassphraseDialogRef>(null);
 
   return [
