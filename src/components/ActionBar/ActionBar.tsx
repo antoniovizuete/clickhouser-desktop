@@ -1,4 +1,5 @@
 import { Alignment, Button, Navbar } from "@blueprintjs/core";
+import { useConnectionContext } from "../../contexts/useConnectionContext";
 import Brand from "../Brand";
 import ConnectionCaption from "./components/ConnectionCaption";
 import SelectThemeButton from "./components/SelectThemeButton";
@@ -11,6 +12,8 @@ type ActionBarProps = {
 
 export default function ActionBar({ onClickRunQuery }: ActionBarProps) {
   const [ConnectionsDrawer, openConnectionDrawer] = useConnectionsDrawerHandler();
+  const { activeConnectionId } = useConnectionContext();
+
   return (<>
     <Navbar className="bg-slate-50 dark:bg-neutral-800 dark:text-white">
       <Navbar.Group align={Alignment.LEFT}>
@@ -21,6 +24,7 @@ export default function ActionBar({ onClickRunQuery }: ActionBarProps) {
             intent="warning"
             aria-label="Run query"
             onClick={onClickRunQuery}
+            disabled={!activeConnectionId}
           />
           <ThemedButton
             icon="data-connection"
