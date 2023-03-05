@@ -56,7 +56,7 @@ export function ConnectionsProvider({ children }: PropsWithChildren<{}>) {
     setDatabaseDecrypted,
     activeConnectionId,
     setActiveConnection,
-    getActiveConnection: async () => await getConnectionById(activeConnectionId!.id)
+    getActiveConnection: async () => activeConnectionId ? await getConnectionById(activeConnectionId.id) : undefined
   };
 
   return (

@@ -11,7 +11,7 @@ import { useThemeContext } from "../../contexts/useThemeContext";
 import { RustBridge } from "../../lib/rust-bridge";
 import { AppToaster } from "../../lib/toaster/AppToaster";
 import Brand from "../Brand";
-import ShowPasswordButton from "../core/ShowPasswordButton";
+import { useShowPasswordButton } from "../core/ShowPasswordButton";
 
 const MAX_ATTEMPS = 3;
 
@@ -25,11 +25,12 @@ export type EnterPassphraseDialogRef = {
 
 const EnterPassphraseDialog = forwardRef<EnterPassphraseDialogRef, Props>(({ openFirstTimeDialog }, ref) => {
   const { bpTheme } = useThemeContext()
+  const { setDatabaseDecrypted } = useConnectionContext()
+  const { showPassword, ShowPasswordButton } = useShowPasswordButton()
+
   const [passphrase, setPassphrase] = useState<string | undefined>()
   const [isOpen, setIsOpen] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
   const [attemps, setAttemps] = useState(MAX_ATTEMPS);
-  const { setDatabaseDecrypted } = useConnectionContext();
 
   useImperativeHandle(ref, () => ({ open }), []);
 
@@ -99,12 +100,7 @@ const EnterPassphraseDialog = forwardRef<EnterPassphraseDialogRef, Props>(({ ope
             placeholder="The database passphrase"
             onChange={(e) => setPassphrase(e.target.value)}
             size={40}
-            rightElement={
-              <ShowPasswordButton
-                showPassword={showPassword}
-                onClick={setShowPassword}
-              />
-            }
+            rightElement={<ShowPasswordButton />}
           />
         </FormGroup>
 

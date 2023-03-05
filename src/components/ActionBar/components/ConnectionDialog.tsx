@@ -6,9 +6,10 @@ import {
   Switch
 } from "@blueprintjs/core";
 import { forwardRef } from "react";
+import { Controller } from "react-hook-form";
 import { useThemeContext } from "../../../contexts/useThemeContext";
 import { Connection } from "../../../lib/clickhouse-clients/types";
-import ShowPasswordButton from "../../core/ShowPasswordButton";
+import { useShowPasswordButton } from "../../core/ShowPasswordButton";
 import { useConnectionDialog } from "../hooks/useConnectionDialog";
 
 type Props = {
@@ -24,27 +25,16 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
 }, ref) => {
   const { bpTheme } = useThemeContext();
   const {
-    connection,
-    isOpen,
-    name,
-    setName,
-    host,
-    setHost,
-    port,
-    setPort,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    secure,
-    setSecure,
-    showPassword,
-    setShowPassword,
-    tested,
-    test,
-    save,
     close,
+    connection,
+    control,
+    isOpen,
+    onClickTest,
+    onSubmit,
+    tested,
   } = useConnectionDialog({ onClose, ref });
+
+  const { showPassword, ShowPasswordButton } = useShowPasswordButton();
 
   return (
     <Dialog
@@ -54,82 +44,93 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
       className={bpTheme}
       title={`${connection ? "Edit" : "New"} Connection`}
     >
-      <div className={`${Classes.DIALOG_BODY} ${bpTheme} flex flex-col gap-2`}>
-        <FormGroup label="Name:">
-          <InputGroup
-            className={`flex-grow ${bpTheme}`}
-            value={name}
-            placeholder="Name"
-            onChange={(e) => setName(e.target.value || "")}
-            size={40}
-          />
-        </FormGroup>
-        <div className="flex flex-row justify-start items-start gap-1">
-          <FormGroup label="Host:">
-            <InputGroup
-              className={`flex-grow ${bpTheme}`}
-              value={host}
-              placeholder="Host"
-              onChange={(e) => setHost(e.target.value || "")}
-              size={40}
-            />
+      <form onSubmit={onSubmit}>
+        <div className={`${Classes.DIALOG_BODY} ${bpTheme} flex flex-col gap-2`}>
+          <FormGroup label="Name:">
+            <Controller name="name" control={control} render={({ field }) => (
+              <InputGroup
+                className={`flex-grow ${bpTheme}`}
+                placeholder="Name"
+                size={40}
+                {...field}
+              />)} />
           </FormGroup>
-          <FormGroup label="Port:">
-            <InputGroup
-              className={`flex-grow ${bpTheme}`}
-              value={port.toString()}
-              placeholder="Port"
-              onChange={(e) => setPort(parseInt(e.target.value))}
-              size={40}
-            />
-          </FormGroup>
-          <FormGroup label="Secure:">
-            <Switch
-              className={`flex-grow ${bpTheme} mt-1`}
-              checked={secure}
-              innerLabel="http"
-              innerLabelChecked="https"
-              large
-              onChange={(e) => setSecure(e.currentTarget.checked)}
-            />
-          </FormGroup>
+          <div className="flex flex-row justify-start items-start gap-1">
+            <FormGroup label="Host:">
+              <Controller name="host" control={control} render={({ field }) => (
+                <InputGroup
+                  className={`flex-grow ${bpTheme}`}
+                  placeholder="Host"
+                  size={40}
+                  {...field}
+                />)} />
+            </FormGroup>
+            <FormGroup label="Port:">
+              <Controller name="port" control={control} render={({ field }) => (
+                <InputGroup
+                  className={`flex-grow ${bpTheme}`}
+                  placeholder="Port"
+                  size={40}
+                  name={field.name}
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  ref={field.ref}
+                  value={field.value.toString()}
+                />)} />
+            </FormGroup>
+            <FormGroup label="Secure:">
+              <Controller name="secure" control={control} render={({ field }) => (
+                <Switch
+                  checked={field.value}
+                  className={`flex-grow ${bpTheme} mt-1`}
+                  innerLabel="http"
+                  innerLabelChecked="https"
+                  large
+                  name={field.name}
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  ref={field.ref}
+                />)}
+              />
+            </FormGroup>
+          </div>
+          <div className="flex flex-row justify-start items-start gap-2">
+            <FormGroup label="Username:">
+              <Controller name="username" control={control} render={({ field }) => (
+                <InputGroup
+                  className={`flex-grow ${bpTheme}`}
+                  placeholder="Username"
+                  size={40}
+                  {...field}
+                />
+              )} />
+            </FormGroup>
+            <FormGroup label="Password:">
+              <Controller name="password" control={control} render={({ field }) => (
+                <InputGroup
+                  className={`flex-grow ${bpTheme}`}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  size={40}
+                  rightElement={<ShowPasswordButton />}
+                  {...field}
+                />
+              )} />
+            </FormGroup>
+          </div>
         </div>
-        <div className="flex flex-row justify-start items-start gap-2">
-          <FormGroup label="Username:">
-            <InputGroup
-              className={`flex-grow ${bpTheme}`}
-              value={username}
-              placeholder="Username"
-              onChange={(e) => setUsername(e.target.value || "")}
-              size={40}
-            />
-          </FormGroup>
-          <FormGroup label="Password:">
-            <InputGroup
-              className={`flex-grow ${bpTheme}`}
-              type={showPassword ? "text" : "password"}
-              value={password}
-              placeholder="Password"
-              onChange={(e) => setPassword(e.target.value || "")}
-              size={40}
-              rightElement={
-                <ShowPasswordButton showPassword={showPassword} onClick={() => setShowPassword(prev => !prev)} />
-              }
-            />
-          </FormGroup>
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+            <Button onClick={close} type="button">Close</Button>
+            <Button intent="success" onClick={onClickTest} type={"button"}>
+              Test Connection
+            </Button>
+            <Button intent="primary" disabled={!tested} type="submit">
+              Save
+            </Button>
+          </div>
         </div>
-      </div>
-      <div className={Classes.DIALOG_FOOTER}>
-        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button onClick={close}>Close</Button>
-          <Button intent="success" onClick={test}>
-            Test Connection
-          </Button>
-          <Button intent="primary" onClick={save} disabled={!tested}>
-            Save
-          </Button>
-        </div>
-      </div>
+      </form>
     </Dialog>
   );
 });

@@ -15,7 +15,6 @@ export const getConnectionDisplay = ({
   excerpt = true,
   showName = true,
 }: Params) => {
-  console.log("getConnectionDisplay", connection);
   if (!connection) {
     return "";
   }

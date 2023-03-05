@@ -51,7 +51,6 @@ export async function performQuery({
 
     try {
       const xhr = new XMLHttpRequest();
-      console.log("url", url);
       xhr.open("POST", url, true);
 
       xhr.onreadystatechange = function () {

@@ -12,7 +12,7 @@ import { useThemeContext } from "../../contexts/useThemeContext";
 import { RustBridge } from "../../lib/rust-bridge";
 import { AppToaster } from "../../lib/toaster/AppToaster";
 import Brand from "../Brand";
-import ShowPasswordButton from "../core/ShowPasswordButton";
+import { useShowPasswordButton } from "../core/ShowPasswordButton";
 
 type Props = {};
 
@@ -26,7 +26,7 @@ const FirstTimeDialog = forwardRef<FirstTimeDialogRef, Props>(({ }, ref) => {
   const [passphrase, setPassphrase] = useState<string | undefined>(undefined)
   const [isOpen, setIsOpen] = useState(false);
   const [saveEnabled, setSaveEnabled] = useState(false);
-  const [showPassword, setShowPassword] = useState(false)
+  const { showPassword, ShowPasswordButton } = useShowPasswordButton()
 
   useImperativeHandle(ref, () => ({ open }), []);
 
@@ -86,12 +86,7 @@ const FirstTimeDialog = forwardRef<FirstTimeDialogRef, Props>(({ }, ref) => {
             placeholder="Type your strong passphrase here"
             onChange={(e) => setPassphrase(e.target.value)}
             size={40}
-            rightElement={
-              <ShowPasswordButton
-                showPassword={showPassword}
-                onClick={setShowPassword}
-              />
-            }
+            rightElement={<ShowPasswordButton />}
           />
           <PasswordStrengthBar
             password={passphrase}

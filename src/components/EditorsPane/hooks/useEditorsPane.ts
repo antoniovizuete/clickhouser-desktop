@@ -48,20 +48,22 @@ export const useEditorsPane = ({
   });
 
   useEffect(() => {
-    disposables.forEach((disposable) => disposable?.dispose());
-    const newAction = getExecuteQueryAction(
-      onExecuteQuery,
-      sqlEditorRef,
-      jsonEditorRef,
-      getActiveConnection()
-    );
+    (async () => {
+      disposables.forEach((disposable) => disposable?.dispose());
+      const newAction = getExecuteQueryAction(
+        onExecuteQuery,
+        sqlEditorRef,
+        jsonEditorRef,
+        await getActiveConnection()
+      );
 
-    if (sqlEditorRef.current) {
-      addAction(sqlEditorRef.current.getEditor(), newAction);
-    }
-    if (jsonEditorRef.current) {
-      addAction(jsonEditorRef.current.getEditor(), newAction);
-    }
+      if (sqlEditorRef.current) {
+        addAction(sqlEditorRef.current.getEditor(), newAction);
+      }
+      if (jsonEditorRef.current) {
+        addAction(jsonEditorRef.current.getEditor(), newAction);
+      }
+    })();
   }, [sqlEditorRef, jsonEditorRef, activeConnectionId]);
 
   const handleEditorDidMount = useCallback(
