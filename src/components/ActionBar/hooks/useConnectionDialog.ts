@@ -59,10 +59,17 @@ export const useConnectionDialog = ({ onClose, ref }: Params) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await test(data);
+    } catch (error) {
+      AppToaster.top.error("Could not connect to the Clickhouse server");
+      return;
+    }
+
+    try {
       await save(data);
       AppToaster.top.success("The connection has been saved successfully");
       close();
     } catch (error) {
+      console.log(error);
       AppToaster.top.error("The connection could not be saved");
     }
   });

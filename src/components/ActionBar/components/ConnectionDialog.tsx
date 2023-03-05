@@ -31,7 +31,6 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
     isOpen,
     onClickTest,
     onSubmit,
-    tested,
   } = useConnectionDialog({ onClose, ref });
 
   const { showPassword, ShowPasswordButton } = useShowPasswordButton();
@@ -125,7 +124,7 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
             <Button intent="success" onClick={onClickTest} type={"button"}>
               Test Connection
             </Button>
-            <Button intent="primary" disabled={!tested} type="submit">
+            <Button intent="primary" type="submit">
               Save
             </Button>
           </div>
