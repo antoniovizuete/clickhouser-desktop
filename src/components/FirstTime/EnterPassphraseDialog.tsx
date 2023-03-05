@@ -13,7 +13,7 @@ import { AppToaster } from "../../lib/toaster/AppToaster";
 import Brand from "../Brand";
 import { useShowPasswordButton } from "../core/ShowPasswordButton";
 
-const MAX_ATTEMPS = 3;
+const MAX_ATTEMPS = 5;
 
 type Props = {
   openFirstTimeDialog: () => void;
@@ -89,7 +89,7 @@ const EnterPassphraseDialog = forwardRef<EnterPassphraseDialogRef, Props>(({ ope
         <div>Consider the following:</div>
         <ul className="list-disc text-xs">
           <li className="list-item ml-6">Have only {attemps} attempts.</li>
-          <li className="list-item ml-6">On the 3rd failed attempt, the connections database will be remove and you will need to re-enter the connections again.</li>
+          <li className="list-item ml-6">Failing all attempts, the connections database will be remove and you will need to re-enter the connections again.</li>
         </ul>
 
         <FormGroup label="Passphrase:">
