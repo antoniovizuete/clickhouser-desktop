@@ -17,19 +17,21 @@ export default function ActionBar({ onClickRunQuery }: ActionBarProps) {
   return (<>
     <Navbar className="bg-slate-50 dark:bg-neutral-800 dark:text-white">
       <Navbar.Group align={Alignment.LEFT}>
-        <div className="flex flex-row justify-start items-center mr-1 gap-1">
-          <Brand />
-          <Button
-            icon="play"
-            intent="warning"
-            aria-label="Run query"
-            onClick={onClickRunQuery}
-            disabled={!activeConnectionId}
-          />
-          <ThemedButton
-            icon="data-connection"
-            action={openConnectionDrawer}
-          />
+        <div className="flex flex-row justify-start items-center mr-1 gap-2">
+          <Brand className="text-lg" />
+          <div className="flex flex-row justify-start items-center gap-1">
+            <Button
+              icon="play"
+              intent="warning"
+              aria-label="Run query"
+              onClick={onClickRunQuery}
+              disabled={!activeConnectionId}
+            />
+            <ThemedButton
+              icon="data-connection"
+              action={openConnectionDrawer}
+            />
+          </div>
           <ConnectionCaption />
         </div>
       </Navbar.Group>
