@@ -1,11 +1,8 @@
 import { ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useConnectionContext } from "../../../contexts/useConnectionContext";
-import {
-  Connection,
-  ConnectionBody,
-  performQuery,
-} from "../../../lib/clickhouse-clients";
+import { Connection, ConnectionBody } from "../../../lib/clickhouse-clients";
+import { testConnection } from "../../../lib/connections-helpers";
 import {
   insertConnection,
   updateConnection,
@@ -52,7 +49,7 @@ export const useConnectionDialog = ({ onClose, ref }: Params) => {
       await test(connection);
       AppToaster.top.success("Successfully connected");
     } catch (error) {
-      AppToaster.top.error("Could not connect to the Clickhouse server");
+      AppToaster.top.error((error as Error).message);
     }
   };
 
@@ -60,7 +57,7 @@ export const useConnectionDialog = ({ onClose, ref }: Params) => {
     try {
       await test(data);
     } catch (error) {
-      AppToaster.top.error("Could not connect to the Clickhouse server");
+      AppToaster.top.error((error as Error).message);
       return;
     }
 
@@ -94,18 +91,12 @@ export const useConnectionDialog = ({ onClose, ref }: Params) => {
   };
 
   const test = async (connection: ConnectionBody) => {
-    const { error } = await performQuery({
-      query: "SELECT 1",
-      ...connection,
-    });
-
-    if (error) {
-      setTested(false);
-      return Promise.reject();
-    }
-
-    setTested(true);
-    return Promise.resolve();
+    return testConnection(connection)
+      .then(() => void setTested(true))
+      .catch(() => {
+        setTested(false);
+        throw new Error("Could not connect to the server");
+      });
   };
 
   useImperativeHandle(ref, () => ({ open }), []);

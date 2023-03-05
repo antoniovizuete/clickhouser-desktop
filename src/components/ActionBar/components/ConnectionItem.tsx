@@ -1,7 +1,8 @@
 import { Icon, IconSize, Tag } from "@blueprintjs/core";
 import { useConnectionContext } from "../../../contexts/useConnectionContext";
 import { Connection } from "../../../lib/clickhouse-clients";
-import { getConnectionDisplay } from "../../../lib/connections-helpers";
+import { getConnectionDisplay, testConnection } from "../../../lib/connections-helpers";
+import { AppToaster } from "../../../lib/toaster/AppToaster";
 
 type ConnectionItemProps = {
   connection: Connection;
@@ -16,6 +17,19 @@ export default function ConnectionItem({
   const { setActiveConnection, activeConnectionId } = useConnectionContext();
   const active = connection.id === activeConnectionId?.id;
 
+  const handleOnClick = async () => {
+    try {
+      await testConnection(connection);
+      setActiveConnection(connection);
+    } catch (error) {
+      AppToaster.top.error(`Could not connect to ${getConnectionDisplay({ connection, showName: false })}.`)
+    }
+  };
+
+  const handleOnDoubleClick = () => {
+    onEditClick(connection);
+  }
+
   return (
     <div
       className="flex flex-row gap-1 justify-between items-center"
@@ -28,8 +42,8 @@ export default function ConnectionItem({
         minimal
         fill
         round
-        onClick={() => setActiveConnection(connection)}
-        onDoubleClick={() => onEditClick(connection)}
+        onClick={handleOnClick}
+        onDoubleClick={handleOnDoubleClick}
       >
         <div
           className={`flex-grow flex flex-row justify-between items-center ${active ? "font-bold" : ""
