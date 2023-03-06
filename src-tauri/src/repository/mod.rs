@@ -57,7 +57,7 @@ impl Repository {
     pub fn get_all(&self) -> Result<Vec<ClickhouseConnection>> {
         let mut stmt = self.connection.prepare(
             format!(
-                "SELECT id, name, host, port, secure, username, password, database FROM {}",
+                "SELECT id, name, host, port, secure, username, password, database FROM {} ORDER BY name, host, port",
                 TABLE
             )
             .as_str(),
