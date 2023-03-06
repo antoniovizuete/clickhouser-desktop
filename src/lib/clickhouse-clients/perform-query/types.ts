@@ -3,6 +3,7 @@ import { ConnectionBody } from "../types";
 export type Params = ConnectionBody & {
   query?: string;
   jsonParams?: string;
+  timeout?: number;
 };
 
 export type MessageResult = {

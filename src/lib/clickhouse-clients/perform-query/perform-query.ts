@@ -10,6 +10,7 @@ type ReturnType = {
 export async function performQuery({
   query,
   jsonParams = "{}",
+  timeout = 30_000,
   ...connection
 }: Params): Promise<ReturnType> {
   if (!query) {
@@ -51,6 +52,7 @@ export async function performQuery({
 
     try {
       const xhr = new XMLHttpRequest();
+      xhr.timeout = timeout;
       xhr.open("POST", url, true);
 
       xhr.onreadystatechange = function () {
