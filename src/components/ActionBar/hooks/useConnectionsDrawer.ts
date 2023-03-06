@@ -76,6 +76,7 @@ export const useConnectionsDrawer = ({ ref }: Params) => {
         })} was removed`
       );
       handleAlertClose();
+      retrieveConnections();
     }
   };
 
