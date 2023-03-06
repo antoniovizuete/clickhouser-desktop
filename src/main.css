@@ -18,6 +18,10 @@ body,
   outline-offset: 0px;
 }
 
+.sash {
+  z-index: 19;
+}
+
 .stat {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
