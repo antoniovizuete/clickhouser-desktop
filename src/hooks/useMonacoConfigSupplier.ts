@@ -95,15 +95,20 @@ export const useMonacoConfigSupplier = ({ jsonParams }: Params) => {
 
   useEffect(() => {
     let subs: IDisposable[] = [];
-    const activeConnection = getActiveConnection();
-    if (monaco && activeConnection) {
-      getTablesSuggestionProvider(activeConnection).then(
-        ({ provider, language }) =>
-          subs.push(
-            monaco.languages.registerCompletionItemProvider(language, provider)
-          )
-      );
-    }
+    (async () => {
+      const activeConnection = await getActiveConnection();
+      if (monaco && activeConnection) {
+        getTablesSuggestionProvider(activeConnection).then(
+          ({ provider, language }) =>
+            subs.push(
+              monaco.languages.registerCompletionItemProvider(
+                language,
+                provider
+              )
+            )
+        );
+      }
+    })();
     return () => {
       subs.forEach((sub) => sub.dispose());
     };

@@ -14,15 +14,19 @@ import { ThemeProvider } from "./contexts/useThemeContext";
 import { RustBridge } from "./lib/rust-bridge";
 import "./main.css";
 
-const isFirstTime = await RustBridge.isFirstTime();
+async function main() {
+  const isFirstTime = await RustBridge.isFirstTime();
 
 
-createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <ThemeProvider>
-      <ConnectionsProvider>
-        <App isFirstTime={isFirstTime} />
-      </ConnectionsProvider>
-    </ThemeProvider>
-  </React.StrictMode>
-);
+  createRoot(document.getElementById("root")!).render(
+    <React.StrictMode>
+      <ThemeProvider>
+        <ConnectionsProvider>
+          <App isFirstTime={isFirstTime} />
+        </ConnectionsProvider>
+      </ThemeProvider>
+    </React.StrictMode>
+  );
+}
+
+main();

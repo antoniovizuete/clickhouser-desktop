@@ -26,7 +26,7 @@ export default function LeftFooter({ result }: Props) {
         {formatReadableRows(statistics.rows_read)} read rows
       </div>
       <div className="stat">{formatReadableBytes(statistics.bytes_read)}</div>
-      {data.length > 0 && (
+      {false && data.length > 0 && (
         <div className="stat bg-[#fbb360]">
           <Popover2
             popoverClassName={bpTheme}

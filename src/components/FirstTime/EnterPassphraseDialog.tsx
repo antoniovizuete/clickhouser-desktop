@@ -12,8 +12,7 @@ import { RustBridge } from "../../lib/rust-bridge";
 import { AppToaster } from "../../lib/toaster/AppToaster";
 import Brand from "../Brand";
 import { useShowPasswordButton } from "../core/ShowPasswordButton";
-
-const MAX_ATTEMPS = 5;
+import { MAX_ATTEMPS } from "./constants";
 
 type Props = {
   openFirstTimeDialog: () => void;
@@ -35,10 +34,7 @@ const EnterPassphraseDialog = forwardRef<EnterPassphraseDialogRef, Props>(({ ope
   useImperativeHandle(ref, () => ({ open }), []);
 
   const handleOkClick = async () => {
-    if (!passphrase) {
-      return;
-    }
-    const result = await RustBridge.init(passphrase);
+    const result = await RustBridge.init(passphrase ?? "");
 
     if (!result.isError()) {
       AppToaster.top.success("Connections database unlocked successfully.");
@@ -107,8 +103,8 @@ const EnterPassphraseDialog = forwardRef<EnterPassphraseDialogRef, Props>(({ ope
       </div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button intent="primary" onClick={handleOkClick} disabled={!passphrase}>
-            Decrypt
+          <Button intent="primary" onClick={handleOkClick}>
+            Continue
           </Button>
         </div>
       </div>

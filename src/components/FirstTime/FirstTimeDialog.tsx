@@ -13,6 +13,7 @@ import { RustBridge } from "../../lib/rust-bridge";
 import { AppToaster } from "../../lib/toaster/AppToaster";
 import Brand from "../Brand";
 import { useShowPasswordButton } from "../core/ShowPasswordButton";
+import { MAX_ATTEMPS } from "./constants";
 
 type Props = {};
 
@@ -31,14 +32,11 @@ const FirstTimeDialog = forwardRef<FirstTimeDialogRef, Props>(({ }, ref) => {
   useImperativeHandle(ref, () => ({ open }), []);
 
   const handleOnChangeScore = (score: number) => {
-    setSaveEnabled(score < 2);
+    //setSaveEnabled(score < 2);
   }
 
   const save = async () => {
-    if (!passphrase) {
-      return;
-    }
-    const result = await RustBridge.init(passphrase);
+    const result = await RustBridge.init(passphrase ?? "");
     if (result.isError()) {
       console.dir("Error: ", result.unwrapError());
       AppToaster.top.error(result.unwrapError()?.message || "Unknown error");
@@ -74,7 +72,7 @@ const FirstTimeDialog = forwardRef<FirstTimeDialogRef, Props>(({ }, ref) => {
           <li className="list-item ml-6">Use a strong passphrase with at least 16 characters.</li>
           <li className="list-item ml-6">Remember the passphrase. There is no way to recover the passphrase.</li>
           <li className="list-item ml-6">
-            Once you set the passphrase, you will have only 3 attempts to enter it. After that, the app will remove the connections database and you will need to re-enter the connections again.
+            Once you set the passphrase, you will have only {MAX_ATTEMPS} attempts to enter it. After that, the app will remove the connections database and you will need to re-enter the connections again.
           </li>
         </ul>
 
