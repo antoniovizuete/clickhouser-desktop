@@ -10,8 +10,6 @@ import {
 import { getConnectionById } from "../lib/connections-helpers/connection-repo";
 
 type ConnectionsContextType = {
-  databaseDecrypted: boolean;
-  setDatabaseDecrypted: (databaseDecrypted: boolean) => void;
   activeConnectionId: ConnectionId | undefined;
   activeConnectionDisplay: ConnectionDisplay | undefined;
   setActiveConnectionDisplay: (connectionDisplay: ConnectionDisplay | undefined) => void;
@@ -20,17 +18,14 @@ type ConnectionsContextType = {
 };
 
 const ConnectionsContext = createContext<ConnectionsContextType>({
-  databaseDecrypted: false,
   activeConnectionDisplay: undefined,
   setActiveConnectionDisplay: () => { },
-  setDatabaseDecrypted: () => { },
   activeConnectionId: undefined,
   setActiveConnection: () => { },
   getActiveConnection: () => Promise.reject(),
 });
 
 export function ConnectionsProvider({ children }: PropsWithChildren<{}>) {
-  const [databaseDecrypted, setDatabaseDecrypted] = useState(false);
   const [activeConnectionDisplay, setActiveConnectionDisplay] = useState<
     ConnectionDisplay | undefined
   >(undefined);
@@ -50,10 +45,8 @@ export function ConnectionsProvider({ children }: PropsWithChildren<{}>) {
   };
 
   const contextValue = {
-    databaseDecrypted,
     activeConnectionDisplay,
     setActiveConnectionDisplay,
-    setDatabaseDecrypted,
     activeConnectionId,
     setActiveConnection,
     getActiveConnection: async () => activeConnectionId ? await getConnectionById(activeConnectionId.id) : undefined

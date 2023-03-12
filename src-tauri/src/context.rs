@@ -1,9 +1,20 @@
-use crate::repository::Repository;
-use std::sync::Mutex;
+use rusqlite::Connection;
+
+use crate::{database::Database, errors::Result};
 
 pub struct Context {
-    pub repository: Mutex<Option<Repository>>,
-    pub database_file: Mutex<Option<String>>,
+    pub connection: Connection,
+}
+
+impl Context {
+    pub fn new() -> Result<Context> {
+        match Database::new_connection() {
+            Ok(connection) => Ok(Context {
+                connection: connection,
+            }),
+            Err(e) => Err(e),
+        }
+    }
 }
 
 unsafe impl Send for Context {}

@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { EditorRef, OnExecuteQueryParams } from "../components/EditorsPane";
-import { useEnterPassphraseDialogHandler } from "../components/FirstTime/EnterPassphraseDialog";
-import { useFirstTimeDialogHandler } from "../components/FirstTime/FirstTimeDialog";
 import { useConnectionContext } from "../contexts/useConnectionContext";
 import { performQuery, QueryResult } from "../lib/clickhouse-clients";
 
-export const useApp = (isFirstTime: boolean) => {
+export const useApp = () => {
   const sqlEditorRef = useRef<EditorRef>(null);
   const jsonEditorRef = useRef<EditorRef>(null);
   const [result, setResult] = useState<QueryResult | undefined>();
@@ -13,9 +11,6 @@ export const useApp = (isFirstTime: boolean) => {
   const [loading, setLoading] = useState(false);
 
   const { getActiveConnection, activeConnectionId } = useConnectionContext();
-  const [FirstTimeDialog, openFirstTimeDialog] = useFirstTimeDialogHandler();
-  const [EnterPassphraseDialog, openEnterPassphraseDialog] =
-    useEnterPassphraseDialogHandler({ openFirstTimeDialog });
 
   const executeQuery = useCallback(
     async ({ query, params }: OnExecuteQueryParams) => {
@@ -68,18 +63,8 @@ export const useApp = (isFirstTime: boolean) => {
     activeConnectionId,
   ]);
 
-  useEffect(() => {
-    if (isFirstTime) {
-      openFirstTimeDialog();
-    } else {
-      openEnterPassphraseDialog();
-    }
-  }, []);
-
   return {
-    EnterPassphraseDialog,
     error,
-    FirstTimeDialog,
     handleOnClickRunQuery,
     handelOnExecuteQuery,
     jsonEditorRef,

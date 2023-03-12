@@ -4,7 +4,6 @@ import {
   useImperativeHandle,
   useState,
 } from "react";
-import { useConnectionContext } from "../../../contexts/useConnectionContext";
 import { Connection } from "../../../lib/clickhouse-clients";
 import { getConnectionDisplay } from "../../../lib/connections-helpers";
 import {
@@ -20,7 +19,6 @@ type Params = {
 };
 
 export const useConnectionsDrawer = ({ ref }: Params) => {
-  const { databaseDecrypted } = useConnectionContext();
   const [isOpen, setIsOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [connections, setConnections] = useState<Connection[]>([]);
@@ -32,10 +30,6 @@ export const useConnectionsDrawer = ({ ref }: Params) => {
   useImperativeHandle(ref, () => ({ open }), []);
 
   const retrieveConnections = useCallback(async () => {
-    if (!databaseDecrypted) {
-      return;
-    }
-
     setIsLoading(true);
     try {
       const connections = await getConnections();
@@ -45,7 +39,7 @@ export const useConnectionsDrawer = ({ ref }: Params) => {
     } finally {
       setIsLoading(false);
     }
-  }, [databaseDecrypted]);
+  }, []);
 
   const [ConnectionDialog, openConnetionDialog] = useConnectionDialogHandler({
     onClose: retrieveConnections,

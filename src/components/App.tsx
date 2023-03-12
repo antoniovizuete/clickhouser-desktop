@@ -5,23 +5,17 @@ import EditorsPane from "./EditorsPane";
 import Footer from "./Footer";
 import Result from "./Result";
 
-type Props = {
-  isFirstTime: boolean;
-}
-
-export default function App({ isFirstTime }: Props) {
+export default function App() {
 
   const {
-    EnterPassphraseDialog,
     error,
-    FirstTimeDialog,
     handelOnExecuteQuery,
     handleOnClickRunQuery,
     jsonEditorRef,
     loading,
     result,
     sqlEditorRef,
-  } = useApp(isFirstTime);
+  } = useApp();
 
   return <>
     <Allotment vertical>
@@ -40,7 +34,5 @@ export default function App({ isFirstTime }: Props) {
         <Footer result={result} />
       </Allotment.Pane>
     </Allotment>
-    {FirstTimeDialog}
-    {EnterPassphraseDialog}
   </>
 }
