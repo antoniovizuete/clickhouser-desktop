@@ -18,7 +18,7 @@ export default function Footer({ result }: Props) {
 
       <div className="flex flex-row justify-end items-center gap-2 divide-x divide-neutral-300 dark:divide-neutral-500 border-l border-l-neutral-300 dark:border-l-neutral-500">
         <a
-          className="stat hover:underline"
+          className="stat hover:underline hidden"
           href="https://github.com/antoniovizuete/clickhouser"
           target="_blank"
           rel="noreferrer"
