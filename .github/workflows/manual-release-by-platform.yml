@@ -1,13 +1,22 @@
-name: Release
+name: manual-release
 on:
   workflow_dispatch:
+    inputs:
+      platform:
+        type: choice
+        description: Select the platform/s
+        options:
+          - "macos-latest"
+          - "self-hosted" #M1
+          - "ubuntu-20.04"
+          - "window-latest"
 
 jobs:
   release:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-20.04]
+        platform: ${{ github.event.inputs.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout repository
