@@ -6,17 +6,17 @@ on:
         type: choice
         description: Select the platform/s
         options:
-          - "macos-latest"
-          - "self-hosted" #M1
-          - "ubuntu-20.04"
-          - "window-latest"
+          - "[macos-latest]"
+          - "[self-hosted]" #M1
+          - "[ubuntu-20.04]"
+          - "[window-latest]"
 
 jobs:
   release:
     strategy:
       fail-fast: false
       matrix:
-        platform: ${{ github.event.inputs.platform }}
+        platform: ${{ fromJSON(github.event.inputs.platform) }}
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout repository
