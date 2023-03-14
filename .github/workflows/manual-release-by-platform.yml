@@ -6,17 +6,28 @@ on:
         type: choice
         description: Select the platform/s
         options:
-          - "[macos-latest]"
-          - "[self-hosted]" #M1
-          - "[ubuntu-20.04]"
-          - "[window-latest]"
+          - "macos-latest"
+          - "self-hosted" #M1
+          - "ubuntu-20.04"
+          - "window-latest"
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setVariables.outputs.matrix }}
+    steps:
+      - id: setVariables
+        run: |
+          echo "::set-output name=matrix::$input"
+        env:
+          input: ${{ inputs.platform }}
   release:
+    needs: setup
     strategy:
       fail-fast: false
       matrix:
-        platform: ${{ fromJSON(github.event.inputs.platform) }}
+        platform: ${{ fromJSON(needs.setup.outputs.matrix) }}
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout repository
