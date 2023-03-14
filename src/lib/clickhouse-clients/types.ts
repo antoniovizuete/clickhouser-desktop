@@ -7,6 +7,7 @@ export type ConnectionDisplay = {
   host: string;
   port: number;
   username: string;
+  database: string;
 };
 
 export type ConnectionBody = ConnectionDisplay & {

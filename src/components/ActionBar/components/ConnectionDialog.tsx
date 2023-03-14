@@ -54,7 +54,7 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
                 {...field}
               />)} />
           </FormGroup>
-          <div className="flex flex-row justify-start items-start gap-1">
+          <div className="flex flex-row justify-start items-start gap-2">
             <FormGroup label="Host:">
               <Controller name="host" control={control} render={({ field }) => (
                 <InputGroup
@@ -77,21 +77,37 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
                   value={field.value.toString()}
                 />)} />
             </FormGroup>
-            <FormGroup label="Secure:">
-              <Controller name="secure" control={control} render={({ field }) => (
-                <Switch
-                  checked={field.value}
-                  className={`flex-grow ${bpTheme} mt-1`}
-                  innerLabel="http"
-                  innerLabelChecked="https"
-                  large
-                  name={field.name}
-                  onBlur={field.onBlur}
-                  onChange={field.onChange}
-                  ref={field.ref}
-                />)}
-              />
-            </FormGroup>
+          </div>
+          <div className="flex flex-row justify-start items-start gap-2">
+            <div className="w-1/2">
+              <FormGroup label="Database:">
+                <Controller name="database" control={control} render={({ field }) => (
+                  <InputGroup
+                    className={`flex-grow ${bpTheme}`}
+                    placeholder="Database"
+                    size={40}
+                    {...field}
+                  />
+                )} />
+              </FormGroup>
+            </div>
+            <div className="w-1/2">
+              <FormGroup label="Secure:">
+                <Controller name="secure" control={control} render={({ field }) => (
+                  <Switch
+                    checked={field.value}
+                    className={`flex-grow ${bpTheme} mt-1`}
+                    innerLabel="http"
+                    innerLabelChecked="https"
+                    large
+                    name={field.name}
+                    onBlur={field.onBlur}
+                    onChange={field.onChange}
+                    ref={field.ref}
+                  />)}
+                />
+              </FormGroup>
+            </div>
           </div>
           <div className="flex flex-row justify-start items-start gap-2">
             <FormGroup label="Username:">
