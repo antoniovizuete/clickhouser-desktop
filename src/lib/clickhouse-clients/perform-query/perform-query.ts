@@ -23,7 +23,7 @@ export async function performQuery({
     return { error: "No active connection" };
   }
 
-  const { username, password, serverAddress } = connectionParams;
+  const { username, password, serverAddress, database } = connectionParams;
 
   const promise = new Promise<QueryResult>((resolve, reject) => {
     const userParams: string[] = [];
@@ -44,6 +44,7 @@ export async function performQuery({
       "add_http_cors_header=1",
       `user=${encodeURIComponent(username)}`,
       `password=${encodeURIComponent(password || "")}`,
+      `database=${encodeURIComponent(database ?? "default")}`,
       "default_format=JSONCompact",
       "max_result_rows=1000",
       "max_result_bytes=10000000",

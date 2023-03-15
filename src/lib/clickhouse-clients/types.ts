@@ -23,4 +23,5 @@ export type ClickhouseConnectionParams = {
   username: string;
   password?: string;
   serverAddress: string;
+  database?: string;
 };

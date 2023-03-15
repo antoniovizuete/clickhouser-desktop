@@ -13,6 +13,7 @@ export const transformConnectionToConnectionParams = (
     serverAddress: `http${connection.secure ? "s" : ""}://${connection.host}:${
       connection.port
     }`,
+    database: connection.database,
   };
 };
 
