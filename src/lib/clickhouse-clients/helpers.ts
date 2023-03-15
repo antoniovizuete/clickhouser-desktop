@@ -1,8 +1,12 @@
 import { ClickhouseConnectionParams, ConnectionBody } from "./types";
 
 export const transformConnectionToConnectionParams = (
-  connection: ConnectionBody
-): ClickhouseConnectionParams => {
+  connection?: ConnectionBody
+): ClickhouseConnectionParams | undefined => {
+  if (!connection) {
+    return undefined;
+  }
+
   return {
     username: connection.username,
     password: connection.password,

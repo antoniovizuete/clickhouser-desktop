@@ -1,6 +1,6 @@
 import { transformConnectionToConnectionParams } from "../helpers";
 import { parseResponse, serializeParamValue } from "./helpers";
-import { Params, QueryResult } from "./types";
+import { PerformQueryParams, QueryResult } from "./types";
 
 type ReturnType = {
   error?: string;
@@ -11,14 +11,19 @@ export async function performQuery({
   query,
   jsonParams = "{}",
   timeout = 30_000,
-  ...connection
-}: Params): Promise<ReturnType> {
+  connection,
+}: PerformQueryParams): Promise<ReturnType> {
   if (!query) {
     return { error: "Query is empty" };
   }
 
-  const { serverAddress, username, password } =
-    transformConnectionToConnectionParams(connection);
+  const connectionParams = transformConnectionToConnectionParams(connection);
+
+  if (!connectionParams) {
+    return { error: "No active connection" };
+  }
+
+  const { username, password, serverAddress } = connectionParams;
 
   const promise = new Promise<QueryResult>((resolve, reject) => {
     const userParams: string[] = [];

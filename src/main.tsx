@@ -15,10 +15,10 @@ import "./main.css";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <ConnectionsProvider>
+    <ConnectionsProvider>
+      <ThemeProvider>
         <App />
-      </ConnectionsProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </ConnectionsProvider>
   </React.StrictMode>
 );

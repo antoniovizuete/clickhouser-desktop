@@ -1,6 +1,7 @@
 import {
   createContext,
   PropsWithChildren,
+  useCallback,
   useContext, useState
 } from "react";
 import {
@@ -44,12 +45,16 @@ export function ConnectionsProvider({ children }: PropsWithChildren<{}>) {
     setActiveConnectionDisplay({ ...display });
   };
 
+  const getActiveConnection = useCallback(async () => {
+    return activeConnectionId ? await getConnectionById(activeConnectionId.id) : undefined
+  }, [activeConnectionId])
+
   const contextValue = {
     activeConnectionDisplay,
     setActiveConnectionDisplay,
     activeConnectionId,
     setActiveConnection,
-    getActiveConnection: async () => activeConnectionId ? await getConnectionById(activeConnectionId.id) : undefined
+    getActiveConnection,
   };
 
   return (

@@ -4,9 +4,9 @@ import { Connection, isJsonResult, performQuery } from "../clickhouse-clients";
 import { SuggestionProvider } from "./types";
 import { noopProvider } from "./utils";
 
-const getTables = async (params: Connection) => {
+const getTables = async (connection: Connection) => {
   const { result } = await performQuery({
-    ...params,
+    connection,
     query: "SELECT database, name FROM system.tables",
   });
 
@@ -23,9 +23,9 @@ const getTables = async (params: Connection) => {
 const language = "sql";
 
 export const getTablesSuggestionProvider = async (
-  params: Connection
+  connection: Connection
 ): Promise<SuggestionProvider> => {
-  const tables = await getTables(params);
+  const tables = await getTables(connection);
 
   if (tables.length === 0) {
     return {

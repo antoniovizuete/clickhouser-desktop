@@ -1,9 +1,10 @@
 import { ConnectionBody } from "../types";
 
-export type Params = ConnectionBody & {
+export type PerformQueryParams = {
   query?: string;
   jsonParams?: string;
   timeout?: number;
+  connection?: ConnectionBody;
 };
 
 export type MessageResult = {

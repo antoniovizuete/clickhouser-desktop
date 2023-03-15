@@ -10,13 +10,12 @@ export type OnExecuteQueryParams = {
 }
 
 type Props = {
-  onExecuteQuery: (params: OnExecuteQueryParams) => void;
   sqlEditorRef: React.RefObject<EditorRef>;
   jsonEditorRef: React.RefObject<EditorRef>;
 }
 
-const EditorsPane = (({ onExecuteQuery, jsonEditorRef, sqlEditorRef }: Props) => {
-  const { handleEditorDidMount } = useEditorsPane({ onExecuteQuery, jsonEditorRef, sqlEditorRef });
+const EditorsPane = (({ jsonEditorRef, sqlEditorRef }: Props) => {
+  const { handleEditorDidMount } = useEditorsPane({ jsonEditorRef, sqlEditorRef });
 
   return (<Allotment>
     <Allotment.Pane>

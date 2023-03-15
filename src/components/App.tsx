@@ -9,7 +9,6 @@ export default function App() {
 
   const {
     error,
-    handelOnExecuteQuery,
     handleOnClickRunQuery,
     jsonEditorRef,
     loading,
@@ -23,7 +22,7 @@ export default function App() {
         <ActionBar onClickRunQuery={handleOnClickRunQuery} />
       </Allotment.Pane>
       <Allotment.Pane>
-        <EditorsPane jsonEditorRef={jsonEditorRef} sqlEditorRef={sqlEditorRef} onExecuteQuery={handelOnExecuteQuery} />
+        <EditorsPane jsonEditorRef={jsonEditorRef} sqlEditorRef={sqlEditorRef} />
       </Allotment.Pane>
       <Allotment.Pane>
         <div className="h-full dark:bg-neutral-800 dark:text-gray-100">

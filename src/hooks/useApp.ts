@@ -1,7 +1,8 @@
 import { useCallback, useRef, useState } from "react";
-import { EditorRef, OnExecuteQueryParams } from "../components/EditorsPane";
+import { EditorRef } from "../components/EditorsPane";
 import { useConnectionContext } from "../contexts/useConnectionContext";
 import { performQuery, QueryResult } from "../lib/clickhouse-clients";
+import { useRunQueryEvent } from "./useRunQueryEvent";
 
 export const useApp = () => {
   const sqlEditorRef = useRef<EditorRef>(null);
@@ -10,22 +11,17 @@ export const useApp = () => {
   const [error, setError] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
 
-  const { getActiveConnection, activeConnectionId } = useConnectionContext();
-
-  const executeQuery = useCallback(
-    async ({ query, params }: OnExecuteQueryParams) => {
+  const { getActiveConnection } = useConnectionContext();
+  const { useRunQueryEventListen, emitRunQueryEvent } = useRunQueryEvent();
+  useRunQueryEventListen(
+    async (event) => {
       setLoading(true);
       const connection = await getActiveConnection();
 
-      if (!connection) {
-        setError("No active connection");
-        return;
-      }
-
       const { error, result } = await performQuery({
-        ...connection,
-        query,
-        jsonParams: params,
+        query: event.payload.query,
+        jsonParams: event.payload.params,
+        connection,
       });
 
       if (error) {
@@ -40,33 +36,19 @@ export const useApp = () => {
 
       setLoading(false);
     },
-    [activeConnectionId]
-  );
-
-  const handelOnExecuteQuery = useCallback(
-    (param: OnExecuteQueryParams) => {
-      executeQuery(param);
-    },
-    [executeQuery, activeConnectionId]
+    [getActiveConnection]
   );
 
   const handleOnClickRunQuery = useCallback(async () => {
-    executeQuery({
+    emitRunQueryEvent({
       query: sqlEditorRef.current?.getValue(),
       params: jsonEditorRef.current?.getValue(),
-      connection: await getActiveConnection(),
     });
-  }, [
-    sqlEditorRef.current,
-    jsonEditorRef.current,
-    executeQuery,
-    activeConnectionId,
-  ]);
+  }, [sqlEditorRef.current, jsonEditorRef.current]);
 
   return {
     error,
     handleOnClickRunQuery,
-    handelOnExecuteQuery,
     jsonEditorRef,
     loading,
     result,
