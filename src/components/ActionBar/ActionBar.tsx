@@ -1,7 +1,6 @@
 import { Alignment, Button, Navbar } from "@blueprintjs/core";
 import { useConnectionContext } from "../../contexts/useConnectionContext";
 import Brand from "../Brand";
-import ConnectionCaption from "./components/ConnectionCaption";
 import SelectThemeButton from "./components/SelectThemeButton";
 import ThemedButton from "./components/ThemedButton";
 import { useConnectionsDrawerHandler } from "./hooks/useConnectionsDrawerHandler";
@@ -12,7 +11,8 @@ type ActionBarProps = {
 
 export default function ActionBar({ onClickRunQuery }: ActionBarProps) {
   const [ConnectionsDrawer, openConnectionDrawer] = useConnectionsDrawerHandler();
-  const { activeConnectionId } = useConnectionContext();
+  const { activeConnectionId, activeConnectionDisplay } = useConnectionContext();
+
 
   return (<>
     <Navbar className="bg-slate-50 dark:bg-neutral-800 dark:text-white">
@@ -27,18 +27,20 @@ export default function ActionBar({ onClickRunQuery }: ActionBarProps) {
               onClick={onClickRunQuery}
               disabled={!activeConnectionId}
             />
-            <ThemedButton
-              icon="data-connection"
-              action={openConnectionDrawer}
-            />
           </div>
-          <ConnectionCaption />
         </div>
       </Navbar.Group>
       <Navbar.Group
         align={Alignment.RIGHT}
         className="flex flex-row justify-start items-center gap-1"
       >
+        <ThemedButton
+          icon="data-connection"
+          action={openConnectionDrawer}
+          grayed={!activeConnectionId}
+        >
+          {activeConnectionDisplay ? activeConnectionDisplay.name : "Select connection"}
+        </ThemedButton>
         <SelectThemeButton />
       </Navbar.Group>
     </Navbar>
