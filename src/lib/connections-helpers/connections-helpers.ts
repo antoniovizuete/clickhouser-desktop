@@ -36,4 +36,5 @@ export const toConnectionBody = (
   secure: connection.secure,
   username: connection.username,
   password: connection.password,
+  database: connection.database,
 });

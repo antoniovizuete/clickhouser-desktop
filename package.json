@@ -11,11 +11,12 @@
   },
   "dependencies": {
     "@blueprintjs/core": "4.14.2",
-    "@blueprintjs/popover2": "1.11.2",
+    "@blueprintjs/popover2": "1.13.10",
     "@blueprintjs/table": "4.7.13",
     "@monaco-editor/react": "4.4.6",
     "@tauri-apps/api": "^1.2.0",
     "allotment": "1.18.0",
+    "classnames": "^2.3.2",
     "monaco-editor": "0.34.1",
     "react": "^18.2.0",
     "react-contenteditable": "3.3.6",
