@@ -1,4 +1,5 @@
-import { Icon, IconSize, Tag } from "@blueprintjs/core";
+import { Icon, IconSize, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
+import { useState } from "react";
 import { useConnectionContext } from "../../../contexts/useConnectionContext";
 import { Connection } from "../../../lib/clickhouse-clients";
 import { getConnectionDisplay, testConnection } from "../../../lib/connections-helpers";
@@ -14,15 +15,19 @@ export default function ConnectionItem({
   onEditClick,
   onRemoveClick,
 }: ConnectionItemProps) {
+  const [isConnecting, setIsConnecting] = useState(false);
   const { setActiveConnection, activeConnectionId } = useConnectionContext();
   const active = connection.id === activeConnectionId?.id;
 
   const handleOnClick = async () => {
     try {
+      setIsConnecting(true);
       await testConnection(connection);
       setActiveConnection(connection);
     } catch (error) {
       AppToaster.top.error(`Could not connect to ${getConnectionDisplay({ connection, showName: false })}.`)
+    } finally {
+      setIsConnecting(false);
     }
   };
 
@@ -52,7 +57,10 @@ export default function ConnectionItem({
           <div className="flex-grow select-none">
             {getConnectionDisplay({ connection })}
           </div>
-          {connection.id === activeConnectionId?.id && (
+          {isConnecting && (
+            <Spinner size={SpinnerSize.SMALL} />
+          )}
+          {!isConnecting && connection.id === activeConnectionId?.id && (
             <Icon icon="link" className="ml-" />
           )}
         </div>
