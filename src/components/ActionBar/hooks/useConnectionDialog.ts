@@ -68,7 +68,6 @@ export const useConnectionDialog = ({ onClose, ref }: Params) => {
       AppToaster.top.success("The connection has been saved successfully");
       close();
     } catch (error) {
-      console.log(error);
       AppToaster.top.error("The connection could not be saved");
     }
   });

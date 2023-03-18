@@ -16,8 +16,6 @@ export default function TableResult({ result, activeTabId }: Params) {
   const forceUpdate = useCallback((id: string) => updateState(id), [activeTabId]);
 
   useEffect(() => {
-    console.log("result", result);
-    console.log("activeTabId", activeTabId);
     forceUpdate(activeTabId);
   }, [result, activeTabId]);
 
@@ -49,8 +47,6 @@ export default function TableResult({ result, activeTabId }: Params) {
     , [result]);
 
   const cellRenderer: (columnNumber: number, meta: JsonResultMeta) => CellRenderer = (columnNumber, meta) => (rowNumber) => {
-    console.log("cellRender - result", result)
-
     const rawValue = result.data[rowNumber][columnNumber];
 
     if (rawValue == null) {
@@ -70,7 +66,6 @@ export default function TableResult({ result, activeTabId }: Params) {
       );
     }
     const value = String(rawValue);
-    console.log(rawValue);
     return (
       <Cell className="text-ellipsis">
         <Tooltip2 content={value} disabled={value.length < 50}>
