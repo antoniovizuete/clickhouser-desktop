@@ -1,18 +1,13 @@
 import { transformConnectionToConnectionParams } from "../helpers";
 import { parseResponse, serializeParamValue } from "./helpers";
-import { PerformQueryParams, QueryResult } from "./types";
-
-type ReturnType = {
-  error?: string;
-  result?: QueryResult;
-};
+import { PerformQueryParams, PerformQueryResult, QueryResult } from "./types";
 
 export async function performQuery({
   query,
-  jsonParams = "{}",
+  params = "{}",
   timeout = 30_000,
   connection,
-}: PerformQueryParams): Promise<ReturnType> {
+}: PerformQueryParams): Promise<PerformQueryResult> {
   if (!query) {
     return { error: "Query is empty" };
   }
@@ -29,13 +24,11 @@ export async function performQuery({
     const userParams: string[] = [];
     try {
       userParams.push(
-        ...Object.entries(JSON.parse(jsonParams || "{}")).map(
-          ([key, value]) => {
-            return `param_${key}=${encodeURIComponent(
-              serializeParamValue(value)
-            )}`;
-          }
-        )
+        ...Object.entries(JSON.parse(params || "{}")).map(([key, value]) => {
+          return `param_${key}=${encodeURIComponent(
+            serializeParamValue(value)
+          )}`;
+        })
       );
     } catch (error) {
       return reject("Invalid JSON params");

@@ -14,12 +14,10 @@ export const useListen = <T>({
 }: ListenHookParams<T>) => {
   useEffect(() => {
     let unlisten: UnlistenFn;
-    console.log("useListen");
     (async () => {
       unlisten = await listen(eventName, handler);
     })();
     return () => {
-      console.log("unlistening");
       unlisten?.();
     };
   }, dependencies);

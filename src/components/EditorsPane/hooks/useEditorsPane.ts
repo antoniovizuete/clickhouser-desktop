@@ -1,7 +1,6 @@
-import { editor, IDisposable, KeyCode, KeyMod } from "monaco-editor";
-import { useCallback, useState } from "react";
+import { editor, KeyCode, KeyMod } from "monaco-editor";
+import { useCallback } from "react";
 import { OnExecuteQueryParams } from "..";
-import { useConnectionContext } from "../../../contexts/useConnectionContext";
 import { useMonacoConfigSupplier } from "../../../hooks/useMonacoConfigSupplier";
 import { useRunQueryEvent } from "../../../hooks/useRunQueryEvent";
 import { Connection } from "../../../lib/clickhouse-clients";
@@ -35,66 +34,31 @@ const getExecuteQueryAction = (
 
 export const useEditorsPane = ({ sqlEditorRef, jsonEditorRef }: Params) => {
   const { emitRunQueryEvent } = useRunQueryEvent();
-  const { activeConnectionId, getActiveConnection } = useConnectionContext();
-  const [disposables, setDisposables] = useState<(IDisposable | undefined)[]>(
-    []
-  );
 
   useMonacoConfigSupplier({
     jsonParams: jsonEditorRef.current?.getValue() ?? "{}",
   });
 
-  // useEffect(() => {
-  //   (async () => {
-  //     disposables.forEach((disposable) => disposable?.dispose());
-  //     const newAction = getExecuteQueryAction(
-  //       onExecuteQuery,
-  //       sqlEditorRef,
-  //       jsonEditorRef,
-  //       await getActiveConnection()
-  //     );
-
-  //     if (sqlEditorRef.current) {
-  //       addAction(sqlEditorRef.current.getEditor(), newAction);
-  //     }
-  //     if (jsonEditorRef.current) {
-  //       addAction(jsonEditorRef.current.getEditor(), newAction);
-  //     }
-  //   })();
-  // }, [sqlEditorRef, jsonEditorRef, activeConnectionId]);
-
   const handleEditorDidMount = useCallback(
     (editor: editor.IStandaloneCodeEditor) => {
-      //disposables.push(
-      addAction(
-        editor,
-        //getExecuteQueryAction(onExecuteQuery, sqlEditorRef, jsonEditorRef)
-        {
-          id: "execute-query",
-          label: "Execute query",
-          keybindings: [KeyMod.CtrlCmd | KeyCode.Enter],
-          run: () => {
-            emitRunQueryEvent({
-              query: sqlEditorRef.current?.getEditor()?.getValue() ?? "",
-              params: jsonEditorRef.current?.getEditor()?.getValue() ?? "",
-            });
-          },
-          contextMenuGroupId: "navigation",
-          contextMenuOrder: 1.5,
-        }
-      );
-      //);
+      addAction(editor, {
+        id: "execute-query",
+        label: "Execute query",
+        keybindings: [KeyMod.CtrlCmd | KeyCode.Enter],
+        run: () => {
+          emitRunQueryEvent({
+            query: sqlEditorRef.current?.getEditor()?.getValue() ?? "",
+            params: jsonEditorRef.current?.getEditor()?.getValue() ?? "",
+          });
+        },
+        contextMenuGroupId: "navigation",
+        contextMenuOrder: 1.5,
+      });
     },
-    [
-      //onExecuteQuery,
-      sqlEditorRef.current,
-      jsonEditorRef.current,
-    ]
+    [sqlEditorRef.current, jsonEditorRef.current]
   );
 
   return {
-    sqlEditorRef,
-    jsonEditorRef,
     handleEditorDidMount,
   };
 };

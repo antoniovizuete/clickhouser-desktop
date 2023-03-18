@@ -2,7 +2,7 @@ import { ConnectionBody } from "../types";
 
 export type PerformQueryParams = {
   query?: string;
-  jsonParams?: string;
+  params?: string;
   timeout?: number;
   connection?: ConnectionBody;
 };
@@ -15,13 +15,15 @@ export type StringResult = {
   value: string;
 };
 
+export type JsonResultMeta = {
+  name: string;
+  type: string;
+};
+
 export type JsonResult = {
   data: (string | number | boolean)[][];
   //| Record<string, string | number | boolean>[];
-  meta: {
-    name: string;
-    type: string;
-  }[];
+  meta: JsonResultMeta[];
   rows: number;
   rows_before_limit_at_least: number;
   statistics: Statistics;
@@ -34,3 +36,8 @@ export type Statistics = {
 };
 
 export type QueryResult = StringResult | JsonResult | MessageResult;
+
+export type PerformQueryResult = {
+  error?: string;
+  result?: QueryResult;
+};

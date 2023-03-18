@@ -2,13 +2,14 @@ import MonacoEditor from "@monaco-editor/react";
 import {
   editor, IDisposable
 } from "monaco-editor/esm/vs/editor/editor.api";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useThemeContext } from "../../../contexts/useThemeContext";
 
 type EditorProps = {
   defaultValue?: string;
   language: "sql" | "json";
   onMount?: (editor: editor.IStandaloneCodeEditor) => void;
+  path: string;
 };
 
 export type EditorRef = {
@@ -18,8 +19,14 @@ export type EditorRef = {
 };
 
 const Editor = forwardRef<EditorRef, EditorProps>((props, ref) => {
-  const { defaultValue, language, onMount } =
+  const { defaultValue, language, onMount, path } =
     props;
+
+  const [internalDefaultValue, setInternalDefaultValue] = useState(defaultValue);
+
+  useEffect(() => {
+    setInternalDefaultValue(defaultValue);
+  }, [defaultValue])
 
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
 
@@ -43,7 +50,7 @@ const Editor = forwardRef<EditorRef, EditorProps>((props, ref) => {
         theme={theme === "dark" ? "vs-dark" : "light"}
         height="100%"
         width="100%"
-        defaultValue={defaultValue}
+        defaultValue={internalDefaultValue}
         language={language}
         onMount={handleOnMount}
         options={{
@@ -52,6 +59,7 @@ const Editor = forwardRef<EditorRef, EditorProps>((props, ref) => {
           scrollBeyondLastLine: false,
           automaticLayout: true,
         }}
+        path={path}
       />
     </div>
   );

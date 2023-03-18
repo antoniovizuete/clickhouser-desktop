@@ -10,6 +10,7 @@ import "../node_modules/normalize.css/normalize.css";
 
 import App from "./components/App";
 import { ConnectionsProvider } from "./contexts/useConnectionContext";
+import { TabsProvider } from "./contexts/useTabsContext";
 import { ThemeProvider } from "./contexts/useThemeContext";
 import "./main.css";
 
@@ -17,7 +18,9 @@ createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ConnectionsProvider>
       <ThemeProvider>
-        <App />
+        <TabsProvider>
+          <App />
+        </TabsProvider>
       </ThemeProvider>
     </ConnectionsProvider>
   </React.StrictMode>

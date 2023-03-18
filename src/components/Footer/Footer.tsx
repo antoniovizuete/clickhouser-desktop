@@ -1,11 +1,13 @@
-import { isJsonResult, QueryResult } from "../../lib/clickhouse-clients";
+import { useTabsContext } from "../../contexts/useTabsContext";
+import { isJsonResult } from "../../lib/clickhouse-clients";
 import LeftFooter from "./components/LeftFooter";
 
-type Props = {
-  result?: QueryResult;
-};
 
-export default function Footer({ result }: Props) {
+export default function Footer() {
+  const { getActiveTab } = useTabsContext();
+  const activeTab = getActiveTab() ?? { id: "", queryResult: undefined };
+  const result = activeTab.queryResult?.result
+
   return (
     <div className="flex flex-row justify-between items-center pl-1 pr-5 py-0.5 bg-slate-50 dark:bg-neutral-800 dark:text-gray-400">
       {result && isJsonResult(result) ? (
