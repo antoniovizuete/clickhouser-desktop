@@ -1,4 +1,5 @@
 import { Icon } from "@blueprintjs/core";
+import { Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
 import { Tab } from "../../../lib/tabs-handler";
 import ClickableIcon from "../../core/ClickableIcon";
@@ -31,9 +32,16 @@ export default function TabUi({ isActive, isFirst, isLast, setActiveTabId, remov
             { "bg-slate-50 dark:bg-neutral-800 cursor-default border-t-2 border-t-yellow-600 dark:border-t-yellow-500": isActive }
           )}
       >
-        <div className='flex-grow flex flex-row gap-2 justify-start items-center w-32' onClick={() => setActiveTabId(tab.id)}>
-          <Icon icon={tab.icon} /><span>{tab.name}</span>
-        </div>
+        <Tooltip2
+          disabled={tab.name.length < 13}
+          minimal
+          content={tab.name}
+          position="bottom"
+        >
+          <div className='flex-grow flex flex-row gap-2 justify-start items-center w-32' onClick={() => setActiveTabId(tab.id)}>
+            <Icon icon={tab.icon} /><div className="w-full truncate h-5">{tab.name}</div>
+          </div>
+        </Tooltip2>
         {tab.closeable && (
           <ClickableIcon
             className={classNames(

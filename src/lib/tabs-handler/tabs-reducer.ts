@@ -12,7 +12,7 @@ type TabsState = {
 type TabsActions =
   | { type: TabAction.ADD_TAB }
   | { type: TabAction.REMOVE_TAB; payload: { id: string } }
-  | { type: TabAction.RENAME_TAB; payload: { id: string; name: string } }
+  | { type: TabAction.RENAME_TAB; payload: { name: string } }
   | {
       type: TabAction.SET_ACTIVE_TAB;
       payload: {
@@ -64,7 +64,7 @@ export const tabsReducer: Reducer<TabsState, TabsActions> = (
       return {
         ...state,
         tabs: state.tabs.map((tab) =>
-          tab.id === action.payload.id
+          tab.id === state.activeTabId
             ? { ...tab, name: action.payload.name }
             : tab
         ),

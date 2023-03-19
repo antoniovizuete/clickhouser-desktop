@@ -14,7 +14,7 @@ type TabsContextType = {
   activeTabId: string;
   addTab: () => void;
   removeTab: (id: string) => void;
-  renameTab: (id: string, name: string) => void;
+  renameTab: (name: string) => void;
   setActiveTabId: (id: string) => void;
   sqlEditorRef: RefObject<EditorRef>;
   jsonEditorRef: RefObject<EditorRef>;
@@ -51,7 +51,7 @@ export function TabsProvider({ children }: PropsWithChildren) {
 
   const removeTab = (id: string) => dispatch({ type: TabAction.REMOVE_TAB, payload: { id } });
 
-  const renameTab = (id: string, name: string) => dispatch({ type: TabAction.RENAME_TAB, payload: { id, name } });
+  const renameTab = (name: string) => dispatch({ type: TabAction.RENAME_TAB, payload: { name } });
 
   const setLoading = (loading: boolean) => dispatch({ type: TabAction.SET_LOADING, payload: { loading } });
 
@@ -61,8 +61,6 @@ export function TabsProvider({ children }: PropsWithChildren) {
     type: TabAction.SET_QUERY_RESULT,
     payload: params
   });
-
-  const changedTab = () => dispatch({ type: TabAction.CHANGED_TAB });
 
   const contextValue: TabsContextType = {
     activeTabId,
