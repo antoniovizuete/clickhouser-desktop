@@ -5,7 +5,7 @@ import Console from "./Console";
 export default function App() {
   return (
     <Allotment vertical>
-      <Allotment.Pane maxSize={40} minSize={40} >
+      <Allotment.Pane maxSize={50} minSize={50} >
         <ActionBar />
       </Allotment.Pane>
       <Allotment.Pane>

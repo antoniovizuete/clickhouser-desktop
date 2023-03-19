@@ -1,9 +1,9 @@
-import { Alignment, Button, Icon, Navbar } from "@blueprintjs/core";
+import { Alignment, Navbar } from "@blueprintjs/core";
 import { useConnectionContext } from "../../contexts/useConnectionContext";
-import { useTabsContext } from "../../contexts/useTabsContext";
 import { getConnectionDisplay } from "../../lib/connections-helpers";
 import Brand from "../Brand";
 import SelectThemeButton from "./components/SelectThemeButton";
+import Tabs from "./components/Tabs";
 import ThemedButton from "./components/ThemedButton";
 import { useConnectionsDrawerHandler } from "./hooks/useConnectionsDrawerHandler";
 
@@ -11,28 +11,12 @@ import { useConnectionsDrawerHandler } from "./hooks/useConnectionsDrawerHandler
 export default function ActionBar() {
   const [ConnectionsDrawer, openConnectionDrawer] = useConnectionsDrawerHandler();
   const { activeConnectionId, activeConnectionDisplay } = useConnectionContext();
-  const { getActiveTab, tabs, addTab, removeTab, setActiveTabId: setActiveTab } = useTabsContext();
-  const activeTab = getActiveTab() ?? { id: "", name: "", icon: "console" };
 
   return (<>
-    <Navbar className="bg-slate-50 dark:bg-neutral-800 dark:text-white">
-      <Navbar.Group align={Alignment.LEFT}>
-        <div className="flex flex-row justify-start items-center mr-1 gap-2">
-          <Brand className="text-lg" />
-          <div>
-            {tabs.map((tab) => (
-              <Button
-                disabled={tab.id === activeTab.id}
-                icon={tab.icon}
-                key={tab.name}
-                onClick={() => setActiveTab(tab.id)}
-                rightIcon={tab.closeable ? <Icon icon="cross" onClick={() => removeTab(tab.id)} /> : undefined}
-                text={tab.name}
-              />
-            ))}
-            <Button icon="plus" onClick={() => addTab()} />
-          </div>
-        </div>
+    <Navbar className="bg-stone-50 dark:bg-neutral-900 dark:text-white border-b border-b-stone-500">
+      <Navbar.Group className="flex flex-row justify-start gap-4" align={Alignment.LEFT}>
+        <Brand className="text-lg" />
+        <Tabs />
       </Navbar.Group>
       <Navbar.Group
         align={Alignment.RIGHT}
