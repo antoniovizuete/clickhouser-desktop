@@ -2,6 +2,7 @@ import { Allotment } from "allotment";
 import { useTabsContext } from "../../contexts/useTabsContext";
 import { Connection } from "../../lib/clickhouse-clients";
 import Editor from "./components/Editor";
+import EditorLabel from "./components/EditorLabel";
 import { useEditorsPane } from "./hooks/useEditorsPane";
 
 export type OnExecuteQueryParams = {
@@ -10,14 +11,20 @@ export type OnExecuteQueryParams = {
   connection: Connection | undefined;
 }
 
-const EditorsPane = (() => {
+
+type Props = {
+  showParams: boolean;
+}
+
+export default function EditorsPane({ showParams }: Props) {
   const { getActiveTab, jsonEditorRef, sqlEditorRef } = useTabsContext();
   const { handleEditorDidMount } = useEditorsPane({ jsonEditorRef, sqlEditorRef });
 
   const activeTab = getActiveTab() ?? { id: "", sql: "", params: "" };
 
   return (<Allotment>
-    <Allotment.Pane>
+    <Allotment.Pane minSize={800}>
+      <EditorLabel label="Query" />
       <Editor
         ref={sqlEditorRef}
         defaultValue={activeTab.sql}
@@ -26,7 +33,8 @@ const EditorsPane = (() => {
         path={`sql-${activeTab.id}`}
       />
     </Allotment.Pane>
-    <Allotment.Pane>
+    <Allotment.Pane visible={showParams}>
+      <EditorLabel label="Parameters" />
       <Editor
         ref={jsonEditorRef}
         defaultValue={activeTab.params}
@@ -38,6 +46,4 @@ const EditorsPane = (() => {
   </Allotment>
 
   )
-});
-
-export default EditorsPane;
+}

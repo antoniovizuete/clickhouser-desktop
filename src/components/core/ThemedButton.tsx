@@ -1,6 +1,6 @@
 import { Button, Icon, IconName } from "@blueprintjs/core";
 import { PropsWithChildren } from "react";
-import { useThemeContext } from "../../../contexts/useThemeContext";
+import { useThemeContext } from "../../contexts/useThemeContext";
 
 type Props = {
   action?: () => void;

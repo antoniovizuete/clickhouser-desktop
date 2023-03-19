@@ -1,10 +1,11 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useConnectionContext } from "../../contexts/useConnectionContext";
 import { useTabsContext } from "../../contexts/useTabsContext";
 import { useRunQueryEvent } from "../../hooks/useRunQueryEvent";
 import { performQuery } from "../../lib/clickhouse-clients";
 
 export const useConsole = () => {
+  const [showParams, setShowParams] = useState(false);
   const { sqlEditorRef, jsonEditorRef, setLoading, setQueryResult } =
     useTabsContext();
 
@@ -38,5 +39,7 @@ export const useConsole = () => {
 
   return {
     handleOnClickRunQuery,
+    showParams,
+    toggleShowParams: () => setShowParams((prev) => !prev),
   };
 };

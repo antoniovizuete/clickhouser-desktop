@@ -38,7 +38,7 @@ export default function TabUi({ isActive, isFirst, isLast, setActiveTabId, remov
           content={tab.name}
           position="bottom"
         >
-          <div className='flex-grow flex flex-row gap-2 justify-start items-center w-32' onClick={() => setActiveTabId(tab.id)}>
+          <div className='flex-grow flex flex-row gap-2 justify-start items-center w-32 !outline-none' onClick={() => setActiveTabId(tab.id)}>
             <Icon icon={tab.icon} /><div className="w-full truncate h-5">{tab.name}</div>
           </div>
         </Tooltip2>

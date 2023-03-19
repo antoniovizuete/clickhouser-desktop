@@ -2,12 +2,15 @@ import { Alignment, Button, Navbar } from "@blueprintjs/core";
 import { useConnectionContext } from "../../../../contexts/useConnectionContext";
 import { useTabsContext } from "../../../../contexts/useTabsContext";
 import EditableSpan from "../../../core/EditableSpan";
+import ThemedButton from "../../../core/ThemedButton";
 
 type ConsoleActionBarProps = {
   onClickRunQuery: () => void;
+  onClickParameters: () => void;
+  showParams: boolean;
 }
 
-export default function ConsoleActionBar({ onClickRunQuery }: ConsoleActionBarProps) {
+export default function ConsoleActionBar({ onClickRunQuery, onClickParameters, showParams }: ConsoleActionBarProps) {
   const { activeConnectionId } = useConnectionContext();
   const { getActiveTab, renameTab } = useTabsContext();
 
@@ -27,6 +30,7 @@ export default function ConsoleActionBar({ onClickRunQuery }: ConsoleActionBarPr
             onClick={onClickRunQuery}
             disabled={!activeConnectionId}
           >Run Query</Button>
+          <ThemedButton icon="code" action={onClickParameters}>{showParams ? "Hide " : ""}Parameters</ThemedButton>
         </div>
       </Navbar.Group>
     </Navbar>

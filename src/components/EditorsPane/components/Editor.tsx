@@ -45,9 +45,10 @@ const Editor = forwardRef<EditorRef, EditorProps>((props, ref) => {
   const { theme } = useThemeContext();
 
   return (
-    <div className="dark:bg-neutral-800 dark:text-neutral-400 h-full">
+    <div className="dark:bg-[rgb(30,30,30)] dark:text-neutral-400 h-full">
       <MonacoEditor
         theme={theme === "dark" ? "vs-dark" : "light"}
+        className="mb-6"
         height="100%"
         width="100%"
         defaultValue={internalDefaultValue}

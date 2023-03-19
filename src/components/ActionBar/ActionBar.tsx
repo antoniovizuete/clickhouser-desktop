@@ -2,9 +2,9 @@ import { Alignment, Navbar } from "@blueprintjs/core";
 import { useConnectionContext } from "../../contexts/useConnectionContext";
 import { getConnectionDisplay } from "../../lib/connections-helpers";
 import Brand from "../Brand";
+import ThemedButton from "../core/ThemedButton";
 import SelectThemeButton from "./components/SelectThemeButton";
 import Tabs from "./components/Tabs";
-import ThemedButton from "./components/ThemedButton";
 import { useConnectionsDrawerHandler } from "./hooks/useConnectionsDrawerHandler";
 
 

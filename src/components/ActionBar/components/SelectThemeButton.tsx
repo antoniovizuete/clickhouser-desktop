@@ -1,5 +1,5 @@
 import { useThemeContext } from "../../../contexts/useThemeContext";
-import ThemedButton from "./ThemedButton";
+import ThemedButton from "../../core/ThemedButton";
 
 export default function SelectThemeButton() {
   const { bpTheme, toggleTheme } = useThemeContext();
