@@ -28,16 +28,18 @@ export default function TabUi({ isActive, isFirst, isLast, setActiveTabId, remov
             { "bg-slate-50 dark:bg-neutral-800 cursor-default border-t-2 border-t-yellow-600 dark:border-t-yellow-500": isActive }
           )}
       >
-        <Tooltip2
-          disabled={tab.name.length < 13}
-          minimal
-          content={tab.name}
-          position="bottom"
-        >
-          <div className='flex-grow flex flex-row gap-2 justify-start items-center w-32 !outline-none' onClick={() => setActiveTabId(tab.id)}>
-            <Icon icon={tab.icon} /><div className="w-full truncate h-5">{tab.name}</div>
-          </div>
-        </Tooltip2>
+        <div className={"w-full"} onClick={(e) => (console.log(e), setActiveTabId(tab.id))}>
+          <Tooltip2
+            disabled={tab.name.length < 13}
+            minimal
+            content={tab.name}
+            position="bottom"
+          >
+            <div className='flex-grow flex flex-row gap-2 justify-start items-center w-36 !outline-none'>
+              <Icon icon={tab.icon} /><div className="w-full truncate h-5">{tab.name}</div>
+            </div>
+          </Tooltip2>
+        </div>
         {tab.closeable && (
           <ClickableIcon
             className={classNames(
