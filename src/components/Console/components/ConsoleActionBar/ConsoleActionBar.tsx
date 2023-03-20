@@ -16,10 +16,16 @@ export default function ConsoleActionBar({ onClickRunQuery, onClickParameters, s
 
   const name = getActiveTab()?.name;
 
+  const handleOnBlurEditableSpan = (e: React.FocusEvent<HTMLSpanElement>) => {
+    if (e.currentTarget.innerText !== name) {
+      renameTab(e.currentTarget.innerText);
+    }
+  }
+
   return (
     <Navbar className="bg-slate-50 dark:bg-neutral-800 dark:text-white">
       <Navbar.Group className="w-1/2" align={Alignment.LEFT}>
-        <EditableSpan onBlur={(e) => renameTab(e.currentTarget.innerText)}>{name}</EditableSpan>
+        <EditableSpan onBlur={handleOnBlurEditableSpan}>{name}</EditableSpan>
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
         <div className="flex flex-row justify-start items-center gap-1">
@@ -30,7 +36,11 @@ export default function ConsoleActionBar({ onClickRunQuery, onClickParameters, s
             onClick={onClickRunQuery}
             disabled={!activeConnectionId}
           >Run Query</Button>
-          <ThemedButton icon="code" action={onClickParameters}>{showParams ? "Hide " : ""}Parameters</ThemedButton>
+          <ThemedButton icon="floppy-disk">Save Query</ThemedButton>
+          <ThemedButton
+            action={onClickParameters}
+            icon={showParams ? "chevron-right" : "chevron-left"}
+          />
         </div>
       </Navbar.Group>
     </Navbar>

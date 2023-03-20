@@ -17,7 +17,7 @@ type Props = {
 }
 
 export default function EditorsPane({ showParams }: Props) {
-  const { getActiveTab, jsonEditorRef, sqlEditorRef } = useTabsContext();
+  const { getActiveTab, jsonEditorRef, sqlEditorRef, markAsChanged } = useTabsContext();
   const { handleEditorDidMount } = useEditorsPane({ jsonEditorRef, sqlEditorRef });
 
   const activeTab = getActiveTab() ?? { id: "", sql: "", params: "" };
@@ -29,6 +29,7 @@ export default function EditorsPane({ showParams }: Props) {
         ref={sqlEditorRef}
         defaultValue={activeTab.sql}
         language="sql"
+        onChange={markAsChanged}
         onMount={handleEditorDidMount}
         path={`sql-${activeTab.id}`}
       />
@@ -39,6 +40,7 @@ export default function EditorsPane({ showParams }: Props) {
         ref={jsonEditorRef}
         defaultValue={activeTab.params}
         language="json"
+        onChange={markAsChanged}
         onMount={handleEditorDidMount}
         path={`params-${activeTab.id}`}
       />

@@ -9,6 +9,7 @@ type EditorProps = {
   defaultValue?: string;
   language: "sql" | "json";
   onMount?: (editor: editor.IStandaloneCodeEditor) => void;
+  onChange?: () => void;
   path: string;
 };
 
@@ -19,7 +20,7 @@ export type EditorRef = {
 };
 
 const Editor = forwardRef<EditorRef, EditorProps>((props, ref) => {
-  const { defaultValue, language, onMount, path } =
+  const { defaultValue, language, onChange, onMount, path } =
     props;
 
   const [internalDefaultValue, setInternalDefaultValue] = useState(defaultValue);
@@ -44,6 +45,11 @@ const Editor = forwardRef<EditorRef, EditorProps>((props, ref) => {
 
   const { theme } = useThemeContext();
 
+  const handleOnChange = (code?: string) => {
+    onChange?.();
+    console.log("onChange Editor", code)
+  };
+
   return (
     <div className="dark:bg-[rgb(30,30,30)] dark:text-neutral-400 h-full">
       <MonacoEditor
@@ -60,6 +66,7 @@ const Editor = forwardRef<EditorRef, EditorProps>((props, ref) => {
           scrollBeyondLastLine: false,
           automaticLayout: true,
         }}
+        onChange={handleOnChange}
         path={path}
       />
     </div>

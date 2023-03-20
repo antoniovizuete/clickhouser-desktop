@@ -20,6 +20,7 @@ type TabsContextType = {
   jsonEditorRef: RefObject<EditorRef>;
   setLoading: (loading: boolean) => void;
   setQueryResult: (params: { queryResult: PerformQueryResult, query?: string, params?: string }) => void;
+  markAsChanged: () => void;
 };
 
 const TabsContext = createContext<TabsContextType>({
@@ -34,6 +35,7 @@ const TabsContext = createContext<TabsContextType>({
   jsonEditorRef: { current: null },
   setLoading: () => { },
   setQueryResult: () => { },
+  markAsChanged: () => { }
 });
 
 
@@ -62,6 +64,8 @@ export function TabsProvider({ children }: PropsWithChildren) {
     payload: params
   });
 
+  const markAsChanged = () => dispatch({ type: TabAction.MARK_AS_CHANGED });
+
   const contextValue: TabsContextType = {
     activeTabId,
     addTab,
@@ -74,6 +78,7 @@ export function TabsProvider({ children }: PropsWithChildren) {
     setQueryResult,
     sqlEditorRef,
     tabs,
+    markAsChanged,
   };
 
   return (

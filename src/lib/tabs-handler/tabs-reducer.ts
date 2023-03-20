@@ -30,7 +30,7 @@ type TabsActions =
         params?: string;
       };
     }
-  | { type: TabAction.CHANGED_TAB };
+  | { type: TabAction.MARK_AS_CHANGED };
 
 const getInitialState = (): TabsState => {
   const tab = getNewTab();
@@ -81,7 +81,7 @@ export const tabsReducer: Reducer<TabsState, TabsActions> = (
         ...state,
         tabs: state.tabs.map((tab) =>
           tab.id === state.activeTabId
-            ? { ...tab, name: action.payload.name }
+            ? { ...tab, name: action.payload.name, touched: true }
             : tab
         ),
       };
@@ -125,10 +125,12 @@ export const tabsReducer: Reducer<TabsState, TabsActions> = (
             : tab
         ),
       };
-    case TabAction.CHANGED_TAB:
+    case TabAction.MARK_AS_CHANGED:
       return {
         ...state,
-        changingTab: false,
+        tabs: state.tabs.map((tab) =>
+          tab.id === state.activeTabId ? { ...tab, touched: true } : tab
+        ),
       };
     default:
       return state;

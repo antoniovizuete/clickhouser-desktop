@@ -8,7 +8,7 @@ export enum TabAction {
   SET_ACTIVE_TAB = "SET_ACTIVE_TAB",
   SET_LOADING = "SET_LOADING",
   SET_QUERY_RESULT = "SET_QUERY_RESULT",
-  CHANGED_TAB = "CHANGED_TAB",
+  MARK_AS_CHANGED = "MARK_AS_CHANGED",
 }
 
 export type Tab = {
@@ -20,4 +20,6 @@ export type Tab = {
   params: string;
   queryResult?: PerformQueryResult;
   loading: boolean;
+  saved: boolean;
+  touched: boolean;
 };

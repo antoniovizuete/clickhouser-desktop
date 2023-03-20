@@ -8,12 +8,13 @@ type Props = {
   isActive: boolean;
   isFirst: boolean;
   isLast: boolean;
+  isTouched: boolean;
   setActiveTabId: (id: string) => void;
-  removeTab: (id: string) => void;
+  onClickCloseTab: (tab: Tab) => void;
   tab: Tab;
 }
 
-export default function TabUi({ isActive, isFirst, isLast, setActiveTabId, removeTab, tab }: Props) {
+export default function TabUi({ isActive, isFirst, isLast, isTouched, setActiveTabId, onClickCloseTab, tab }: Props) {
   return (
     <div className="flex flex-col justify-start items-start h-4/5">
       <div
@@ -43,13 +44,16 @@ export default function TabUi({ isActive, isFirst, isLast, setActiveTabId, remov
         {tab.closeable && (
           <ClickableIcon
             className={classNames(
-              { "opacity-0": !isActive },
-              { "opacity-100": isActive }
+              { "opacity-0": !isActive && !isTouched },
+              { "opacity-100": isActive || isTouched }
             )}
-            icon="cross"
-            onClick={() => removeTab(tab.id)}
+            icon={isTouched ? "record" : "cross"}
+            overrideIconOnMouseEnter="cross"
+            onClick={() => onClickCloseTab(tab)}
           />
         )}
+        {!tab.closeable && isTouched && (<ClickableIcon icon="record" />)}
+        {!tab.closeable && !isTouched && (<div className="w-5" />)}
       </div>
     </div>
   )
