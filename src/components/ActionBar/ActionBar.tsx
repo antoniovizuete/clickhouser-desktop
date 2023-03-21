@@ -13,7 +13,7 @@ export default function ActionBar() {
   const { activeConnectionId, activeConnectionDisplay } = useConnectionContext();
 
   return (<>
-    <Navbar className="bg-stone-50 dark:bg-neutral-900 dark:text-white border-b border-b-stone-500">
+    <Navbar className="bg-stone-50 dark:bg-neutral-900 dark:text-white border-b dark:border-b-stone-600 border-l dark:border-l-stone-600 ">
       <Navbar.Group className="flex flex-row justify-start gap-4" align={Alignment.LEFT}>
         <Brand className="text-lg" />
         <Tabs />

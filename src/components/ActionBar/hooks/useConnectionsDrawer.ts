@@ -4,12 +4,9 @@ import {
   useImperativeHandle,
   useState,
 } from "react";
+import { connectionRepo } from "../../../lib/backend-repos/connection-repo";
 import { Connection } from "../../../lib/clickhouse-clients";
 import { getConnectionDisplay } from "../../../lib/connections-helpers";
-import {
-  deleteConnection,
-  getConnections,
-} from "../../../lib/connections-helpers/connection-repo";
 import { AppToaster } from "../../../lib/toaster/AppToaster";
 import { ConnectionsDrawerRef } from "../components/ConnectionsDrawer";
 import { useConnectionDialogHandler } from "./useConnectionDialogHandler";
@@ -32,7 +29,7 @@ export const useConnectionsDrawer = ({ ref }: Params) => {
   const retrieveConnections = useCallback(async () => {
     setIsLoading(true);
     try {
-      const connections = await getConnections();
+      const connections = await connectionRepo.get();
       setConnections(connections);
     } catch (error) {
       AppToaster.top.error("There was an error loading the connections");
@@ -63,7 +60,7 @@ export const useConnectionsDrawer = ({ ref }: Params) => {
 
   const handleConfirmRemove = () => {
     if (selectedConnetionToDelete) {
-      deleteConnection(selectedConnetionToDelete.id);
+      connectionRepo.delete(selectedConnetionToDelete.id);
       AppToaster.top.warn(
         `The connection ${getConnectionDisplay({
           connection: selectedConnetionToDelete,

@@ -2,6 +2,7 @@ import { Button, Classes, Dialog } from '@blueprintjs/core';
 import { useState } from 'react';
 import { useTabsContext } from '../../../contexts/useTabsContext';
 import { useThemeContext } from '../../../contexts/useThemeContext';
+import { useSaveQuery } from '../../../hooks/useSaveQuery';
 import { Tab } from '../../../lib/tabs-handler';
 import ClickableIcon from '../../core/ClickableIcon';
 import TabUi from './TabUi';
@@ -12,6 +13,7 @@ export default function Tabs() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [tabToRemove, setTabToRemove] = useState<Tab | undefined>();
   const { bpTheme } = useThemeContext();
+  const [saveQuery] = useSaveQuery();
 
   const handleOnClickCloseTab = (tab: Tab) => {
     if (tab.touched) {
@@ -29,16 +31,25 @@ export default function Tabs() {
     closeAlert();
   }
 
+  const handleOnClickSave = () => {
+    if (tabToRemove) {
+      saveQuery(tabToRemove);
+      removeTab(tabToRemove.id);
+      closeAlert();
+    }
+  }
+
+
   const closeAlert = () => {
     setIsAlertOpen(false);
   }
 
   return (<>
     <div className="flex flex-row justify-start items-end h-full">
-      <div className='w-full h-full flex flex-row justify-start items-end divide-x divide-stone-500'>
+      <div className='w-full h-full flex flex-row justify-start items-end divide-x dark:divide-stone-600'>
         {tabs.map((tab, i, arr) => (
           <TabUi
-            key={tab.id}
+            key={`${tab.id}${tab.touched}`}
             isActive={tab.id === activeTab.id}
             isFirst={i === 0}
             isLast={i === arr.length - 1}
@@ -69,7 +80,7 @@ export default function Tabs() {
           <Button onClick={closeAlert} type={"button"}>
             Cancel
           </Button>
-          <Button intent="warning" type="submit">
+          <Button intent="warning" type="submit" onClick={handleOnClickSave}>
             Save
           </Button>
         </div>

@@ -5,14 +5,17 @@ import {
   useRef
 } from "react";
 import { EditorRef } from "../components/EditorsPane/components/Editor";
+import { Query } from "../lib/backend-repos/query-repo";
 import { PerformQueryResult } from "../lib/clickhouse-clients/perform-query/types";
 import { initialTabsState, Tab, TabAction, tabsReducer } from "../lib/tabs-handler";
+import { TouchableFields } from "../lib/tabs-handler/tabs-reducer";
 
 type TabsContextType = {
   getActiveTab: () => Tab | undefined;
   tabs: Tab[];
   activeTabId: string;
   addTab: () => void;
+  restoreTab: (query: Query) => void;
   removeTab: (id: string) => void;
   renameTab: (name: string) => void;
   setActiveTabId: (id: string) => void;
@@ -20,7 +23,8 @@ type TabsContextType = {
   jsonEditorRef: RefObject<EditorRef>;
   setLoading: (loading: boolean) => void;
   setQueryResult: (params: { queryResult: PerformQueryResult, query?: string, params?: string }) => void;
-  markAsChanged: () => void;
+  markAsChanged: (field: TouchableFields, value?: string) => void;
+  markAsSaved: () => void;
 };
 
 const TabsContext = createContext<TabsContextType>({
@@ -28,6 +32,7 @@ const TabsContext = createContext<TabsContextType>({
   activeTabId: "",
   tabs: [],
   addTab: () => { },
+  restoreTab: () => { },
   removeTab: () => { },
   renameTab: () => { },
   setActiveTabId: () => { },
@@ -35,17 +40,20 @@ const TabsContext = createContext<TabsContextType>({
   jsonEditorRef: { current: null },
   setLoading: () => { },
   setQueryResult: () => { },
-  markAsChanged: () => { }
+  markAsChanged: () => { },
+  markAsSaved: () => { },
 });
 
 
 export function TabsProvider({ children }: PropsWithChildren) {
   const [state, dispatch] = useReducer(tabsReducer, initialTabsState)
-  const { tabs, activeTabId, changingTab } = state;
+  const { tabs, activeTabId } = state;
   const sqlEditorRef = useRef<EditorRef>(null);
   const jsonEditorRef = useRef<EditorRef>(null);
 
   const addTab = () => dispatch({ type: TabAction.ADD_TAB });
+
+  const restoreTab = (query: Query) => dispatch({ type: TabAction.RESTORE_TAB, payload: { query } });
 
   const getActiveTab = useCallback(() => {
     return tabs.find((t) => t.id === activeTabId);
@@ -64,13 +72,16 @@ export function TabsProvider({ children }: PropsWithChildren) {
     payload: params
   });
 
-  const markAsChanged = () => dispatch({ type: TabAction.MARK_AS_CHANGED });
+  const markAsChanged: TabsContextType["markAsChanged"] = (field, value) => (console.log("markAsChanged"), dispatch({ type: TabAction.MARK_AS_CHANGED, payload: { field, value } }));
+
+  const markAsSaved = () => dispatch({ type: TabAction.MARK_AS_SAVED });
 
   const contextValue: TabsContextType = {
     activeTabId,
     addTab,
     getActiveTab,
     jsonEditorRef,
+    restoreTab,
     removeTab,
     renameTab,
     setActiveTabId,
@@ -79,6 +90,7 @@ export function TabsProvider({ children }: PropsWithChildren) {
     sqlEditorRef,
     tabs,
     markAsChanged,
+    markAsSaved,
   };
 
   return (

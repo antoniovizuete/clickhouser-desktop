@@ -1,6 +1,8 @@
 import { Alignment, Button, Navbar } from "@blueprintjs/core";
 import { useConnectionContext } from "../../../../contexts/useConnectionContext";
 import { useTabsContext } from "../../../../contexts/useTabsContext";
+import { useSaveQuery } from "../../../../hooks/useSaveQuery";
+import { Tab } from "../../../../lib/tabs-handler";
 import EditableSpan from "../../../core/EditableSpan";
 import ThemedButton from "../../../core/ThemedButton";
 
@@ -12,7 +14,8 @@ type ConsoleActionBarProps = {
 
 export default function ConsoleActionBar({ onClickRunQuery, onClickParameters, showParams }: ConsoleActionBarProps) {
   const { activeConnectionId } = useConnectionContext();
-  const { getActiveTab, renameTab } = useTabsContext();
+  const { getActiveTab, renameTab, sqlEditorRef, jsonEditorRef } = useTabsContext();
+  const [saveQuery] = useSaveQuery()
 
   const name = getActiveTab()?.name;
 
@@ -22,8 +25,18 @@ export default function ConsoleActionBar({ onClickRunQuery, onClickParameters, s
     }
   }
 
+  const handleOnClickSave = async () => {
+    const tab = getActiveTab();
+
+    saveQuery({
+      ...tab || {} as Tab,
+      sql: sqlEditorRef.current?.getValue() ?? "",
+      params: jsonEditorRef.current?.getValue() ?? "",
+    });
+  }
+
   return (
-    <Navbar className="bg-slate-50 dark:bg-neutral-800 dark:text-white">
+    <Navbar className="bg-slate-50 dark:bg-neutral-800 dark:text-white border-l dark:border-l-stone-600">
       <Navbar.Group className="w-1/2" align={Alignment.LEFT}>
         <EditableSpan onBlur={handleOnBlurEditableSpan}>{name}</EditableSpan>
       </Navbar.Group>
@@ -36,7 +49,10 @@ export default function ConsoleActionBar({ onClickRunQuery, onClickParameters, s
             onClick={onClickRunQuery}
             disabled={!activeConnectionId}
           >Run Query</Button>
-          <ThemedButton icon="floppy-disk">Save Query</ThemedButton>
+          <ThemedButton
+            action={handleOnClickSave}
+            icon="floppy-disk"
+          >Save Query</ThemedButton>
           <ThemedButton
             action={onClickParameters}
             icon={showParams ? "chevron-right" : "chevron-left"}

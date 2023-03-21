@@ -1,12 +1,14 @@
 type Props = {
   className?: string
+  logo?: boolean
 };
 export default function Brand({
-  className = ""
+  className = "",
+  logo = false,
 }: Props) {
   return (
     <span className={`${className} font-semibold tracking-wide text-[#eca834] drop-shadow-sm`}>
-      Clickhouse<span className="text-[#ff5050]">r</span>
+      C{!logo && "lick"}H{!logo && "ouse"}<span className="text-[#ff5050]">r</span>
     </span>
   );
 }

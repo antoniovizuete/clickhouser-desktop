@@ -15,17 +15,17 @@ export default function Console() {
 
   return <>
     <Allotment vertical>
-      <Allotment.Pane maxSize={48} minSize={48} >
+      <Allotment.Pane maxSize={50} minSize={50} >
         <ConsoleActionBar
           onClickRunQuery={handleOnClickRunQuery}
           onClickParameters={toggleShowParams}
           showParams={showParams}
         />
       </Allotment.Pane>
-      <Allotment.Pane>
+      <Allotment.Pane className="!border-l-0">
         <EditorsPane showParams={showParams} />
       </Allotment.Pane>
-      <Allotment.Pane>
+      <Allotment.Pane >
         <div className="h-full dark:bg-neutral-800 dark:text-gray-100">
           <Result />
         </div>

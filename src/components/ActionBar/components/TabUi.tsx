@@ -21,15 +21,15 @@ export default function TabUi({ isActive, isFirst, isLast, isTouched, setActiveT
         className={
           classNames(
             "h-full px-2 flex flex-row justify-between items-center gap-2",
-            "hover:dark:bg-neutral-800 border-t border-t-stone-500 ",
+            "hover:dark:bg-neutral-800 border-t  ",
             "group select-none",
-            { "border-l border-l-stone-500 rounded-tl-lg": isFirst },
-            { "!border-r border-r-stone-500 rounded-tr-lg": isLast },
-            { "dark:bg-neutral-900 cursor-pointer border-b border-b-stone-500": !isActive },
+            { "border-l dark:border-l-stone-600 rounded-tl-lg": isFirst },
+            { "!border-r dark:border-r-stone-600 rounded-tr-lg": isLast },
+            { "dark:bg-neutral-900 cursor-pointer border-b dark:border-b-stone-600 dark:border-t-stone-500": !isActive },
             { "bg-slate-50 dark:bg-neutral-800 cursor-default border-t-2 border-t-yellow-600 dark:border-t-yellow-500": isActive }
           )}
       >
-        <div className={"w-full"} onClick={(e) => (console.log(e), setActiveTabId(tab.id))}>
+        <div className={"w-full"} onClick={(e) => setActiveTabId(tab.id)}>
           <Tooltip2
             disabled={tab.name.length < 13}
             minimal
@@ -53,7 +53,7 @@ export default function TabUi({ isActive, isFirst, isLast, isTouched, setActiveT
           />
         )}
         {!tab.closeable && isTouched && (<ClickableIcon icon="record" />)}
-        {!tab.closeable && !isTouched && (<div className="w-5" />)}
+        {!tab.closeable && !isTouched && (<div className="w-6" />)}
       </div>
     </div>
   )

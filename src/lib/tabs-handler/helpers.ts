@@ -7,9 +7,10 @@ export const getNewTab = (): Tab => {
     closeable: true,
     icon: "console",
     name: "New query",
-    //name: id.slice(0, 6),
     sql: "",
     params: "",
     loading: false,
+    touched: false,
+    isNew: true,
   };
 };

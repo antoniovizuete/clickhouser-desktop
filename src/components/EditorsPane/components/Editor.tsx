@@ -1,16 +1,18 @@
-import MonacoEditor from "@monaco-editor/react";
+import MonacoEditor, { OnChange } from "@monaco-editor/react";
 import {
   editor, IDisposable
 } from "monaco-editor/esm/vs/editor/editor.api";
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useThemeContext } from "../../../contexts/useThemeContext";
+import { TouchableFields } from "../../../lib/tabs-handler/tabs-reducer";
 
 type EditorProps = {
   defaultValue?: string;
   language: "sql" | "json";
   onMount?: (editor: editor.IStandaloneCodeEditor) => void;
-  onChange?: () => void;
+  onChange?: (field: TouchableFields, value?: string) => void;
   path: string;
+  touchableField: TouchableFields;
 };
 
 export type EditorRef = {
@@ -20,7 +22,7 @@ export type EditorRef = {
 };
 
 const Editor = forwardRef<EditorRef, EditorProps>((props, ref) => {
-  const { defaultValue, language, onChange, onMount, path } =
+  const { defaultValue, language, onChange, onMount, path, touchableField } =
     props;
 
   const [internalDefaultValue, setInternalDefaultValue] = useState(defaultValue);
@@ -45,9 +47,8 @@ const Editor = forwardRef<EditorRef, EditorProps>((props, ref) => {
 
   const { theme } = useThemeContext();
 
-  const handleOnChange = (code?: string) => {
-    onChange?.();
-    console.log("onChange Editor", code)
+  const handleOnChange: OnChange = (newValue) => {
+    onChange?.(touchableField, newValue);
   };
 
   return (

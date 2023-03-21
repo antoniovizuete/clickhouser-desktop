@@ -3,7 +3,7 @@ use crate::context::Context;
 use tauri::State;
 
 #[tauri::command]
-pub fn get_all_connections(
+pub fn get_all_connection(
     context: State<'_, Context>,
 ) -> Result<Vec<ClickhouseConnection>, String> {
     match Repository::new(&context.connection).get_all() {
@@ -31,10 +31,10 @@ pub fn get_connection_by_id(
 
 #[tauri::command]
 pub fn insert_connection(
-    connection: ClickhouseConnection,
+    entity: ClickhouseConnection,
     context: State<'_, Context>,
 ) -> Result<(), String> {
-    match Repository::new(&context.connection).create(connection) {
+    match Repository::new(&context.connection).create(entity) {
         Ok(_) => Ok(()),
         Err(e) => {
             let string_error: String = e.into();
@@ -46,10 +46,10 @@ pub fn insert_connection(
 #[tauri::command]
 pub fn update_connection(
     id: u32,
-    connection: ClickhouseConnection,
+    entity: ClickhouseConnection,
     context: State<'_, Context>,
 ) -> Result<(), String> {
-    match Repository::new(&context.connection).update(id, connection) {
+    match Repository::new(&context.connection).update(id, entity) {
         Ok(_) => Ok(()),
         Err(e) => {
             let string_error: String = e.into();

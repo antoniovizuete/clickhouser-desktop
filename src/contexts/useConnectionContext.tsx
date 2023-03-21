@@ -4,11 +4,11 @@ import {
   useCallback,
   useContext, useState
 } from "react";
+import { connectionRepo } from "../lib/backend-repos";
 import {
   ActiveConnection,
   Connection, ConnectionDisplay, ConnectionId
 } from "../lib/clickhouse-clients";
-import { getConnectionById } from "../lib/connections-helpers/connection-repo";
 
 type ConnectionsContextType = {
   activeConnectionId: ConnectionId | undefined;
@@ -46,7 +46,7 @@ export function ConnectionsProvider({ children }: PropsWithChildren<{}>) {
   };
 
   const getActiveConnection = useCallback(async () => {
-    return activeConnectionId ? await getConnectionById(activeConnectionId.id) : undefined
+    return activeConnectionId ? await connectionRepo.getById(activeConnectionId.id) : undefined
   }, [activeConnectionId])
 
   const contextValue = {

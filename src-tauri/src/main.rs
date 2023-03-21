@@ -3,9 +3,7 @@
     windows_subsystem = "windows"
 )]
 
-use connections_repository::commands as connection_commands;
 use context::Context;
-use queries_repository::commands as query_commands;
 
 mod connections_repository;
 mod context;
@@ -19,16 +17,16 @@ fn main() {
     tauri::Builder::default()
         .manage(context)
         .invoke_handler(tauri::generate_handler![
-            connection_commands::get_all_connections,
-            connection_commands::get_connection_by_id,
-            connection_commands::insert_connection,
-            connection_commands::update_connection,
-            connection_commands::delete_connection,
-            query_commands::get_all_queries,
-            query_commands::get_query_by_id,
-            query_commands::insert_query,
-            query_commands::update_query,
-            query_commands::delete_query,
+            connections_repository::commands::get_all_connection,
+            connections_repository::commands::get_connection_by_id,
+            connections_repository::commands::insert_connection,
+            connections_repository::commands::update_connection,
+            connections_repository::commands::delete_connection,
+            queries_repository::commands::get_all_query,
+            queries_repository::commands::get_query_by_id,
+            queries_repository::commands::insert_query,
+            queries_repository::commands::update_query,
+            queries_repository::commands::delete_query,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

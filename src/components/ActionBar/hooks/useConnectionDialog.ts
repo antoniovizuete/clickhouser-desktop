@@ -1,12 +1,9 @@
 import { ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useConnectionContext } from "../../../contexts/useConnectionContext";
+import { connectionRepo } from "../../../lib/backend-repos";
 import { Connection, ConnectionBody } from "../../../lib/clickhouse-clients";
 import { testConnection } from "../../../lib/connections-helpers";
-import {
-  insertConnection,
-  updateConnection,
-} from "../../../lib/connections-helpers/connection-repo";
 import { AppToaster } from "../../../lib/toaster/AppToaster";
 import { ConnectionDialogRef } from "../components/ConnectionDialog";
 
@@ -104,12 +101,15 @@ export const useConnectionDialog = ({ onClose, ref }: Params) => {
 
   const save = async (connectionToSave: ConnectionBody) => {
     if (connection) {
-      await updateConnection(connection.id, connectionToSave);
+      await connectionRepo.update(
+        connection.id,
+        connectionToSave as Connection
+      );
       if (connection.id === activeConnectionId?.id) {
         setActiveConnectionDisplay(connectionToSave);
       }
     } else {
-      await insertConnection(connectionToSave);
+      await connectionRepo.insert(connectionToSave as Connection);
     }
     close();
   };

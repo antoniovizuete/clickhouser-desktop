@@ -1,4 +1,5 @@
 import { Reducer } from "react";
+import { Query } from "../backend-repos/query-repo";
 import { PerformQueryResult } from "../clickhouse-clients/perform-query/types";
 import { getNewTab } from "./helpers";
 import { Tab, TabAction } from "./types";
@@ -6,11 +7,13 @@ import { Tab, TabAction } from "./types";
 type TabsState = {
   tabs: Tab[];
   activeTabId: string;
-  changingTab: boolean;
 };
+
+export type TouchableFields = Extract<keyof Tab, "sql" | "params">;
 
 type TabsActions =
   | { type: TabAction.ADD_TAB }
+  | { type: TabAction.RESTORE_TAB; payload: { query: Query } }
   | { type: TabAction.REMOVE_TAB; payload: { id: string } }
   | { type: TabAction.RENAME_TAB; payload: { name: string } }
   | {
@@ -30,7 +33,11 @@ type TabsActions =
         params?: string;
       };
     }
-  | { type: TabAction.MARK_AS_CHANGED };
+  | {
+      type: TabAction.MARK_AS_CHANGED;
+      payload: { field: TouchableFields; value?: string };
+    }
+  | { type: TabAction.MARK_AS_SAVED };
 
 const getInitialState = (): TabsState => {
   const tab = getNewTab();
@@ -38,7 +45,6 @@ const getInitialState = (): TabsState => {
   return {
     tabs: [tab],
     activeTabId: tab.id,
-    changingTab: false,
   };
 };
 
@@ -89,16 +95,6 @@ export const tabsReducer: Reducer<TabsState, TabsActions> = (
       return {
         ...state,
         activeTabId: action.payload.id,
-        changingTab: true,
-        tabs: state.tabs.map((tab) =>
-          tab.id === state.activeTabId
-            ? {
-                ...tab,
-                sql: action.payload.sql ?? "",
-                params: action.payload.params ?? "",
-              }
-            : tab
-        ),
       };
 
     case TabAction.SET_LOADING:
@@ -129,8 +125,44 @@ export const tabsReducer: Reducer<TabsState, TabsActions> = (
       return {
         ...state,
         tabs: state.tabs.map((tab) =>
-          tab.id === state.activeTabId ? { ...tab, touched: true } : tab
+          tab.id === state.activeTabId &&
+          tab[action.payload.field] !== action.payload.value
+            ? {
+                ...tab,
+                [action.payload.field]: action.payload.value,
+                touched: true,
+              }
+            : tab
         ),
+      };
+    case TabAction.MARK_AS_SAVED:
+      return {
+        ...state,
+        tabs: state.tabs.map((tab) =>
+          tab.id === state.activeTabId
+            ? { ...tab, touched: false, isNew: false }
+            : tab
+        ),
+      };
+    case TabAction.RESTORE_TAB:
+      const restoredTab: Tab = {
+        ...action.payload.query,
+        closeable: true,
+        icon: "console",
+        loading: false,
+        touched: false,
+        isNew: false,
+      };
+      const tabsRestoring = !state.tabs.some((tab) => tab.id === restoredTab.id)
+        ? [
+            ...state.tabs.map((tab) => ({ ...tab, closeable: true })),
+            restoredTab,
+          ]
+        : [...state.tabs];
+      return {
+        ...state,
+        tabs: tabsRestoring,
+        activeTabId: restoredTab.id,
       };
     default:
       return state;
