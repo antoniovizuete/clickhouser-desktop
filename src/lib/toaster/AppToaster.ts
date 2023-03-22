@@ -1,7 +1,7 @@
 import {
-  Toaster,
-  Position,
   Intent,
+  Position,
+  Toaster,
   ToasterInstance,
   ToastProps,
 } from "@blueprintjs/core";
@@ -61,13 +61,14 @@ class AppToasterClass {
 }
 
 const top = new AppToasterClass(Toaster.create({ position: Position.TOP }));
-const bottomRight = new AppToasterClass(
-  Toaster.create({ position: Position.BOTTOM_RIGHT })
+const topRight = new AppToasterClass(
+  Toaster.create({ position: Position.TOP_RIGHT })
 );
 
-const toasters = [top, bottomRight];
+const toasters = [top, topRight];
 
 export const AppToaster = {
   top,
+  topRight,
   clear: () => toasters.forEach((toaster) => toaster.clear()),
 };

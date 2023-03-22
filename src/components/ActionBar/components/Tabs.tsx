@@ -51,7 +51,6 @@ export default function Tabs() {
           <TabUi
             key={`${tab.id}${tab.touched}`}
             isActive={tab.id === activeTab.id}
-            isFirst={i === 0}
             isLast={i === arr.length - 1}
             isTouched={tab.touched}
             setActiveTabId={setActiveTabId}

@@ -10,7 +10,11 @@ export const useSaveQuery = () => {
   const { emitSaveQueryEvent } = useSaveQueryEvent();
 
   const saveQuery = useCallback(
-    async (tab?: Tab) => {
+    async (
+      tab?: Tab,
+      successMessage = "Query saved",
+      error = "Failed to save query"
+    ) => {
       if (!tab) {
         AppToaster.top.error("No tab to save");
         return;
@@ -27,10 +31,10 @@ export const useSaveQuery = () => {
         }
         markAsSaved();
         emitSaveQueryEvent(undefined);
-        AppToaster.top.success("Query saved");
+        AppToaster.topRight.success(successMessage);
       } catch (e) {
         console.error(e);
-        AppToaster.top.error("Failed to save query");
+        AppToaster.top.error(error);
       }
     },
     [sqlEditorRef, jsonEditorRef, markAsSaved]

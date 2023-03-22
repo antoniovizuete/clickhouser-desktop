@@ -3,7 +3,6 @@ import { useConnectionContext } from "../../../../contexts/useConnectionContext"
 import { useTabsContext } from "../../../../contexts/useTabsContext";
 import { useSaveQuery } from "../../../../hooks/useSaveQuery";
 import { Tab } from "../../../../lib/tabs-handler";
-import EditableSpan from "../../../core/EditableSpan";
 import ThemedButton from "../../../core/ThemedButton";
 
 type ConsoleActionBarProps = {
@@ -14,16 +13,8 @@ type ConsoleActionBarProps = {
 
 export default function ConsoleActionBar({ onClickRunQuery, onClickParameters, showParams }: ConsoleActionBarProps) {
   const { activeConnectionId } = useConnectionContext();
-  const { getActiveTab, renameTab, sqlEditorRef, jsonEditorRef } = useTabsContext();
+  const { getActiveTab, sqlEditorRef, jsonEditorRef } = useTabsContext();
   const [saveQuery] = useSaveQuery()
-
-  const name = getActiveTab()?.name;
-
-  const handleOnBlurEditableSpan = (e: React.FocusEvent<HTMLSpanElement>) => {
-    if (e.currentTarget.innerText !== name) {
-      renameTab(e.currentTarget.innerText);
-    }
-  }
 
   const handleOnClickSave = async () => {
     const tab = getActiveTab();
@@ -38,7 +29,7 @@ export default function ConsoleActionBar({ onClickRunQuery, onClickParameters, s
   return (
     <nav className="mx-4 selection: h-10 flex flex-row justify-between items-center bg-slate-50 dark:bg-neutral-800 dark:text-white">
       <section>
-        <EditableSpan onBlur={handleOnBlurEditableSpan}>{name}</EditableSpan>
+
       </section>
       <section className="flex flex-row justify-start items-center gap-1">
         <Button

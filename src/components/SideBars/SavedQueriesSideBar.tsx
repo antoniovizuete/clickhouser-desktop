@@ -1,11 +1,11 @@
-import { Button, Classes, Dialog, Icon } from "@blueprintjs/core";
+import { Button, Classes, Dialog } from "@blueprintjs/core";
 import { useEffect, useState } from "react";
 import { useTabsContext } from "../../contexts/useTabsContext";
 import { useThemeContext } from "../../contexts/useThemeContext";
 import { useSaveQueryEvent } from "../../hooks/useSaveQueryEvent";
 import { Query, queryRepo } from "../../lib/backend-repos/query-repo";
 import { AppToaster } from "../../lib/toaster/AppToaster";
-import ClickableIcon from "../core/ClickableIcon";
+import SavedQuery from "./SavedQueries/SavedQuery";
 
 
 export default function SavedQueriesSideBar() {
@@ -57,20 +57,7 @@ export default function SavedQueriesSideBar() {
       <h2 className="pl-4 py-3 text-stone-600 dark:text-stone-300 uppercase text-xs font-semibold">Saved queries</h2>
       <div className="pl-2 flex-grow flex flex-col justify-start items-start w-full">
         {queries.map(query => (
-          <div
-            key={query.id}
-            className="w-full group flex justify-start items-center px-2 text-stone-600 dark:text-stone-400 gap-2 hover:font-bold hover:cursor-pointer"
-          >
-            <div className="flex-grow" onClick={() => handleOnClickQuery(query)}>
-              <Icon icon="console" className="mr-2" />
-              {query.name}
-            </div>
-            <ClickableIcon
-              icon="delete"
-              className="opacity-0 group-hover:opacity-100 hover:scale-110 hover:text-red-600"
-              onClick={() => handleOnClickRemoveQuery(query)}
-            />
-          </div>
+          <SavedQuery key={query.id} query={query} onClick={handleOnClickQuery} onClickRemove={handleOnClickRemoveQuery} />
         ))}
       </div>
     </div>
