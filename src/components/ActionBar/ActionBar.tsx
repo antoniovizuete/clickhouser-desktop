@@ -1,7 +1,5 @@
-import { Alignment, Navbar } from "@blueprintjs/core";
 import { useConnectionContext } from "../../contexts/useConnectionContext";
 import { getConnectionDisplay } from "../../lib/connections-helpers";
-import Brand from "../Brand";
 import ThemedButton from "../core/ThemedButton";
 import SelectThemeButton from "./components/SelectThemeButton";
 import Tabs from "./components/Tabs";
@@ -13,14 +11,12 @@ export default function ActionBar() {
   const { activeConnectionId, activeConnectionDisplay } = useConnectionContext();
 
   return (<>
-    <Navbar className="bg-stone-50 dark:bg-neutral-900 dark:text-white border-b dark:border-b-stone-600 border-l dark:border-l-stone-600 ">
-      <Navbar.Group className="flex flex-row justify-start gap-4" align={Alignment.LEFT}>
-        <Brand className="text-lg" />
+    <nav className="flex flex-row h-10 bg-stone-50 dark:bg-neutral-900 dark:text-white ">
+      <section className="flex-grow">
         <Tabs />
-      </Navbar.Group>
-      <Navbar.Group
-        align={Alignment.RIGHT}
-        className="flex flex-row justify-start items-center gap-1"
+      </section>
+      <section
+        className="flex-grow-0 flex flex-row justify-start items-center gap-1 pr-4 border-b border-b-stone-600"
       >
         <ThemedButton
           icon="data-connection"
@@ -30,8 +26,8 @@ export default function ActionBar() {
           {activeConnectionDisplay ? getConnectionDisplay({ connection: activeConnectionDisplay }) : "Select connection"}
         </ThemedButton>
         <SelectThemeButton />
-      </Navbar.Group>
-    </Navbar>
+      </section>
+    </nav>
     {ConnectionsDrawer}
   </>)
 }

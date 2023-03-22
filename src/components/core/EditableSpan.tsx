@@ -2,10 +2,11 @@ import classNames from 'classnames';
 import { PropsWithChildren } from 'react';
 
 type Props = {
+  editable?: boolean;
   onBlur: (e: React.FocusEvent<HTMLSpanElement>) => void;
 }
 
-export default function EditableSpan({ onBlur, children }: PropsWithChildren<Props>) {
+export default function EditableSpan({ editable = true, onBlur, children }: PropsWithChildren<Props>) {
   return (
     <span className={
       classNames(
@@ -15,7 +16,7 @@ export default function EditableSpan({ onBlur, children }: PropsWithChildren<Pro
         "focus:bg-white dark:focus:bg-stone-900",
         "focus:border-slate-300 dark:focus:border-stone-600"
       )}
-      contentEditable
+      contentEditable={editable}
       onBlur={onBlur}>{children}</span>
   )
 }

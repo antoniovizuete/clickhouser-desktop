@@ -1,4 +1,4 @@
-import { Alignment, Button, Navbar } from "@blueprintjs/core";
+import { Button } from "@blueprintjs/core";
 import { useConnectionContext } from "../../../../contexts/useConnectionContext";
 import { useTabsContext } from "../../../../contexts/useTabsContext";
 import { useSaveQuery } from "../../../../hooks/useSaveQuery";
@@ -36,29 +36,28 @@ export default function ConsoleActionBar({ onClickRunQuery, onClickParameters, s
   }
 
   return (
-    <Navbar className="bg-slate-50 dark:bg-neutral-800 dark:text-white border-l dark:border-l-stone-600">
-      <Navbar.Group className="w-1/2" align={Alignment.LEFT}>
+    <nav className="mx-4 selection: h-10 flex flex-row justify-between items-center bg-slate-50 dark:bg-neutral-800 dark:text-white">
+      <section>
         <EditableSpan onBlur={handleOnBlurEditableSpan}>{name}</EditableSpan>
-      </Navbar.Group>
-      <Navbar.Group align={Alignment.RIGHT}>
-        <div className="flex flex-row justify-start items-center gap-1">
-          <Button
-            icon="play"
-            intent="warning"
-            aria-label="Run query"
-            onClick={onClickRunQuery}
-            disabled={!activeConnectionId}
-          >Run Query</Button>
-          <ThemedButton
-            action={handleOnClickSave}
-            icon="floppy-disk"
-          >Save Query</ThemedButton>
-          <ThemedButton
-            action={onClickParameters}
-            icon={showParams ? "chevron-right" : "chevron-left"}
-          />
-        </div>
-      </Navbar.Group>
-    </Navbar>
+      </section>
+      <section className="flex flex-row justify-start items-center gap-1">
+        <Button
+          icon="play"
+          intent="warning"
+          aria-label="Run query"
+          onClick={onClickRunQuery}
+          disabled={!activeConnectionId}
+        >Run Query</Button>
+        <ThemedButton
+          action={handleOnClickSave}
+          icon="floppy-disk"
+        >Save Query</ThemedButton>
+        <ThemedButton
+          action={onClickParameters}
+          icon={showParams ? "chevron-right" : "chevron-left"}
+        />
+
+      </section>
+    </nav>
   )
 }

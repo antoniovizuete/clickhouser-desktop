@@ -1,6 +1,6 @@
 import { Allotment } from "allotment";
+import ActionBar from "../ActionBar";
 import EditorsPane from "../EditorsPane";
-import Footer from "../Footer";
 import Result from "../Result";
 import ConsoleActionBar from "./components/ConsoleActionBar";
 import { useConsole } from "./useConsole";
@@ -15,23 +15,21 @@ export default function Console() {
 
   return <>
     <Allotment vertical>
-      <Allotment.Pane maxSize={50} minSize={50} >
+      <Allotment.Pane maxSize={80} minSize={80}>
+        <ActionBar />
         <ConsoleActionBar
           onClickRunQuery={handleOnClickRunQuery}
           onClickParameters={toggleShowParams}
           showParams={showParams}
         />
       </Allotment.Pane>
-      <Allotment.Pane className="!border-l-0">
+      <Allotment.Pane>
         <EditorsPane showParams={showParams} />
       </Allotment.Pane>
       <Allotment.Pane >
         <div className="h-full dark:bg-neutral-800 dark:text-gray-100">
           <Result />
         </div>
-      </Allotment.Pane>
-      <Allotment.Pane maxSize={24} minSize={24} className="p-0">
-        <Footer />
       </Allotment.Pane>
     </Allotment>
   </>
