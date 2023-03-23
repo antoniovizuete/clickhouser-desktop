@@ -22,7 +22,7 @@ type TabsContextType = {
   sqlEditorRef: RefObject<EditorRef>;
   jsonEditorRef: RefObject<EditorRef>;
   setLoading: (loading: boolean) => void;
-  setQueryResult: (params: { queryResult: PerformQueryResult, query?: string, params?: string }) => void;
+  setQueryResult: (params: { queryResult: PerformQueryResult, sql?: string, params?: string }) => void;
   markAsChanged: (field: TouchableFields, value?: string) => void;
   markAsSaved: () => void;
 };
