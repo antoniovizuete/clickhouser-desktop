@@ -14,7 +14,7 @@ export default function IconBarItem({ icon, isActive, onClick, tooltip }: Props)
   const { bpTheme } = useThemeContext();
 
   return (
-    <div className={classNames("w-full h-12 flex flex-row justify-center items-center py-6 px-2 border-r-4 hover:cursor-pointer",
+    <div className={classNames("w-full h-12 flex flex-row justify-center items-center py-6 px-2 border-r-4 hover:cursor-pointer group",
       { "border-r-yellow-600 dark:border-r-yellow-600": isActive },
       { "border-r-transparent hover:border-r-yellow-300 hover:dark:border-r-yellow-700": !isActive },
     )}
@@ -24,7 +24,7 @@ export default function IconBarItem({ icon, isActive, onClick, tooltip }: Props)
         <Icon
           className={classNames("hover:scale-110 !outline-none",
             { "text-yellow-600 dark:text-yellow-500/400 hover:dark:text-yellow-500": isActive },
-            { "text-stone-300 dark:text-stone-500 ": !isActive },)}
+            { "text-neutral-500 dark:text-stone-500 group-hover:text-yellow-500": !isActive },)}
           icon={icon}
           size={24}
 

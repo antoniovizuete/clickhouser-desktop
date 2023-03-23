@@ -16,7 +16,7 @@ export default function ActionBar() {
         <Tabs />
       </section>
       <section
-        className="flex-grow-0 flex flex-row justify-start items-center gap-1 pr-4 border-b border-b-stone-600"
+        className="flex-grow-0 flex flex-row justify-start items-center gap-1 pr-4 border-b border-b-border dark:border-b-border-dark"
       >
         <ThemedButton
           icon="data-connection"
