@@ -25,7 +25,7 @@ export const useConsole = () => {
         connection,
       });
 
-      setQueryResult({ queryResult, query, params });
+      setQueryResult({ queryResult, sql: query, params });
     },
     [getActiveConnection, setQueryResult, setLoading]
   );
