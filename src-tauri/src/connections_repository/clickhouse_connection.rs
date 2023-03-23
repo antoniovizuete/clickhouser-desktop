@@ -8,4 +8,5 @@ pub struct ClickhouseConnection {
     pub username: String,
     pub password: Option<String>,
     pub database: Option<String>,
+    pub color: Option<String>,
 }

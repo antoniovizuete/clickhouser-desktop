@@ -72,7 +72,7 @@ export function TabsProvider({ children }: PropsWithChildren) {
     payload: params
   });
 
-  const markAsChanged: TabsContextType["markAsChanged"] = (field, value) => (console.log("markAsChanged"), dispatch({ type: TabAction.MARK_AS_CHANGED, payload: { field, value } }));
+  const markAsChanged: TabsContextType["markAsChanged"] = (field, value) => dispatch({ type: TabAction.MARK_AS_CHANGED, payload: { field, value } });
 
   const markAsSaved = () => dispatch({ type: TabAction.MARK_AS_SAVED });
 

@@ -8,6 +8,7 @@ export type ConnectionDisplay = {
   port: number;
   username: string;
   database: string;
+  color: string;
 };
 
 export type ConnectionBody = ConnectionDisplay & {

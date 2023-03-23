@@ -6,14 +6,20 @@ import { performQuery } from "../../lib/clickhouse-clients";
 
 export const useConsole = () => {
   const [showParams, setShowParams] = useState(false);
-  const { sqlEditorRef, jsonEditorRef, setLoading, setQueryResult } =
-    useTabsContext();
+  const {
+    sqlEditorRef,
+    jsonEditorRef,
+    setLoading,
+    setQueryResult,
+    getActiveTab,
+  } = useTabsContext();
 
   const { getActiveConnection } = useConnectionContext();
   const { useRunQueryEventListen, emitRunQueryEvent } = useRunQueryEvent();
 
   useRunQueryEventListen(
     async (event) => {
+      if (getActiveTab()?.loading) return;
       setLoading(true);
 
       const connection = await getActiveConnection();

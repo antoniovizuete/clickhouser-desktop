@@ -24,6 +24,7 @@ pub fn apply_migrations(connection: &mut Connection) -> Result<()> {
                 params TEXT
             )",
         ),
+        M::up("ALTER TABLE connections ADD color TEXT;"),
     ]);
 
     migrations.to_latest(connection)?;

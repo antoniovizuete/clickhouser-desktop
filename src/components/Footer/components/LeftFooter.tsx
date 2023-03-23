@@ -1,5 +1,6 @@
 import { Icon, Menu } from "@blueprintjs/core";
 import { MenuItem2, Popover2, Tooltip2 } from "@blueprintjs/popover2";
+import classNames from "classnames";
 import { useThemeContext } from "../../../contexts/useThemeContext";
 import { JsonResult } from "../../../lib/clickhouse-clients";
 import { download, KindEnum } from "../../../lib/file-downloader";
@@ -19,15 +20,17 @@ export default function LeftFooter({ result }: Props) {
     download(result, kind);
   };
   return (
-    <div className="flex flex-row justify-start items-center gap-2 divide-x divide-neutral-300 dark:divide-neutral-500 border-l border-l-neutral-300 dark:border-l-neutral-500">
-      <div className="stat">Elapsed: {statistics.elapsed.toFixed(2)} s.</div>
-      <div className="stat">{formatReadableRows(data.length)} rows</div>
-      <div className="stat">
+    <div className={classNames(
+      "flex flex-row justify-start items-center gap-2 divide-x divide-neutral-300 dark:divide-neutral-500"
+    )}>
+      <div className="">Elapsed: {statistics.elapsed.toFixed(2)} s.</div>
+      <div className="">{formatReadableRows(data.length)} rows</div>
+      <div className="">
         {formatReadableRows(statistics.rows_read)} read rows
       </div>
-      <div className="stat">{formatReadableBytes(statistics.bytes_read)}</div>
+      <div className="">{formatReadableBytes(statistics.bytes_read)}</div>
       {false && data.length > 0 && (
-        <div className="stat bg-[#fbb360]">
+        <div className=" bg-[#fbb360]">
           <Popover2
             popoverClassName={bpTheme}
             position="top"

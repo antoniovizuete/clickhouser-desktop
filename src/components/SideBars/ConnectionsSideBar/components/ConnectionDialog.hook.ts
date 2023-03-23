@@ -1,11 +1,11 @@
 import { ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useConnectionContext } from "../../../contexts/useConnectionContext";
-import { connectionRepo } from "../../../lib/backend-repos";
-import { Connection, ConnectionBody } from "../../../lib/clickhouse-clients";
-import { testConnection } from "../../../lib/connections-helpers";
-import { AppToaster } from "../../../lib/toaster/AppToaster";
-import { ConnectionDialogRef } from "../components/ConnectionDialog";
+import { useConnectionContext } from "../../../../contexts/useConnectionContext";
+import { connectionRepo } from "../../../../lib/backend-repos";
+import { Connection, ConnectionBody } from "../../../../lib/clickhouse-clients";
+import { testConnection } from "../../../../lib/connections-helpers";
+import { AppToaster } from "../../../../lib/toaster/AppToaster";
+import { ConnectionDialogRef } from "./ConnectionDialog";
 
 type Params = {
   onClose: () => void;
@@ -30,6 +30,7 @@ export const useConnectionDialog = ({ onClose, ref }: Params) => {
       database: connection?.database || "",
       username: connection?.username || "default",
       password: connection?.password || "",
+      color: connection?.color ?? "#000000",
     },
     defaultValues: {
       name: "",
@@ -39,6 +40,7 @@ export const useConnectionDialog = ({ onClose, ref }: Params) => {
       database: "",
       username: "default",
       password: "",
+      color: "#000000",
     },
   });
 
