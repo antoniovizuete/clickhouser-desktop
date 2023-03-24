@@ -8,6 +8,20 @@ body,
   height: 100vh;
 }
 
+html {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+body {
+  height: 100%;
+  padding: 0;
+  overflow: auto;
+  margin: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
 :root {
   --focus-border-rgb: 236, 168, 52;
   --focus-border: rgb(var(--focus-border-rgb));
