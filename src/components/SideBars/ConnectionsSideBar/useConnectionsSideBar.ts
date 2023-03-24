@@ -1,30 +1,17 @@
-import {
-  ForwardedRef,
-  useCallback,
-  useImperativeHandle,
-  useState,
-} from "react";
+import { useCallback, useState } from "react";
 import { connectionRepo } from "../../../lib/backend-repos/connection-repo";
 import { Connection } from "../../../lib/clickhouse-clients";
 import { getConnectionDisplay } from "../../../lib/connections-helpers";
 import { AppToaster } from "../../../lib/toaster/AppToaster";
-import { ConnectionsDrawerRef } from "../components/ConnectionsDrawer";
-import { useConnectionDialogHandler } from "./useConnectionDialogHandler";
+import { useConnectionDialogHandler } from "./components/ConnectionDialog";
 
-type Params = {
-  ref: ForwardedRef<ConnectionsDrawerRef>;
-};
-
-export const useConnectionsDrawer = ({ ref }: Params) => {
-  const [isOpen, setIsOpen] = useState(false);
+export const useConnectionsSideBar = () => {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [connections, setConnections] = useState<Connection[]>([]);
   const [selectedConnetionToDelete, setSelectedConnetionToDelete] = useState<
     Connection | undefined
   >(undefined);
   const [isLoading, setIsLoading] = useState(false);
-
-  useImperativeHandle(ref, () => ({ open }), []);
 
   const retrieveConnections = useCallback(async () => {
     setIsLoading(true);
@@ -41,9 +28,6 @@ export const useConnectionsDrawer = ({ ref }: Params) => {
   const [ConnectionDialog, openConnetionDialog] = useConnectionDialogHandler({
     onClose: retrieveConnections,
   });
-
-  const close = () => setIsOpen(false);
-  const open = () => setIsOpen(true);
 
   const handleNewClick = () => {
     openConnetionDialog();
@@ -78,7 +62,7 @@ export const useConnectionsDrawer = ({ ref }: Params) => {
 
   return {
     close,
-    ConnectionDialog,
+    ConnectionDialog: () => ConnectionDialog,
     connections,
     handleAlertClose,
     handleConfirmRemove,
@@ -87,7 +71,6 @@ export const useConnectionsDrawer = ({ ref }: Params) => {
     handleRemoveClick,
     isAlertOpen,
     isLoading,
-    isOpen,
     retrieveConnections,
     selectedConnetionToDelete,
   };

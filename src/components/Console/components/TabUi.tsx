@@ -36,8 +36,8 @@ export default function TabUi({ isActive, isLast, isTouched, setActiveTabId, onC
             "h-full px-2 flex flex-row justify-between items-center gap-2",
             "hover:dark:bg-neutral-800  ",
             "group select-none",
-            { "!border-r dark:border-r-stone-600": isLast },
-            { "dark:bg-neutral-900 cursor-pointer border-b dark:border-b-stone-600 dark:border-t-stone-500": !isActive },
+            { "!border-r border-r-border dark:border-r-border-dark": isLast },
+            { "dark:bg-neutral-900 cursor-pointer border-b border-b-border dark:border-b-border-dark dark:border-t-stone-500": !isActive },
             { "bg-slate-50 dark:bg-neutral-800 cursor-default border-t-2 border-t-yellow-600 dark:border-t-yellow-500": isActive }
           )}
       >

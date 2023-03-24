@@ -5,14 +5,16 @@ import {
   FormGroup, InputGroup,
   Switch
 } from "@blueprintjs/core";
-import { forwardRef } from "react";
+import { forwardRef, useRef } from "react";
 import { Controller } from "react-hook-form";
-import { useThemeContext } from "../../../contexts/useThemeContext";
-import { Connection } from "../../../lib/clickhouse-clients/types";
-import { useShowPasswordButton } from "../../core/ShowPasswordButton";
-import { useConnectionDialog } from "../hooks/useConnectionDialog";
+import { useThemeContext } from "../../../../contexts/useThemeContext";
+import { Connection } from "../../../../lib/clickhouse-clients";
+import ColorSelector from "../../../core/ColorSelector";
+import { useShowPasswordButton } from "../../../core/ShowPasswordButton";
+import { useConnectionDialog } from "./ConnectionDialog.hook";
 
-type Props = {
+
+type ComponentProps = {
   onClose: () => void;
 };
 
@@ -20,7 +22,7 @@ export type ConnectionDialogRef = {
   open: (connection?: Connection) => void;
 };
 
-const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
+const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(({
   onClose
 }, ref) => {
   const { bpTheme } = useThemeContext();
@@ -45,15 +47,22 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
     >
       <form onSubmit={onSubmit}>
         <div className={`${Classes.DIALOG_BODY} ${bpTheme} flex flex-col gap-2`}>
-          <FormGroup label="Name:">
-            <Controller name="name" control={control} render={({ field }) => (
-              <InputGroup
-                className={`flex-grow ${bpTheme}`}
-                placeholder="Name"
-                size={40}
-                {...field}
-              />)} />
-          </FormGroup>
+          <div className="flex flex-row justify-start items-center gap-2">
+            <FormGroup label="Name:">
+              <Controller name="name" control={control} render={({ field }) => (
+                <InputGroup
+                  className={`flex-grow ${bpTheme}`}
+                  placeholder="Name"
+                  size={40}
+                  {...field}
+                />)} />
+            </FormGroup>
+            <FormGroup label="Color:">
+              <Controller name="color" control={control} render={({ field }) => (
+                <ColorSelector {...field} />
+              )} />
+            </FormGroup>
+          </div>
           <div className="flex flex-row justify-start items-start gap-2">
             <FormGroup label="Host:">
               <Controller name="host" control={control} render={({ field }) => (
@@ -67,7 +76,7 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
             <FormGroup label="Port:">
               <Controller name="port" control={control} render={({ field }) => (
                 <InputGroup
-                  className={`flex-grow ${bpTheme}`}
+                  className={`w-24 ${bpTheme}`}
                   placeholder="Port"
                   size={40}
                   name={field.name}
@@ -79,7 +88,7 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
             </FormGroup>
           </div>
           <div className="flex flex-row justify-start items-start gap-2">
-            <div className="w-1/2">
+            <div className="flex-grow">
               <FormGroup label="Database:">
                 <Controller name="database" control={control} render={({ field }) => (
                   <InputGroup
@@ -91,7 +100,7 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
                 )} />
               </FormGroup>
             </div>
-            <div className="w-1/2">
+            <div className="w-24">
               <FormGroup label="Secure:">
                 <Controller name="secure" control={control} render={({ field }) => (
                   <Switch
@@ -150,4 +159,19 @@ const ConenctionsDialog = forwardRef<ConnectionDialogRef, Props>(({
   );
 });
 
-export default ConenctionsDialog;
+export default ConnectionsDialog;
+
+type ReturnType = [JSX.Element, ConnectionDialogRef["open"]];
+
+type Props = {
+  onClose: () => void;
+};
+
+export const useConnectionDialogHandler = ({ onClose }: Props): ReturnType => {
+  const connectionsDialogRef = useRef<ConnectionDialogRef>(null);
+
+  return [
+    <ConnectionsDialog ref={connectionsDialogRef} onClose={onClose} />,
+    connectionsDialogRef.current?.open ?? (() => { }),
+  ];
+};

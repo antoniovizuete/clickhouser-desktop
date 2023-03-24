@@ -46,7 +46,7 @@ export default function EditorsPane({ showParams }: Props) {
         touchableField="sql"
       />
     </Allotment.Pane>
-    <Allotment.Pane visible={showParams} preferredSize="40%" minSize={350}>
+    <Allotment.Pane visible={showParams} preferredSize="40%" minSize={450}>
       <EditorLabel label="Parameters" />
       <Editor
         ref={jsonEditorRef}

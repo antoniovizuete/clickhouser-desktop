@@ -33,7 +33,6 @@ export const useSaveQuery = () => {
         emitSaveQueryEvent(undefined);
         AppToaster.topRight.success(successMessage);
       } catch (e) {
-        console.error(e);
         AppToaster.top.error(error);
       }
     },

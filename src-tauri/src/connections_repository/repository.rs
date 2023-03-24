@@ -19,8 +19,8 @@ impl<'a> Repository<'a> {
 
     pub fn create(&self, connection: ClickhouseConnection) -> Result<()> {
         self.database_connection.execute(
-            format!("INSERT INTO {} (name, host, port, secure, username, password, database) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)", TABLE).as_str(),
-            (connection.name, connection.host, connection.port, connection.secure, connection.username, connection.password, connection.database)
+            format!("INSERT INTO {} (name, host, port, secure, username, password, database, color) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)", TABLE).as_str(),
+            (connection.name, connection.host, connection.port, connection.secure, connection.username, connection.password, connection.database, connection.color)
         )?;
 
         Ok(())
@@ -29,7 +29,7 @@ impl<'a> Repository<'a> {
     pub fn get_all(&self) -> Result<Vec<ClickhouseConnection>> {
         let mut stmt = self.database_connection.prepare(
             format!(
-                "SELECT id, name, host, port, secure, username, password, database FROM {} ORDER BY name, host, port",
+                "SELECT id, name, host, port, secure, username, password, database, color FROM {} ORDER BY name, host, port",
                 TABLE
             )
             .as_str(),
@@ -48,7 +48,7 @@ impl<'a> Repository<'a> {
     pub fn get_by_id(&self, id: i32) -> Result<ClickhouseConnection> {
         let mut stmt = self
             .database_connection
-            .prepare(format!("SELECT id, name, host, port, secure, username, password, database FROM {} WHERE id = ?1", TABLE).as_str())?;
+            .prepare(format!("SELECT id, name, host, port, secure, username, password, database, color FROM {} WHERE id = ?1", TABLE).as_str())?;
         let connection = stmt.query_row([id], |row| Ok(map_row_to_clickhouse_connection(row)))?;
 
         Ok(connection)
@@ -56,8 +56,8 @@ impl<'a> Repository<'a> {
 
     pub fn update(&self, id: u32, connection: ClickhouseConnection) -> Result<()> {
         self.database_connection.execute(
-            format!("UPDATE {} SET name = ?1, host = ?2, port = ?3, secure = ?4, username = ?5, password = ?6, database = ?7 WHERE id = ?8", TABLE).as_str(),
-            (connection.name, connection.host, connection.port, connection.secure, connection.username, connection.password, connection.database, id)
+            format!("UPDATE {} SET name = ?1, host = ?2, port = ?3, secure = ?4, username = ?5, password = ?6, database = ?7, color = ?8 WHERE id = ?9", TABLE).as_str(),
+            (connection.name, connection.host, connection.port, connection.secure, connection.username, connection.password, connection.database, connection.color, id)
         )?;
 
         Ok(())
@@ -83,5 +83,6 @@ fn map_row_to_clickhouse_connection(row: &rusqlite::Row) -> ClickhouseConnection
         username: row.get(5).unwrap(),
         password: row.get(6).unwrap_or(None),
         database: row.get(7).unwrap_or(None),
+        color: row.get(8).unwrap_or(None),
     }
 }

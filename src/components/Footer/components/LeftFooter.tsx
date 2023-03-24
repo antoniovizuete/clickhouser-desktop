@@ -1,7 +1,8 @@
 import { Icon, Menu } from "@blueprintjs/core";
 import { MenuItem2, Popover2, Tooltip2 } from "@blueprintjs/popover2";
+import classNames from "classnames";
 import { useThemeContext } from "../../../contexts/useThemeContext";
-import { JsonResult } from "../../../lib/clickhouse-clients";
+import { isJsonResult, QueryResult } from "../../../lib/clickhouse-clients";
 import { download, KindEnum } from "../../../lib/file-downloader";
 import {
   formatReadableBytes,
@@ -9,17 +10,25 @@ import {
 } from "../../../lib/stats-helpers/format-readable";
 
 type Props = {
-  result: JsonResult;
+  result?: QueryResult;
 };
 
 export default function LeftFooter({ result }: Props) {
   const { bpTheme } = useThemeContext();
+
+  if (!isJsonResult(result)) {
+    return null;
+  }
+
   const { statistics, data } = result;
   const handleDownload = (kind: KindEnum) => () => {
     download(result, kind);
   };
+
   return (
-    <div className="flex flex-row justify-start items-center gap-2 divide-x divide-neutral-300 dark:divide-neutral-500 border-l border-l-neutral-300 dark:border-l-neutral-500">
+    <div className={classNames(
+      "flex flex-row justify-start items-center gap-1 divide-x divide-neutral-300 dark:divide-neutral-500"
+    )}>
       <div className="stat">Elapsed: {statistics.elapsed.toFixed(2)} s.</div>
       <div className="stat">{formatReadableRows(data.length)} rows</div>
       <div className="stat">

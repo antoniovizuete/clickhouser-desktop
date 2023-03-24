@@ -6,7 +6,7 @@ import {
   isStringResult
 } from "../../lib/clickhouse-clients";
 
-import Brand from "../Brand";
+import Brand from "../core/Brand";
 import TableResult from "./components/TableResult";
 
 export default function Result() {

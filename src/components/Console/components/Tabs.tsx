@@ -46,7 +46,7 @@ export default function Tabs() {
 
   return (<>
     <div className="h-full flex flex-row justify-start items-center">
-      <div className='h-full flex flex-row justify-start items-end divide-x dark:divide-stone-600'>
+      <div className='h-full flex flex-row justify-start items-end divide-x divide-border dark:divide-border-dark'>
         {tabs.map((tab, i, arr) => (
           <TabUi
             key={`${tab.id}${tab.touched}`}
@@ -59,10 +59,10 @@ export default function Tabs() {
           />
         ))}
       </div>
-      <div className='h-full flex flex-row justify-start items-center px-2 border-b border-b-stone-600'>
+      <div className='h-full flex flex-row justify-start items-center px-2 border-b border-b-border dark:border-b-border-dark'>
         <ClickableIcon icon="plus" onClick={() => addTab()} />
       </div>
-      <div className="h-full flex-grow border-b border-b-stone-600"></div>
+      <div className="h-full flex-grow border-b border-b-border dark:border-b-border-dark"></div>
     </div>
     <Dialog
       icon="warning-sign"

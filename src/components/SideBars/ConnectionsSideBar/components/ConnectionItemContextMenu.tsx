@@ -1,8 +1,9 @@
 import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { hideContextMenu, showContextMenu } from "@blueprintjs/popover2";
 import { PropsWithChildren, useCallback } from 'react';
-import { useThemeContext } from '../../../contexts/useThemeContext';
-import { Connection } from '../../../lib/clickhouse-clients';
+import { useThemeContext } from '../../../../contexts/useThemeContext';
+import { Connection } from '../../../../lib/clickhouse-clients';
+
 
 type Props = {
   connection: Connection;
