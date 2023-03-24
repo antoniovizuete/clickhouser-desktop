@@ -19,7 +19,7 @@ export async function performQuery({
   }
 
   const { username, password, serverAddress, database } = connectionParams;
-  console.trace();
+
   const promise = new Promise<QueryResult>((resolve, reject) => {
     const userParams: string[] = [];
     try {
