@@ -18,7 +18,8 @@ export default function ActionBar({
   showParams,
 }: ActionBarProps) {
   const { activeConnectionId } = useConnectionContext();
-  const { getActiveTab, sqlEditorRef, jsonEditorRef } = useTabsContext();
+  const { getActiveTab, sqlEditorRef, jsonEditorRef, addTab } =
+    useTabsContext();
   const [saveQuery] = useSaveQuery();
 
   const handleOnClickSave = async () => {
@@ -33,11 +34,16 @@ export default function ActionBar({
 
   return (
     <>
-      <nav className="flex flex-row h-10 bg-stone-50 dark:bg-neutral-900 dark:text-white ">
-        <section className="flex-grow">
+      <nav className="w-full flex flex-row justify-start items-start h-12 bg-stone-50 dark:bg-neutral-800 dark:text-white group/scroll">
+        <section className="h-full flex-grow overflow-x-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent group-hover/scroll:scrollbar-thumb-black/25 dark:group-hover/scroll:scrollbar-thumb-white/25">
           <Tabs />
         </section>
-        <section className="flex-grow-0 flex flex-row justify-start items-center gap-1 pr-4 border-b border-b-border dark:border-b-border-dark">
+        <section className="h-10 flex-grow-0 flex flex-row justify-start items-center gap-1 px-4 border-b bg-stone-50 dark:bg-neutral-900 border-b-border dark:border-b-border-dark">
+          <ClickableIcon
+            className="hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600"
+            icon="plus"
+            onClick={() => addTab()}
+          />
           <ClickableIcon
             className={classNames(
               "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",

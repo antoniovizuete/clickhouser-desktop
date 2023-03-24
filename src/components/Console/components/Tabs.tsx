@@ -4,7 +4,6 @@ import { useTabsContext } from "../../../contexts/useTabsContext";
 import { useThemeContext } from "../../../contexts/useThemeContext";
 import { useSaveQuery } from "../../../hooks/useSaveQuery";
 import { Tab } from "../../../lib/tabs-handler";
-import ClickableIcon from "../../core/ClickableIcon";
 import TabUi from "./TabUi";
 
 export default function Tabs() {
@@ -60,10 +59,7 @@ export default function Tabs() {
             />
           ))}
         </div>
-        <div className="h-full flex flex-row justify-start items-center px-2 border-b border-b-border dark:border-b-border-dark">
-          <ClickableIcon icon="plus" onClick={() => addTab()} />
-        </div>
-        <div className="h-full flex-grow border-b border-b-border dark:border-b-border-dark"></div>
+        <div className="h-full flex-grow border-b border-b-border dark:border-b-border-dark bg-stone-50 dark:bg-neutral-900"></div>
       </div>
       <Dialog
         icon="warning-sign"

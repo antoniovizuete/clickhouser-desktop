@@ -19,6 +19,12 @@ module.exports = {
 
     },
   },
-  plugins: [],
-
+  plugins: [
+    require('tailwind-scrollbar')
+  ],
+  variants: {
+    extend: {
+      "scrollbar-thumb": ['dark', 'group-hover', 'group-hover/scroll'],
+    },
+  }
 }
