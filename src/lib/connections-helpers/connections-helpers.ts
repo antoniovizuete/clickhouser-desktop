@@ -37,4 +37,5 @@ export const toConnectionBody = (
   username: connection.username,
   password: connection.password,
   database: connection.database,
+  color: connection.color,
 });
