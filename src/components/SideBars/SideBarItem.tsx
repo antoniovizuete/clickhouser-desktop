@@ -1,6 +1,6 @@
-import { Tooltip2 } from '@blueprintjs/popover2';
-import classNames from 'classnames';
-import { ReactNode } from 'react';
+import { Tooltip2 } from "@blueprintjs/popover2";
+import classNames from "classnames";
+import { ReactNode } from "react";
 
 type Props = {
   caption: string;
@@ -10,11 +10,25 @@ type Props = {
   left?: ReactNode;
   right?: ReactNode;
   style?: React.CSSProperties;
-}
+};
 
-export default function SideBarItem({ left, right, onClick, onDoubleClick, caption, style, tooltip }: Props) {
+export default function SideBarItem({
+  left,
+  right,
+  onClick,
+  onDoubleClick,
+  caption,
+  style,
+  tooltip,
+}: Props) {
   return (
-    <Tooltip2 compact disabled={!tooltip} content={tooltip} hoverOpenDelay={750} className="w-full">
+    <Tooltip2
+      compact
+      disabled={!tooltip}
+      content={tooltip}
+      hoverOpenDelay={750}
+      className="w-full"
+    >
       <div
         className={classNames(
           "select-none w-full h-7 group flex justify-between items-center !outline-none group pr-3",
@@ -35,5 +49,5 @@ export default function SideBarItem({ left, right, onClick, onDoubleClick, capti
         {right}
       </div>
     </Tooltip2>
-  )
+  );
 }

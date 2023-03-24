@@ -6,7 +6,7 @@ import { isJsonResult, QueryResult } from "../../../lib/clickhouse-clients";
 import { download, KindEnum } from "../../../lib/file-downloader";
 import {
   formatReadableBytes,
-  formatReadableRows
+  formatReadableRows,
 } from "../../../lib/stats-helpers/format-readable";
 
 type Props = {
@@ -26,9 +26,11 @@ export default function LeftFooter({ result }: Props) {
   };
 
   return (
-    <div className={classNames(
-      "flex flex-row justify-start items-center gap-1 divide-x divide-neutral-300 dark:divide-neutral-500"
-    )}>
+    <div
+      className={classNames(
+        "flex flex-row justify-start items-center gap-1 divide-x divide-neutral-300 dark:divide-neutral-500"
+      )}
+    >
       <div className="stat">Elapsed: {statistics.elapsed.toFixed(2)} s.</div>
       <div className="stat">{formatReadableRows(data.length)} rows</div>
       <div className="stat">

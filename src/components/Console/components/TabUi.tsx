@@ -14,32 +14,48 @@ type Props = {
   setActiveTabId: (id: string) => void;
   onClickCloseTab: (tab: Tab) => void;
   tab: Tab;
-}
+};
 
-export default function TabUi({ isActive, isLast, isTouched, setActiveTabId, onClickCloseTab, tab }: Props) {
+export default function TabUi({
+  isActive,
+  isLast,
+  isTouched,
+  setActiveTabId,
+  onClickCloseTab,
+  tab,
+}: Props) {
   const { renameTab } = useTabsContext();
   const [saveQuery] = useSaveQuery();
   const handleOnBlurEditableSpan = (e: React.FocusEvent<HTMLSpanElement>) => {
     if (e.currentTarget.innerText !== tab.name) {
       renameTab(e.currentTarget.innerText);
-      saveQuery({
-        ...tab,
-        name: e.currentTarget.innerText,
-      }, "Query renamed successfully", "Error renaming query");
+      saveQuery(
+        {
+          ...tab,
+          name: e.currentTarget.innerText,
+        },
+        "Query renamed successfully",
+        "Error renaming query"
+      );
     }
-  }
+  };
   return (
     <div className="flex flex-col justify-start items-start h-full">
       <div
-        className={
-          classNames(
-            "h-full px-2 flex flex-row justify-between items-center gap-2",
-            "hover:dark:bg-neutral-800  ",
-            "group select-none",
-            { "!border-r border-r-border dark:border-r-border-dark": isLast },
-            { "dark:bg-neutral-900 cursor-pointer border-b border-b-border dark:border-b-border-dark dark:border-t-stone-500": !isActive },
-            { "bg-slate-50 dark:bg-neutral-800 cursor-default border-t-2 border-t-yellow-600 dark:border-t-yellow-500": isActive }
-          )}
+        className={classNames(
+          "h-full px-2 flex flex-row justify-between items-center gap-2",
+          "hover:dark:bg-neutral-800  ",
+          "group select-none",
+          { "!border-r border-r-border dark:border-r-border-dark": isLast },
+          {
+            "dark:bg-neutral-900 cursor-pointer border-b border-b-border dark:border-b-border-dark dark:border-t-stone-500":
+              !isActive,
+          },
+          {
+            "bg-slate-50 dark:bg-neutral-800 cursor-default border-t-2 border-t-yellow-600 dark:border-t-yellow-500":
+              isActive,
+          }
+        )}
       >
         <div className={"w-full"} onClick={(e) => setActiveTabId(tab.id)}>
           <Tooltip2
@@ -48,9 +64,14 @@ export default function TabUi({ isActive, isLast, isTouched, setActiveTabId, onC
             content={tab.name}
             position="bottom"
           >
-            <div className='flex-grow flex flex-row gap-2 justify-start items-center w-36 !outline-none'>
+            <div className="flex-grow flex flex-row gap-2 justify-start items-center w-36 !outline-none">
               <Icon icon={tab.icon} />
-              <EditableSpan editable={isActive} onBlur={handleOnBlurEditableSpan}>{tab.name}</EditableSpan>
+              <EditableSpan
+                editable={isActive}
+                onBlur={handleOnBlurEditableSpan}
+              >
+                {tab.name}
+              </EditableSpan>
             </div>
           </Tooltip2>
         </div>
@@ -66,9 +87,9 @@ export default function TabUi({ isActive, isLast, isTouched, setActiveTabId, onC
             onClick={() => onClickCloseTab(tab)}
           />
         )}
-        {!tab.closeable && isTouched && (<ClickableIcon icon="record" />)}
-        {!tab.closeable && !isTouched && (<div className="w-6" />)}
+        {!tab.closeable && isTouched && <ClickableIcon icon="record" />}
+        {!tab.closeable && !isTouched && <div className="w-6" />}
       </div>
     </div>
-  )
+  );
 }

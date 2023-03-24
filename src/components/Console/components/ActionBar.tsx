@@ -10,71 +10,74 @@ type ActionBarProps = {
   onClickRunQuery: () => void;
   onClickParameters: () => void;
   showParams: boolean;
-}
+};
 
-
-export default function ActionBar({ onClickRunQuery, onClickParameters, showParams }: ActionBarProps) {
+export default function ActionBar({
+  onClickRunQuery,
+  onClickParameters,
+  showParams,
+}: ActionBarProps) {
   const { activeConnectionId } = useConnectionContext();
   const { getActiveTab, sqlEditorRef, jsonEditorRef } = useTabsContext();
-  const [saveQuery] = useSaveQuery()
+  const [saveQuery] = useSaveQuery();
 
   const handleOnClickSave = async () => {
     const tab = getActiveTab();
 
     saveQuery({
-      ...tab || {} as Tab,
+      ...(tab || ({} as Tab)),
       sql: sqlEditorRef.current?.getValue() ?? "",
       params: jsonEditorRef.current?.getValue() ?? "",
     });
-  }
+  };
 
-  return (<>
-    <nav className="flex flex-row h-10 bg-stone-50 dark:bg-neutral-900 dark:text-white ">
-      <section className="flex-grow">
-        <Tabs />
-      </section>
-      <section
-        className="flex-grow-0 flex flex-row justify-start items-center gap-1 pr-4 border-b border-b-border dark:border-b-border-dark"
-      >
-        <ClickableIcon
-          className={classNames(
-            "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
-            "text-stone-700 dark:text-stone-300",
-            { "cursor-not-allowed": !activeConnectionId }
-          )}
-          disabled={!activeConnectionId}
-          icon="play"
-          onClick={onClickRunQuery}
-          size={20}
-          tooltip="Run query"
-          tooltipPlacement="bottom"
-        />
+  return (
+    <>
+      <nav className="flex flex-row h-10 bg-stone-50 dark:bg-neutral-900 dark:text-white ">
+        <section className="flex-grow">
+          <Tabs />
+        </section>
+        <section className="flex-grow-0 flex flex-row justify-start items-center gap-1 pr-4 border-b border-b-border dark:border-b-border-dark">
+          <ClickableIcon
+            className={classNames(
+              "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
+              "text-stone-700 dark:text-stone-300",
+              { "cursor-not-allowed": !activeConnectionId }
+            )}
+            disabled={!activeConnectionId}
+            icon="play"
+            onClick={onClickRunQuery}
+            size={20}
+            tooltip="Run query"
+            tooltipPlacement="bottom"
+          />
 
-        <ClickableIcon
-          className={classNames(
-            "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
-            "text-stone-600 dark:text-stone-400",
-          )}
-          icon="floppy-disk"
-          onClick={handleOnClickSave}
-          size={16}
-          tooltip="Save query"
-          tooltipPlacement="bottom"
-        />
+          <ClickableIcon
+            className={classNames(
+              "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
+              "text-stone-600 dark:text-stone-400"
+            )}
+            icon="floppy-disk"
+            onClick={handleOnClickSave}
+            size={16}
+            tooltip="Save query"
+            tooltipPlacement="bottom"
+          />
 
-        <ClickableIcon
-          className={classNames(
-            "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
-            "text-stone-600 dark:text-stone-400",
-            { "text-yellow-600 dark:text-yellow-500/400": showParams }
-          )}
-          icon="column-layout"
-          onClick={onClickParameters}
-          size={16}
-          tooltip="Toggle parameters"
-          tooltipPlacement="bottom"
-        />
-      </section>
-    </nav>
-  </>)
+          <ClickableIcon
+            className={classNames(
+              "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
+              "text-stone-600 dark:text-stone-400",
+              { "text-yellow-600 dark:text-yellow-500/400": showParams }
+            )}
+            icon="column-layout"
+            onClick={onClickParameters}
+            size={16}
+            tooltip="Toggle parameters"
+            tooltipPlacement="bottom"
+          />
+        </section>
+      </nav>
+    </>
+  );
 }

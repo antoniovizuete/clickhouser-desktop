@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 export const useShowPasswordButton = () => {
   const [showPassword, setShowPassword] = useState(false);
   const toggleShowPassword = useCallback(
-    () => setShowPassword(prev => !prev),
+    () => setShowPassword((prev) => !prev),
     []
   );
 

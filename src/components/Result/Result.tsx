@@ -1,10 +1,7 @@
 import { Icon, NonIdealState, Spinner } from "@blueprintjs/core";
 import { useTabsContext } from "../../contexts/useTabsContext";
 import { useThemeContext } from "../../contexts/useThemeContext";
-import {
-  isMessageResult,
-  isStringResult
-} from "../../lib/clickhouse-clients";
+import { isMessageResult, isStringResult } from "../../lib/clickhouse-clients";
 
 import Brand from "../core/Brand";
 import TableResult from "./components/TableResult";
@@ -12,8 +9,14 @@ import TableResult from "./components/TableResult";
 export default function Result() {
   const { bpTheme } = useThemeContext();
   const { getActiveTab, activeTabId } = useTabsContext();
-  const { loading, queryResult } = getActiveTab() ?? { loading: false, queryResult: undefined };
-  const { result, error } = queryResult ?? { result: undefined, error: undefined };
+  const { loading, queryResult } = getActiveTab() ?? {
+    loading: false,
+    queryResult: undefined,
+  };
+  const { result, error } = queryResult ?? {
+    result: undefined,
+    error: undefined,
+  };
 
   if (error) {
     return (

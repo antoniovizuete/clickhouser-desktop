@@ -1,17 +1,22 @@
-import { Alert } from '@blueprintjs/core'
-import { useThemeContext } from '../../../../contexts/useThemeContext'
-import { Connection } from '../../../../lib/clickhouse-clients'
-import { getConnectionDisplay } from '../../../../lib/connections-helpers'
+import { Alert } from "@blueprintjs/core";
+import { useThemeContext } from "../../../../contexts/useThemeContext";
+import { Connection } from "../../../../lib/clickhouse-clients";
+import { getConnectionDisplay } from "../../../../lib/connections-helpers";
 
 type Props = {
-  handleAlertClose: () => void
-  handleConfirmRemove: () => void
-  isAlertOpen: boolean
-  selectedConnetionToDelete?: Connection
-}
+  handleAlertClose: () => void;
+  handleConfirmRemove: () => void;
+  isAlertOpen: boolean;
+  selectedConnetionToDelete?: Connection;
+};
 
-export default function RemoveConnectionAlert({ handleAlertClose, handleConfirmRemove, isAlertOpen, selectedConnetionToDelete }: Props) {
-  const { bpTheme } = useThemeContext()
+export default function RemoveConnectionAlert({
+  handleAlertClose,
+  handleConfirmRemove,
+  isAlertOpen,
+  selectedConnetionToDelete,
+}: Props) {
+  const { bpTheme } = useThemeContext();
   return (
     <Alert
       className={bpTheme}
@@ -30,5 +35,5 @@ export default function RemoveConnectionAlert({ handleAlertClose, handleConfirmR
       </p>
       <p>Are you sure you want to remove this connection?</p>
     </Alert>
-  )
+  );
 }

@@ -1,9 +1,8 @@
-import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import { Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
 import { hideContextMenu, showContextMenu } from "@blueprintjs/popover2";
-import { PropsWithChildren, useCallback } from 'react';
-import { useThemeContext } from '../../../../contexts/useThemeContext';
-import { Connection } from '../../../../lib/clickhouse-clients';
-
+import { PropsWithChildren, useCallback } from "react";
+import { useThemeContext } from "../../../../contexts/useThemeContext";
+import { Connection } from "../../../../lib/clickhouse-clients";
 
 type Props = {
   connection: Connection;
@@ -12,7 +11,13 @@ type Props = {
   onRemoveClick: (connection: Connection) => void;
 };
 
-export default function ConnectionItemContextMenu({ children, connection, onConnectClick, onEditClick, onRemoveClick }: PropsWithChildren<Props>) {
+export default function ConnectionItemContextMenu({
+  children,
+  connection,
+  onConnectClick,
+  onEditClick,
+  onRemoveClick,
+}: PropsWithChildren<Props>) {
   const { theme } = useThemeContext();
   const handleClose = useCallback(() => {
     hideContextMenu();
@@ -37,25 +42,33 @@ export default function ConnectionItemContextMenu({ children, connection, onConn
       <MenuItem icon="link" text="Connect" onClick={handleOnConnect} />
       <MenuDivider />
       <MenuItem icon="edit" text="Edit..." onClick={handleOnEdit} />
-      <MenuItem icon="cross" intent="danger" text="Remove" onClick={handleOnRemove} />
+      <MenuItem
+        icon="cross"
+        intent="danger"
+        text="Remove"
+        onClick={handleOnRemove}
+      />
     </Menu>
   );
 
-  const handleContextMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
-    event.preventDefault();
-    showContextMenu({
-      content: menu,
-      isDarkTheme: theme === 'dark',
-      onClose: handleClose,
-      targetOffset: {
-        left: event.clientX,
-        top: event.clientY,
-      },
-    });
-  }, []);
+  const handleContextMenu = useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      event.preventDefault();
+      showContextMenu({
+        content: menu,
+        isDarkTheme: theme === "dark",
+        onClose: handleClose,
+        targetOffset: {
+          left: event.clientX,
+          top: event.clientY,
+        },
+      });
+    },
+    []
+  );
 
   return (
-    <div className='w-full' onContextMenu={handleContextMenu}>
+    <div className="w-full" onContextMenu={handleContextMenu}>
       {children}
     </div>
   );

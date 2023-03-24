@@ -2,27 +2,32 @@ import {
   createContext,
   PropsWithChildren,
   useCallback,
-  useContext, useState
+  useContext,
+  useState,
 } from "react";
 import { connectionRepo } from "../lib/backend-repos";
 import {
   ActiveConnection,
-  Connection, ConnectionDisplay, ConnectionId
+  Connection,
+  ConnectionDisplay,
+  ConnectionId,
 } from "../lib/clickhouse-clients";
 
 type ConnectionsContextType = {
   activeConnectionId: ConnectionId | undefined;
   activeConnectionDisplay: ConnectionDisplay | undefined;
-  setActiveConnectionDisplay: (connectionDisplay: ConnectionDisplay | undefined) => void;
+  setActiveConnectionDisplay: (
+    connectionDisplay: ConnectionDisplay | undefined
+  ) => void;
   setActiveConnection: (connection: ActiveConnection | undefined) => void;
   getActiveConnection: () => Promise<Connection | undefined>;
 };
 
 const ConnectionsContext = createContext<ConnectionsContextType>({
   activeConnectionDisplay: undefined,
-  setActiveConnectionDisplay: () => { },
+  setActiveConnectionDisplay: () => {},
   activeConnectionId: undefined,
-  setActiveConnection: () => { },
+  setActiveConnection: () => {},
   getActiveConnection: () => Promise.reject(),
 });
 
@@ -34,7 +39,9 @@ export function ConnectionsProvider({ children }: PropsWithChildren<{}>) {
     ConnectionId | undefined
   >(undefined);
 
-  const setActiveConnection = async (activeConnection: ActiveConnection | undefined) => {
+  const setActiveConnection = async (
+    activeConnection: ActiveConnection | undefined
+  ) => {
     if (!activeConnection) {
       setInternalActiveConnectionId(undefined);
       setActiveConnectionDisplay(undefined);
@@ -46,8 +53,10 @@ export function ConnectionsProvider({ children }: PropsWithChildren<{}>) {
   };
 
   const getActiveConnection = useCallback(async () => {
-    return activeConnectionId ? await connectionRepo.getById(activeConnectionId.id) : undefined
-  }, [activeConnectionId])
+    return activeConnectionId
+      ? await connectionRepo.getById(activeConnectionId.id)
+      : undefined;
+  }, [activeConnectionId]);
 
   const contextValue = {
     activeConnectionDisplay,

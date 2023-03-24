@@ -1,8 +1,12 @@
 import MonacoEditor, { OnChange } from "@monaco-editor/react";
+import { editor, IDisposable } from "monaco-editor/esm/vs/editor/editor.api";
 import {
-  editor, IDisposable
-} from "monaco-editor/esm/vs/editor/editor.api";
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { useThemeContext } from "../../../contexts/useThemeContext";
 import { TouchableFields } from "../../../lib/tabs-handler/tabs-reducer";
 
@@ -25,11 +29,12 @@ const Editor = forwardRef<EditorRef, EditorProps>((props, ref) => {
   const { defaultValue, language, onChange, onMount, path, touchableField } =
     props;
 
-  const [internalDefaultValue, setInternalDefaultValue] = useState(defaultValue);
+  const [internalDefaultValue, setInternalDefaultValue] =
+    useState(defaultValue);
 
   useEffect(() => {
     setInternalDefaultValue(defaultValue);
-  }, [defaultValue])
+  }, [defaultValue]);
 
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
 

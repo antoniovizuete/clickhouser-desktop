@@ -10,7 +10,6 @@ import { useConnectionDialogHandler } from "./components/ConnectionDialog";
 import ConnectionItem from "./components/ConnectionItem";
 import RemoveConnectionAlert from "./components/RemoveConnectionAlert";
 
-
 export default function ConnectionsSideBar() {
   const [connections, setConnections] = useState<Connection[]>([]);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -21,7 +20,7 @@ export default function ConnectionsSideBar() {
   const retrieveConnections = async () => {
     const retrievedConnections = await connectionRepo.get();
     setConnections(retrievedConnections);
-  }
+  };
 
   const [ConnectionDialog, openConnetionDialog] = useConnectionDialogHandler({
     onClose: retrieveConnections,
@@ -33,7 +32,7 @@ export default function ConnectionsSideBar() {
 
   const handleEditClick = (connection: Connection) => {
     openConnetionDialog(connection);
-  }
+  };
 
   const handleNewClick = () => {
     openConnetionDialog();
@@ -42,7 +41,7 @@ export default function ConnectionsSideBar() {
   const handleRemoveClick = (connection: Connection) => {
     setSelectedConnetionToDelete(connection);
     setIsAlertOpen(true);
-  }
+  };
 
   const handleAlertClose = () => {
     setIsAlertOpen(false);
@@ -62,29 +61,38 @@ export default function ConnectionsSideBar() {
     }
   };
 
-  return (<>
-    <SideBar icon="data-connection" title="Connetctions" buttons={
-      <ClickableIcon className="text-black dark:text-white" onClick={handleNewClick} icon="plus" />
-    } >
-      {(connections || []).map((connection) =>
-        <ConnectionItem
-          key={connection.id}
-          connection={connection}
-          onEditClick={handleEditClick}
-          onRemoveClick={handleRemoveClick}
-        />
-      )}
-      {connections.length === 0 && (
-        <SideBarEmptyState text="You don't have any connections yet." />
-      )}
-    </SideBar>
-    {ConnectionDialog}
-    <RemoveConnectionAlert
-      handleAlertClose={handleAlertClose}
-      handleConfirmRemove={handleConfirmRemove}
-      isAlertOpen={isAlertOpen}
-      selectedConnetionToDelete={selectedConnetionToDelete}
-    />
-  </>
-  )
+  return (
+    <>
+      <SideBar
+        icon="data-connection"
+        title="Connetctions"
+        buttons={
+          <ClickableIcon
+            className="text-black dark:text-white"
+            onClick={handleNewClick}
+            icon="plus"
+          />
+        }
+      >
+        {(connections || []).map((connection) => (
+          <ConnectionItem
+            key={connection.id}
+            connection={connection}
+            onEditClick={handleEditClick}
+            onRemoveClick={handleRemoveClick}
+          />
+        ))}
+        {connections.length === 0 && (
+          <SideBarEmptyState text="You don't have any connections yet." />
+        )}
+      </SideBar>
+      {ConnectionDialog}
+      <RemoveConnectionAlert
+        handleAlertClose={handleAlertClose}
+        handleConfirmRemove={handleConfirmRemove}
+        isAlertOpen={isAlertOpen}
+        selectedConnetionToDelete={selectedConnetionToDelete}
+      />
+    </>
+  );
 }
