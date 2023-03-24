@@ -43,6 +43,8 @@ export default function ActionBar({
             className="hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600"
             icon="plus"
             onClick={() => addTab()}
+            tooltip="New query"
+            tooltipPlacement="bottom"
           />
           <ClickableIcon
             className={classNames(
