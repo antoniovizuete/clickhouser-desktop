@@ -75,6 +75,7 @@ const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(
                       className={`flex-grow ${bpTheme}`}
                       placeholder="Host"
                       size={40}
+                      spellCheck={false}
                       {...field}
                     />
                   )}
@@ -93,6 +94,7 @@ const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(
                       onBlur={field.onBlur}
                       onChange={field.onChange}
                       ref={field.ref}
+                      spellCheck={false}
                       value={field.value.toString()}
                     />
                   )}
@@ -110,6 +112,7 @@ const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(
                         className={`flex-grow ${bpTheme}`}
                         placeholder="Database"
                         size={40}
+                        spellCheck={false}
                         {...field}
                       />
                     )}
@@ -148,6 +151,7 @@ const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(
                       className={`flex-grow ${bpTheme}`}
                       placeholder="Username"
                       size={40}
+                      spellCheck={false}
                       {...field}
                     />
                   )}
@@ -163,6 +167,7 @@ const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       size={40}
+                      spellCheck={false}
                       rightElement={<ShowPasswordButton />}
                       {...field}
                     />
