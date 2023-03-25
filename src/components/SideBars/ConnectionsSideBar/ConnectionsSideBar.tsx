@@ -65,7 +65,7 @@ export default function ConnectionsSideBar() {
     <>
       <SideBar
         icon="data-connection"
-        title="Connetctions"
+        title="Connections"
         buttons={
           <ClickableIcon
             className="text-black dark:text-white"

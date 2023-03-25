@@ -21,28 +21,29 @@ export const useConnectionDialog = ({ onClose, ref }: Params) => {
     undefined
   );
 
-  const { control, handleSubmit, getValues, watch } = useForm<ConnectionBody>({
-    values: {
-      name: connection?.name || "",
-      host: connection?.host || "",
-      port: connection?.port || 8123,
-      secure: connection?.secure || false,
-      database: connection?.database || "",
-      username: connection?.username || "default",
-      password: connection?.password || "",
-      color: connection?.color ?? "#000000",
-    },
-    defaultValues: {
-      name: "",
-      host: "",
-      port: 8123,
-      secure: false,
-      database: "",
-      username: "default",
-      password: "",
-      color: "#000000",
-    },
-  });
+  const { control, handleSubmit, getValues, reset, watch } =
+    useForm<ConnectionBody>({
+      values: {
+        name: connection?.name || "",
+        host: connection?.host || "",
+        port: connection?.port || 8123,
+        secure: connection?.secure || false,
+        database: connection?.database || "",
+        username: connection?.username || "default",
+        password: connection?.password || "",
+        color: connection?.color ?? "#000000",
+      },
+      defaultValues: {
+        name: "",
+        host: "",
+        port: 8123,
+        secure: false,
+        database: "",
+        username: "default",
+        password: "",
+        color: "#000000",
+      },
+    });
 
   const onClickTest = async () => {
     try {
@@ -66,6 +67,7 @@ export const useConnectionDialog = ({ onClose, ref }: Params) => {
       await save(data);
       AppToaster.top.success("The connection has been saved successfully");
       close();
+      reset();
     } catch (error) {
       AppToaster.top.error("The connection could not be saved");
     }
@@ -81,6 +83,7 @@ export const useConnectionDialog = ({ onClose, ref }: Params) => {
   const close = () => {
     setConnection(undefined);
     setTested(false);
+    reset();
     onClose();
     setIsOpen(false);
   };
