@@ -52,6 +52,7 @@ const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(
                       className={`flex-grow ${bpTheme}`}
                       placeholder="Name"
                       size={40}
+                      spellCheck={false}
                       {...field}
                     />
                   )}
@@ -75,6 +76,7 @@ const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(
                       className={`flex-grow ${bpTheme}`}
                       placeholder="Host"
                       size={40}
+                      spellCheck={false}
                       {...field}
                     />
                   )}
@@ -110,6 +112,7 @@ const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(
                         className={`flex-grow ${bpTheme}`}
                         placeholder="Database"
                         size={40}
+                        spellCheck={false}
                         {...field}
                       />
                     )}
@@ -148,6 +151,7 @@ const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(
                       className={`flex-grow ${bpTheme}`}
                       placeholder="Username"
                       size={40}
+                      spellCheck={false}
                       {...field}
                     />
                   )}
