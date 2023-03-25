@@ -52,7 +52,6 @@ const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(
                       className={`flex-grow ${bpTheme}`}
                       placeholder="Name"
                       size={40}
-                      spellCheck={false}
                       {...field}
                     />
                   )}
@@ -95,6 +94,7 @@ const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(
                       onBlur={field.onBlur}
                       onChange={field.onChange}
                       ref={field.ref}
+                      spellCheck={false}
                       value={field.value.toString()}
                     />
                   )}
