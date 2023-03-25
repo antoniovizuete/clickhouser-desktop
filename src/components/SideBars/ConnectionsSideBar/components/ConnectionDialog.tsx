@@ -167,6 +167,7 @@ const ConnectionsDialog = forwardRef<ConnectionDialogRef, ComponentProps>(
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       size={40}
+                      spellCheck={false}
                       rightElement={<ShowPasswordButton />}
                       {...field}
                     />
