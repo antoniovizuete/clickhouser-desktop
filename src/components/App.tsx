@@ -1,10 +1,6 @@
 import { Allotment } from "allotment";
-import { useReducer } from "react";
-import {
-  initialSideBarState,
-  SideBarAction,
-  sideBarReducer,
-} from "../reducers/sidebar-reducer";
+import { useApp } from "../hooks/useApp";
+import { SideBarAction } from "../reducers/sidebar-reducer";
 import Console from "./Console";
 import IconBarItem from "./core/IconBarItem";
 import Footer from "./Footer";
@@ -13,7 +9,7 @@ import ThemeIconBarItem from "./SideBars/IconBarItems/ThemeIconBarItem";
 import SavedQueriesSideBar from "./SideBars/SavedQueriesSideBar/SavedQueriesSideBar";
 
 export default function App() {
-  const [state, dispatch] = useReducer(sideBarReducer, initialSideBarState);
+  const { sideBarDispatch, sideBarState } = useApp();
 
   return (
     <>
@@ -31,23 +27,23 @@ export default function App() {
                     icon="data-connection"
                     tooltip="Connections"
                     onClick={() =>
-                      dispatch({
+                      sideBarDispatch({
                         type: SideBarAction.TOGGLE,
                         payload: { section: "connection" },
                       })
                     }
-                    isActive={state.isConnectionSectionOpen}
+                    isActive={sideBarState.isConnectionSectionOpen}
                   />
                   <IconBarItem
                     icon="console"
                     tooltip="Saved queries"
                     onClick={() =>
-                      dispatch({
+                      sideBarDispatch({
                         type: SideBarAction.TOGGLE,
                         payload: { section: "query" },
                       })
                     }
-                    isActive={state.isQuerySectionOpen}
+                    isActive={sideBarState.isQuerySectionOpen}
                   />
                 </div>
                 <div className="w-full flex-grow-0">
@@ -55,12 +51,12 @@ export default function App() {
                 </div>
               </div>
             </Allotment.Pane>
-            {state.isConnectionSectionOpen && (
+            {sideBarState.isConnectionSectionOpen && (
               <Allotment.Pane preferredSize="16%" maxSize={400} minSize={200}>
                 <ConnectionsSideBar />
               </Allotment.Pane>
             )}
-            {state.isQuerySectionOpen && (
+            {sideBarState.isQuerySectionOpen && (
               <Allotment.Pane preferredSize="16%" maxSize={400} minSize={200}>
                 <SavedQueriesSideBar />
               </Allotment.Pane>
