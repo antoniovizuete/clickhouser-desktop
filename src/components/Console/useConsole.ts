@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useConnectionContext } from "../../contexts/useConnectionContext";
 import { useTabsContext } from "../../contexts/useTabsContext";
-import { useRunQueryEvent } from "../../hooks/useRunQueryEvent";
+import { useRunQueryEvent } from "../../events/run-query/useRunQueryEvent";
 import { performQuery } from "../../lib/clickhouse-clients";
 
 export const useConsole = () => {

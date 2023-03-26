@@ -2,7 +2,7 @@ import { Button, Classes, Dialog } from "@blueprintjs/core";
 import { useState } from "react";
 import { useTabsContext } from "../../../contexts/useTabsContext";
 import { useThemeContext } from "../../../contexts/useThemeContext";
-import { useSaveQuery } from "../../../hooks/useSaveQuery";
+import { useSaveQuery } from "../../../events/save-query/useSaveQuery";
 import { Tab } from "../../../lib/tabs-handler";
 import TabUi from "./TabUi";
 

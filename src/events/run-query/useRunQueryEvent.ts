@@ -1,7 +1,6 @@
 import { EventCallback } from "@tauri-apps/api/event";
 import { DependencyList } from "react";
-import { useEmit } from "./useEmit";
-import { useListen } from "./useListen";
+import { useEmit, useListen } from "../common";
 
 const RUN_QUERY_EVENT = "run-query";
 

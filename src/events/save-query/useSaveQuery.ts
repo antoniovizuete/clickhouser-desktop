@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { useTabsContext } from "../contexts/useTabsContext";
-import { queryRepo } from "../lib/backend-repos/query-repo";
-import { Tab } from "../lib/tabs-handler";
-import { AppToaster } from "../lib/toaster/AppToaster";
+import { useTabsContext } from "../../contexts/useTabsContext";
+import { queryRepo } from "../../lib/backend-repos/query-repo";
+import { Tab } from "../../lib/tabs-handler";
+import { AppToaster } from "../../lib/toaster/AppToaster";
 import { useSaveQueryEvent } from "./useSaveQueryEvent";
 
 export const useSaveQuery = () => {

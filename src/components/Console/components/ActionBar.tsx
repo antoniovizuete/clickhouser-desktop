@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useConnectionContext } from "../../../contexts/useConnectionContext";
 import { useTabsContext } from "../../../contexts/useTabsContext";
-import { useSaveQuery } from "../../../hooks/useSaveQuery";
+import { useSaveQuery } from "../../../events/save-query/useSaveQuery";
 import { Tab } from "../../../lib/tabs-handler";
 import ClickableIcon from "../../core/ClickableIcon";
 import Tabs from "./Tabs";

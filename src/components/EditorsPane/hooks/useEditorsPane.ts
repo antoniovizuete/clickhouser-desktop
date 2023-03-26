@@ -1,8 +1,8 @@
 import { editor, KeyCode, KeyMod } from "monaco-editor";
 import { useCallback } from "react";
 import { OnExecuteQueryParams } from "..";
+import { useRunQueryEvent } from "../../../events/run-query/useRunQueryEvent";
 import { useMonacoConfigSupplier } from "../../../hooks/useMonacoConfigSupplier";
-import { useRunQueryEvent } from "../../../hooks/useRunQueryEvent";
 import { Connection } from "../../../lib/clickhouse-clients";
 import { addAction } from "../../../lib/editor-helpers/add-action.editor.helper";
 import { EditorRef } from "../components/Editor";

@@ -2,7 +2,7 @@ import { Button, Classes, Dialog } from "@blueprintjs/core";
 import { useEffect, useState } from "react";
 import { useTabsContext } from "../../../contexts/useTabsContext";
 import { useThemeContext } from "../../../contexts/useThemeContext";
-import { useSaveQueryEvent } from "../../../hooks/useSaveQueryEvent";
+import { useSaveQueryEvent } from "../../../events/save-query/useSaveQueryEvent";
 import { Query, queryRepo } from "../../../lib/backend-repos/query-repo";
 import { AppToaster } from "../../../lib/toaster/AppToaster";
 import ClickableIcon from "../../core/ClickableIcon";
