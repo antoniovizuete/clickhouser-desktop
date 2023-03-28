@@ -34,7 +34,7 @@ impl<'a> Repository<'a> {
         let mut stmt = self.database_connection.prepare(
             format!("SELECT id, name, sql, params FROM {} ORDER BY name", TABLE).as_str(),
         )?;
-        let queries_iter = stmt.query_map([], |row| Ok(map_row_to_clickhouse_connection(row)))?;
+        let queries_iter = stmt.query_map([], |row| Ok(map_row(row)))?;
 
         let mut queries = Vec::new();
         for query in queries_iter {
@@ -48,7 +48,7 @@ impl<'a> Repository<'a> {
         let mut stmt = self.database_connection.prepare(
             format!("SELECT id, name, sql, params FROM {} WHERE id = ?1", TABLE).as_str(),
         )?;
-        let connection = stmt.query_row([id], |row| Ok(map_row_to_clickhouse_connection(row)))?;
+        let connection = stmt.query_row([id], |row| Ok(map_row(row)))?;
 
         Ok(connection)
     }
@@ -76,7 +76,7 @@ impl<'a> Repository<'a> {
     }
 }
 
-fn map_row_to_clickhouse_connection(row: &rusqlite::Row) -> Query {
+fn map_row(row: &rusqlite::Row) -> Query {
     Query {
         id: row.get(0).unwrap(),
         name: row.get(1).unwrap(),
