@@ -58,6 +58,10 @@ class AppToasterClass {
   public clear(): void {
     this._toaster.clear();
   }
+
+  public dismiss(key: string): void {
+    this._toaster.dismiss(key);
+  }
 }
 
 const top = new AppToasterClass(Toaster.create({ position: Position.TOP }));

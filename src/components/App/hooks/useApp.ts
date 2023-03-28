@@ -1,4 +1,7 @@
-import { useReducer } from "react";
+import { listen } from "@tauri-apps/api/event";
+import { useEffect, useReducer } from "react";
+import { useTabsContext } from "../../../contexts/useTabsContext";
+import { useSaveQuery } from "../../../events/save-query/useSaveQuery";
 import {
   initialSideBarState,
   sideBarReducer,
@@ -9,6 +12,19 @@ export const useApp = () => {
     sideBarReducer,
     initialSideBarState
   );
+
+  const { getActiveTab } = useTabsContext();
+  const [saveQuery] = useSaveQuery();
+
+  useEffect(() => {
+    let sub = listen("save-query", () => {
+      const tab = getActiveTab();
+      saveQuery(tab);
+    });
+    return () => {
+      sub.then((unlisten) => unlisten?.());
+    };
+  }, [saveQuery, getActiveTab]);
 
   return {
     sideBarState,

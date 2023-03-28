@@ -1,16 +1,14 @@
+import { Spinner } from "@blueprintjs/core";
 import { useCallback } from "react";
 import { useTabsContext } from "../../contexts/useTabsContext";
 import { queryRepo } from "../../lib/backend-repos/query-repo";
 import { Tab } from "../../lib/tabs-handler";
 import { AppToaster } from "../../lib/toaster/AppToaster";
 import { useSavedQueryEvent } from "../saved-query/useSavedQueryEvent";
-import { useSaveQueryEvent } from "./useSaveQueryEvent";
 
 export const useSaveQuery = () => {
-  const { markAsSaved, sqlEditorRef, jsonEditorRef, getActiveTab } =
-    useTabsContext();
+  const { markAsSaved, sqlEditorRef, jsonEditorRef } = useTabsContext();
   const { emitSavedQueryEvent } = useSavedQueryEvent();
-  const { useSaveQueryEventListener } = useSaveQueryEvent();
 
   const saveQuery = useCallback(
     async (
@@ -18,7 +16,13 @@ export const useSaveQuery = () => {
       successMessage = "Query saved",
       error = "Failed to save query"
     ) => {
+      const loadingToastKey = AppToaster.topRight.info({
+        icon: <Spinner intent="primary" size={12} />,
+        message: "Saving query...",
+      });
+
       if (!tab) {
+        AppToaster.topRight.dismiss(loadingToastKey);
         AppToaster.top.error("No tab to save");
         return;
       }
@@ -34,18 +38,15 @@ export const useSaveQuery = () => {
         }
         markAsSaved();
         emitSavedQueryEvent(undefined);
+        AppToaster.topRight.dismiss(loadingToastKey);
         AppToaster.topRight.success(successMessage);
       } catch (e) {
-        AppToaster.top.error(error);
+        AppToaster.topRight.dismiss(loadingToastKey);
+        AppToaster.topRight.error(error);
       }
     },
     [sqlEditorRef, jsonEditorRef, markAsSaved]
   );
-
-  useSaveQueryEventListener(async () => {
-    const tab = getActiveTab();
-    await saveQuery(tab);
-  }, [saveQuery, getActiveTab]);
 
   return [saveQuery];
 };

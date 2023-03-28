@@ -40,7 +40,6 @@ export default function ClickableIcon({
   );
 
   useEffect(() => {
-    console.log("internalShortcut", intenalShortcut);
     setTooltipContent(
       `${tooltip} ${intenalShortcut ? `(${intenalShortcut})` : ""}`
     );

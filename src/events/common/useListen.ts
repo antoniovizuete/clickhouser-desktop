@@ -15,7 +15,7 @@ export const useListen = <T>({
   useEffect(() => {
     let unlisten: UnlistenFn;
     (async () => {
-      unlisten = await listen(eventName, handler);
+      unlisten = await listen<T>(eventName, handler);
     })();
     return () => {
       unlisten?.();
