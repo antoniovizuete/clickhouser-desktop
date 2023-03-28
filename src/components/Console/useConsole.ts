@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { useConnectionContext } from "../../contexts/useConnectionContext";
 import { useTabsContext } from "../../contexts/useTabsContext";
 import { useRunQueryEvent } from "../../events/run-query/useRunQueryEvent";
+import { useToggleParamsEvent } from "../../events/toggle-params/useToggleParamsEvent";
 import { performQuery } from "../../lib/clickhouse-clients";
 
 export const useConsole = () => {
@@ -15,26 +16,39 @@ export const useConsole = () => {
   } = useTabsContext();
 
   const { getActiveConnection } = useConnectionContext();
-  const { useRunQueryEventListen, emitRunQueryEvent } = useRunQueryEvent();
 
-  useRunQueryEventListen(
-    async (event) => {
-      if (getActiveTab()?.loading) return;
-      setLoading(true);
+  const toggleShowParams = useCallback(() => {
+    setShowParams((prev) => !prev);
+  }, [setShowParams]);
 
-      const connection = await getActiveConnection();
-      const { query, params } = event.payload;
+  useToggleParamsEvent().useToggleParamsEventListener(() => {
+    toggleShowParams();
+  }, [toggleShowParams]);
 
-      const queryResult = await performQuery({
-        query,
-        params,
-        connection,
-      });
+  const { useRunQueryEventListener, emitRunQueryEvent } = useRunQueryEvent();
 
-      setQueryResult({ queryResult, sql: query, params });
-    },
-    [getActiveConnection, setQueryResult, setLoading]
-  );
+  useRunQueryEventListener(async () => {
+    if (getActiveTab()?.loading) return;
+    setLoading(true);
+
+    const connection = await getActiveConnection();
+    const query = sqlEditorRef.current?.getValue();
+    const params = jsonEditorRef.current?.getValue();
+
+    const queryResult = await performQuery({
+      query,
+      params,
+      connection,
+    });
+
+    setQueryResult({ queryResult, sql: query, params });
+  }, [
+    getActiveConnection,
+    setQueryResult,
+    setLoading,
+    sqlEditorRef.current,
+    jsonEditorRef.current,
+  ]);
 
   const handleOnClickRunQuery = useCallback(async () => {
     emitRunQueryEvent({
@@ -46,6 +60,6 @@ export const useConsole = () => {
   return {
     handleOnClickRunQuery,
     showParams,
-    toggleShowParams: () => setShowParams((prev) => !prev),
+    toggleShowParams,
   };
 };

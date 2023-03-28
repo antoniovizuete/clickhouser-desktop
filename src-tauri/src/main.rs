@@ -4,11 +4,13 @@
 )]
 
 use context::Context;
+use tauri::Manager;
 
 mod connections_repository;
 mod context;
 mod database;
 mod errors;
+mod menu;
 mod queries_repository;
 
 fn main() {
@@ -16,6 +18,18 @@ fn main() {
 
     tauri::Builder::default()
         .manage(context)
+        .menu(menu::build_menu())
+        .on_menu_event(|event| match event.menu_item_id() {
+            "close-window" => {
+                let window = event.window();
+                window.close().unwrap();
+            }
+            "close-tab" | "run-query" | "new-query" | "save-query" | "toggle-params" => {
+                let window = event.window();
+                window.emit_all(event.menu_item_id(), {}).unwrap()
+            }
+            _ => {}
+        })
         .invoke_handler(tauri::generate_handler![
             connections_repository::commands::get_all_connection,
             connections_repository::commands::get_connection_by_id,

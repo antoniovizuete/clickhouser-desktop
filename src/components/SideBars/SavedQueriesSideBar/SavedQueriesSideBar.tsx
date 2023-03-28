@@ -2,7 +2,7 @@ import { Button, Classes, Dialog } from "@blueprintjs/core";
 import { useEffect, useState } from "react";
 import { useTabsContext } from "../../../contexts/useTabsContext";
 import { useThemeContext } from "../../../contexts/useThemeContext";
-import { useSaveQueryEvent } from "../../../events/save-query/useSaveQueryEvent";
+import { useSavedQueryEvent } from "../../../events/saved-query/useSavedQueryEvent";
 import { Query, queryRepo } from "../../../lib/backend-repos/query-repo";
 import { AppToaster } from "../../../lib/toaster/AppToaster";
 import ClickableIcon from "../../core/ClickableIcon";
@@ -13,7 +13,7 @@ import SideBarItem from "../SideBarItem";
 export default function SavedQueriesSideBar() {
   const { bpTheme } = useThemeContext();
   const { restoreTab } = useTabsContext();
-  const { useSaveQueryEventListen } = useSaveQueryEvent();
+  const { useSavedQueryEventListener } = useSavedQueryEvent();
 
   const [queries, setQueries] = useState<Query[]>([]);
   const [queryToRemove, setQueryToRemove] = useState<Query | undefined>();
@@ -28,7 +28,7 @@ export default function SavedQueriesSideBar() {
     retrieveQueries();
   }, []);
 
-  useSaveQueryEventListen(() => {
+  useSavedQueryEventListener(() => {
     retrieveQueries();
   }, []);
 

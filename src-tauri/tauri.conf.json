@@ -7,18 +7,22 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "clickhouser-desktop",
+    "productName": "ClickHouser",
     "version": "0.0.0"
   },
   "tauri": {
     "allowlist": {
       "all": false,
-      "globalShortcut": {
+      "os": {
         "all": true
       },
       "shell": {
         "all": false,
         "open": true
+      },
+      "window": {
+        "all": false,
+        "close": true
       }
     },
     "bundle": {
@@ -65,7 +69,7 @@
         "center": true,
         "fullscreen": false,
         "resizable": true,
-        "title": "Clickhouser Desktop",
+        "title": "ClickHouser",
         "width": 1920,
         "height": 1080,
         "minWidth": 800,

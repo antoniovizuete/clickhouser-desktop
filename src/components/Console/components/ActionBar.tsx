@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { useConnectionContext } from "../../../contexts/useConnectionContext";
 import { useTabsContext } from "../../../contexts/useTabsContext";
 import { useSaveQuery } from "../../../events/save-query/useSaveQuery";
+
 import { Tab } from "../../../lib/tabs-handler";
 import ClickableIcon from "../../core/ClickableIcon";
 import Tabs from "./Tabs";
@@ -45,6 +46,7 @@ export default function ActionBar({
             onClick={() => addTab()}
             tooltip="New query"
             tooltipPlacement="bottom"
+            shortcut="CmdOrCtrl+N"
           />
           <ClickableIcon
             className={classNames(
@@ -58,6 +60,7 @@ export default function ActionBar({
             size={20}
             tooltip="Run query"
             tooltipPlacement="bottom"
+            shortcut="CmdOrCtrl+R"
           />
 
           <ClickableIcon
@@ -70,6 +73,7 @@ export default function ActionBar({
             size={16}
             tooltip="Save query"
             tooltipPlacement="bottom"
+            shortcut="CmdOrCtrl+S"
           />
 
           <ClickableIcon
@@ -83,6 +87,7 @@ export default function ActionBar({
             size={16}
             tooltip="Toggle parameters"
             tooltipPlacement="bottom"
+            shortcut="CmdOrCtrl+P"
           />
         </section>
       </nav>

@@ -3,6 +3,7 @@ import { Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
 import { useTabsContext } from "../../../contexts/useTabsContext";
 import { useSaveQuery } from "../../../events/save-query/useSaveQuery";
+
 import { Tab } from "../../../lib/tabs-handler";
 import ClickableIcon from "../../core/ClickableIcon";
 import EditableSpan from "../../core/EditableSpan";

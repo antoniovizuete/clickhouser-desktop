@@ -2,11 +2,11 @@ import { useMonaco } from "@monaco-editor/react";
 import { IDisposable } from "monaco-editor/esm/vs/editor/editor.api";
 import { useEffect, useState } from "react";
 import { format } from "sql-formatter";
-import { useConnectionContext } from "../contexts/useConnectionContext";
-import { getParemeterNameSuggetionProvider } from "../lib/editor-suggestions/parameter-name.suggestion";
-import { paremeterSnippetSuggetionProvider } from "../lib/editor-suggestions/parameter-snippet.suggestion";
-import { paremeterTypeSuggetionProvider } from "../lib/editor-suggestions/parameter-type.suggestion";
-import { getTablesSuggestionProvider } from "../lib/editor-suggestions/tables.suggestion";
+import { useConnectionContext } from "../../../contexts/useConnectionContext";
+import { getParemeterNameSuggetionProvider } from "../../../lib/editor-suggestions/parameter-name.suggestion";
+import { paremeterSnippetSuggetionProvider } from "../../../lib/editor-suggestions/parameter-snippet.suggestion";
+import { paremeterTypeSuggetionProvider } from "../../../lib/editor-suggestions/parameter-type.suggestion";
+import { getTablesSuggestionProvider } from "../../../lib/editor-suggestions/tables.suggestion";
 
 type Params = {
   jsonParams: string;

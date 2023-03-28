@@ -8,6 +8,9 @@ import {
   useRef,
 } from "react";
 import { EditorRef } from "../components/EditorsPane/components/Editor";
+import { useCloseTabEvent } from "../events/close-tab/useCloseTabEvent";
+import { useNewQueryEvent } from "../events/new-query/useNewQueryEvent";
+import { usePreventCloseTabEvent } from "../events/prevent-close-tab/useClosingEvent";
 import { Query } from "../lib/backend-repos/query-repo";
 import { PerformQueryResult } from "../lib/clickhouse-clients/perform-query/types";
 import {
@@ -58,6 +61,31 @@ const TabsContext = createContext<TabsContextType>({
 
 export function TabsProvider({ children }: PropsWithChildren) {
   const [state, dispatch] = useReducer(tabsReducer, initialTabsState);
+
+  const { emitPreventCloseTabEvent } = usePreventCloseTabEvent();
+
+  useCloseTabEvent().useCloseTabEventListener(
+    (event) => {
+      if (state.tabs.length > 1) {
+        const tabToClose =
+          event.payload?.tab ??
+          state.tabs.find((t) => t.id === state.activeTabId);
+
+        if (tabToClose?.touched && !event.payload?.force) {
+          emitPreventCloseTabEvent({ tabToClose });
+          return;
+        }
+
+        removeTab(tabToClose?.id ?? state.activeTabId);
+      }
+    },
+    [state.activeTabId, state.tabs]
+  );
+
+  useNewQueryEvent().useNewQueryEventListener(() => {
+    addTab();
+  }, []);
+
   const { tabs, activeTabId } = state;
   const sqlEditorRef = useRef<EditorRef>(null);
   const jsonEditorRef = useRef<EditorRef>(null);

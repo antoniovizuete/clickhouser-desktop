@@ -1,15 +1,24 @@
 import { Allotment } from "allotment";
-import { useApp } from "../hooks/useApp";
-import { SideBarAction } from "../reducers/sidebar-reducer";
-import Console from "./Console";
-import IconBarItem from "./core/IconBarItem";
-import Footer from "./Footer";
-import ConnectionsSideBar from "./SideBars/ConnectionsSideBar";
-import ThemeIconBarItem from "./SideBars/IconBarItems/ThemeIconBarItem";
-import SavedQueriesSideBar from "./SideBars/SavedQueriesSideBar/SavedQueriesSideBar";
+import { SideBarAction } from "../../reducers/sidebar-reducer";
+import Console from "../Console";
+import IconBarItem from "../core/IconBarItem";
+import Footer from "../Footer";
+import ConnectionsSideBar from "../SideBars/ConnectionsSideBar";
+import ThemeIconBarItem from "../SideBars/IconBarItems/ThemeIconBarItem";
+import SavedQueriesSideBar from "../SideBars/SavedQueriesSideBar/SavedQueriesSideBar";
+import CloseDialog from "./dialogs/CloseDialog";
+import { useApp } from "./hooks/useApp";
+import { useCloseDialog } from "./hooks/useCloseDialog";
 
 export default function App() {
   const { sideBarDispatch, sideBarState } = useApp();
+  const {
+    handleOnClickDontSave,
+    handleOnClickSave,
+    handleOnClose,
+    isOpen,
+    tabToBeClosed,
+  } = useCloseDialog();
 
   return (
     <>
@@ -70,6 +79,13 @@ export default function App() {
           <Footer />
         </Allotment.Pane>
       </Allotment>
+      <CloseDialog
+        handleOnClickDontSave={handleOnClickDontSave}
+        handleOnClickSave={handleOnClickSave}
+        isOpen={isOpen}
+        onClose={handleOnClose}
+        tabToBeClosed={tabToBeClosed}
+      />
     </>
   );
 }

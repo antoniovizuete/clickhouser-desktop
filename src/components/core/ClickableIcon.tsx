@@ -2,13 +2,15 @@ import { Icon, IconName } from "@blueprintjs/core";
 import { Placement, Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
+import { pretifyShortcut } from "../../lib/shortcut-helpes";
 
 type Props = {
   className?: string;
   disabled?: boolean;
   icon: IconName;
-  overrideIconOnMouseEnter?: IconName;
   onClick?: () => void;
+  overrideIconOnMouseEnter?: IconName;
+  shortcut?: string;
   size?: number;
   tooltip?: string;
   tooltipPlacement?: Placement;
@@ -19,6 +21,7 @@ export default function ClickableIcon({
   icon,
   onClick,
   overrideIconOnMouseEnter,
+  shortcut,
   size,
   tooltip,
   tooltipPlacement,
@@ -27,10 +30,26 @@ export default function ClickableIcon({
   useEffect(() => {
     setIconName(icon);
   }, [icon]);
+  const [intenalShortcut, setIntenalShortcut] = useState<string>("");
+  useEffect(() => {
+    pretifyShortcut(shortcut ?? "").then((s) => setIntenalShortcut(s));
+  }, [shortcut]);
+
+  const [tooltipContent, setTooltipContent] = useState(
+    `${tooltip} ${intenalShortcut ? `(${intenalShortcut})` : ""}`
+  );
+
+  useEffect(() => {
+    console.log("internalShortcut", intenalShortcut);
+    setTooltipContent(
+      `${tooltip} ${intenalShortcut ? `(${intenalShortcut})` : ""}`
+    );
+  }, [tooltip, intenalShortcut]);
+
   return (
     <Tooltip2
       disabled={!tooltip}
-      content={tooltip}
+      content={tooltipContent}
       compact
       hoverOpenDelay={750}
       placement={tooltipPlacement}

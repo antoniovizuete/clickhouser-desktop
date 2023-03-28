@@ -1,4 +1,3 @@
-import React from "react";
 import { createRoot } from "react-dom/client";
 
 import "allotment/dist/style.css";
@@ -15,13 +14,11 @@ import { ThemeProvider } from "./contexts/useThemeContext";
 import "./main.css";
 
 createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <ConnectionsProvider>
-      <ThemeProvider>
-        <TabsProvider>
-          <App />
-        </TabsProvider>
-      </ThemeProvider>
-    </ConnectionsProvider>
-  </React.StrictMode>
+  <ConnectionsProvider>
+    <ThemeProvider>
+      <TabsProvider>
+        <App />
+      </TabsProvider>
+    </ThemeProvider>
+  </ConnectionsProvider>
 );

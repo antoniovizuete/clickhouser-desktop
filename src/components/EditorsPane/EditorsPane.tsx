@@ -1,10 +1,10 @@
 import { Allotment } from "allotment";
 import { useEffect, useMemo } from "react";
 import { useTabsContext } from "../../contexts/useTabsContext";
-import { useMonacoConfigSupplier } from "../../hooks/useMonacoConfigSupplier";
 import { Connection } from "../../lib/clickhouse-clients";
 import Editor from "./components/Editor";
 import EditorLabel from "./components/EditorLabel";
+import { useEditorsPane } from "./hooks/useEditorPane";
 
 export type OnExecuteQueryParams = {
   query: string | undefined;
@@ -25,8 +25,9 @@ export default function EditorsPane({ showParams }: Props) {
     activeTabId,
   } = useTabsContext();
 
-  useMonacoConfigSupplier({
-    jsonParams: jsonEditorRef.current?.getValue() ?? "{}",
+  const { handleEditorDidMount } = useEditorsPane({
+    sqlEditorRef,
+    jsonEditorRef,
   });
 
   const activeTab = useMemo(() => getActiveTab(), [activeTabId]);
@@ -46,6 +47,7 @@ export default function EditorsPane({ showParams }: Props) {
           ref={sqlEditorRef}
           language="sql"
           onChange={markAsChanged}
+          onMount={handleEditorDidMount}
           path={`sql-${activeTab?.id}`}
           touchableField="sql"
         />
@@ -56,6 +58,7 @@ export default function EditorsPane({ showParams }: Props) {
           ref={jsonEditorRef}
           language="json"
           onChange={markAsChanged}
+          onMount={handleEditorDidMount}
           path={`params-${activeTab?.id}`}
           touchableField="params"
         />

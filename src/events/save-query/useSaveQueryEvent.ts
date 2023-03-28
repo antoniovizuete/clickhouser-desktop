@@ -1,17 +1,10 @@
-import { EventCallback } from "@tauri-apps/api/event";
-import { DependencyList } from "react";
-import { useEmit, useListen } from "../common";
-
-const EVENT_NAME = "save-query";
+import { useEvent } from "../common/useEvent";
 
 export const useSaveQueryEvent = () => {
-  const [emitSaveQueryEvent] = useEmit({ eventName: EVENT_NAME });
+  const { emitEvent, useEventListener } = useEvent<void>("save-query");
 
   return {
-    emitSaveQueryEvent,
-    useSaveQueryEventListen: (
-      handler: EventCallback<void>,
-      dependencies: DependencyList
-    ) => useListen({ eventName: EVENT_NAME, handler, dependencies }),
+    emitSaveQueryEvent: emitEvent,
+    useSaveQueryEventListener: useEventListener,
   };
 };

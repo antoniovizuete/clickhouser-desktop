@@ -3,11 +3,14 @@ import { useTabsContext } from "../../contexts/useTabsContext";
 import { queryRepo } from "../../lib/backend-repos/query-repo";
 import { Tab } from "../../lib/tabs-handler";
 import { AppToaster } from "../../lib/toaster/AppToaster";
+import { useSavedQueryEvent } from "../saved-query/useSavedQueryEvent";
 import { useSaveQueryEvent } from "./useSaveQueryEvent";
 
 export const useSaveQuery = () => {
-  const { markAsSaved, sqlEditorRef, jsonEditorRef } = useTabsContext();
-  const { emitSaveQueryEvent } = useSaveQueryEvent();
+  const { markAsSaved, sqlEditorRef, jsonEditorRef, getActiveTab } =
+    useTabsContext();
+  const { emitSavedQueryEvent } = useSavedQueryEvent();
+  const { useSaveQueryEventListener } = useSaveQueryEvent();
 
   const saveQuery = useCallback(
     async (
@@ -30,7 +33,7 @@ export const useSaveQuery = () => {
           });
         }
         markAsSaved();
-        emitSaveQueryEvent(undefined);
+        emitSavedQueryEvent(undefined);
         AppToaster.topRight.success(successMessage);
       } catch (e) {
         AppToaster.top.error(error);
@@ -38,6 +41,11 @@ export const useSaveQuery = () => {
     },
     [sqlEditorRef, jsonEditorRef, markAsSaved]
   );
+
+  useSaveQueryEventListener(async () => {
+    const tab = getActiveTab();
+    await saveQuery(tab);
+  }, [saveQuery, getActiveTab]);
 
   return [saveQuery];
 };

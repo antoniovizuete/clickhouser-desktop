@@ -1,22 +1,12 @@
-import { EventCallback } from "@tauri-apps/api/event";
-import { DependencyList } from "react";
-import { useEmit, useListen } from "../common";
+import { useEvent } from "../common/useEvent";
 
-const RUN_QUERY_EVENT = "run-query";
-
-export type RunQueryPayload = {
-  query: string;
-  params: string;
-};
+type Payload = {};
 
 export const useRunQueryEvent = () => {
-  const [emitRunQueryEvent] = useEmit({ eventName: RUN_QUERY_EVENT });
+  const { emitEvent, useEventListener } = useEvent<Payload>("run-query");
 
   return {
-    emitRunQueryEvent,
-    useRunQueryEventListen: (
-      handler: EventCallback<RunQueryPayload>,
-      dependencies: DependencyList
-    ) => useListen({ eventName: RUN_QUERY_EVENT, handler, dependencies }),
+    emitRunQueryEvent: emitEvent,
+    useRunQueryEventListener: useEventListener,
   };
 };
