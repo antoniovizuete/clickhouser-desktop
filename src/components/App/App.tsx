@@ -35,6 +35,7 @@ export default function App() {
                   <IconBarItem
                     icon="data-connection"
                     tooltip="Connections"
+                    shortcut="CmdOrCtrl+Shift+C"
                     onClick={() =>
                       sideBarDispatch({
                         type: SideBarAction.TOGGLE,
@@ -46,6 +47,7 @@ export default function App() {
                   <IconBarItem
                     icon="console"
                     tooltip="Saved queries"
+                    shortcut="CmdOrCtrl+Shift+Q"
                     onClick={() =>
                       sideBarDispatch({
                         type: SideBarAction.TOGGLE,

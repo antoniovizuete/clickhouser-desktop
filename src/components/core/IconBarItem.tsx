@@ -1,12 +1,13 @@
 import { Icon, IconName } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
-import { useThemeContext } from "../../contexts/useThemeContext";
+import { useShortcutOnTooltip } from "../../hooks/useShortcutOnTooltip";
 
 type Props = {
   icon: IconName;
   isActive?: boolean;
   onClick?: () => void;
+  shortcut?: string;
   tooltip?: string;
 };
 
@@ -14,14 +15,14 @@ export default function IconBarItem({
   icon,
   isActive,
   onClick,
+  shortcut,
   tooltip,
 }: Props) {
-  const { bpTheme } = useThemeContext();
-
+  const tooltipContent = useShortcutOnTooltip({ shortcut, tooltip });
   return (
     <Tooltip2
       className="w-full"
-      content={tooltip}
+      content={tooltipContent}
       compact
       hoverOpenDelay={750}
       placement="right"

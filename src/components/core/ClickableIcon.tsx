@@ -2,7 +2,7 @@ import { Icon, IconName } from "@blueprintjs/core";
 import { Placement, Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
-import { pretifyShortcut } from "../../lib/shortcut-helpes";
+import { useShortcutOnTooltip } from "../../hooks/useShortcutOnTooltip";
 
 type Props = {
   className?: string;
@@ -30,20 +30,8 @@ export default function ClickableIcon({
   useEffect(() => {
     setIconName(icon);
   }, [icon]);
-  const [intenalShortcut, setIntenalShortcut] = useState<string>("");
-  useEffect(() => {
-    pretifyShortcut(shortcut ?? "").then((s) => setIntenalShortcut(s));
-  }, [shortcut]);
 
-  const [tooltipContent, setTooltipContent] = useState(
-    `${tooltip} ${intenalShortcut ? `(${intenalShortcut})` : ""}`
-  );
-
-  useEffect(() => {
-    setTooltipContent(
-      `${tooltip} ${intenalShortcut ? `(${intenalShortcut})` : ""}`
-    );
-  }, [tooltip, intenalShortcut]);
+  const tooltipContent = useShortcutOnTooltip({ shortcut, tooltip });
 
   return (
     <Tooltip2

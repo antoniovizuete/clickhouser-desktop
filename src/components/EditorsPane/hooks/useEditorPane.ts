@@ -1,7 +1,6 @@
-import { editor, KeyCode, KeyMod } from "monaco-editor";
+import { editor } from "monaco-editor";
 import { useCallback } from "react";
 import { useRunQueryEvent } from "../../../events/run-query/useRunQueryEvent";
-import { addAction } from "../../../lib/editor-helpers/add-action.editor.helper";
 import { EditorRef } from "../components/Editor";
 import { useMonacoConfigSupplier } from "./useMonacoConfigSupplier";
 
@@ -19,7 +18,7 @@ export const useEditorsPane = ({ sqlEditorRef, jsonEditorRef }: Params) => {
 
   const handleEditorDidMount = useCallback(
     (editor: editor.IStandaloneCodeEditor) => {
-      addAction(editor, {
+      /*addAction(editor, {
         id: "execute-query",
         label: "Execute query",
         keybindings: [KeyMod.CtrlCmd | KeyCode.Enter],
@@ -31,7 +30,7 @@ export const useEditorsPane = ({ sqlEditorRef, jsonEditorRef }: Params) => {
         },
         contextMenuGroupId: "navigation",
         contextMenuOrder: 1.5,
-      });
+      });*/
     },
     [sqlEditorRef.current, jsonEditorRef.current]
   );

@@ -85,9 +85,9 @@ export default function ActionBar({
             icon="column-layout"
             onClick={onClickParameters}
             size={16}
-            tooltip="Toggle parameters"
+            tooltip={showParams ? "Hide parameters" : "Show parameters"}
             tooltipPlacement="bottom"
-            shortcut="CmdOrCtrl+P"
+            shortcut="CmdOrCtrl+Shift+P"
           />
         </section>
       </nav>

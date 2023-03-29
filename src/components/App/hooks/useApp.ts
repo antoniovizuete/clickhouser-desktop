@@ -2,8 +2,10 @@ import { listen } from "@tauri-apps/api/event";
 import { useEffect, useReducer } from "react";
 import { useTabsContext } from "../../../contexts/useTabsContext";
 import { useSaveQuery } from "../../../events/save-query/useSaveQuery";
+import { useToggleSidebarEvent } from "../../../events/toggle-sidebar/useToggleSidebarEvent";
 import {
   initialSideBarState,
+  SideBarAction,
   sideBarReducer,
 } from "../../../reducers/sidebar-reducer";
 
@@ -25,6 +27,15 @@ export const useApp = () => {
       sub.then((unlisten) => unlisten?.());
     };
   }, [saveQuery, getActiveTab]);
+
+  useToggleSidebarEvent().useToggleSidebarEventListener((event) => {
+    sideBarDispatch({
+      type: SideBarAction.TOGGLE_FROM_EVENT,
+      payload: {
+        section: event.payload,
+      },
+    });
+  }, []);
 
   return {
     sideBarState,
