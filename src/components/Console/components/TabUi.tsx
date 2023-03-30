@@ -63,6 +63,7 @@ export default function TabUi({
       >
         <div className={"w-full"} onClick={() => setActiveTabId(tab.id)}>
           <Tooltip2
+            compact
             disabled={tab.name.length < 13}
             minimal
             content={tab.name}

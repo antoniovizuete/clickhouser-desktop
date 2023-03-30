@@ -13,8 +13,19 @@
   "tauri": {
     "allowlist": {
       "all": false,
+      "fs": {
+        "all": false,
+        "scope": [
+          "**"
+        ],
+        "writeFile": true
+      },
       "os": {
         "all": true
+      },
+      "dialog": {
+        "all": false,
+        "save": true
       },
       "shell": {
         "all": false,
