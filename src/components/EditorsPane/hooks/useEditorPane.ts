@@ -1,6 +1,10 @@
-import { editor } from "monaco-editor";
+import { editor, KeyCode, KeyMod } from "monaco-editor";
 import { useCallback } from "react";
-import { useRunQueryEvent } from "../../../events/run-query/useRunQueryEvent";
+import { useToggleParamsEvent } from "../../../events/toggle-params/useToggleParamsEvent";
+import {
+  ToggleSidebarEventVariants,
+  useToggleSidebarEvent,
+} from "../../../events/toggle-sidebar/useToggleSidebarEvent";
 import { EditorRef } from "../components/Editor";
 import { useMonacoConfigSupplier } from "./useMonacoConfigSupplier";
 
@@ -9,8 +13,9 @@ type Params = {
   jsonEditorRef: React.RefObject<EditorRef>;
 };
 
-export const useEditorsPane = ({ sqlEditorRef, jsonEditorRef }: Params) => {
-  const { emitRunQueryEvent } = useRunQueryEvent();
+export const useEditorsPane = ({ jsonEditorRef }: Params) => {
+  const { emitToggleSidebarEvent } = useToggleSidebarEvent();
+  const { emitToggleParamsEvent } = useToggleParamsEvent();
 
   useMonacoConfigSupplier({
     jsonParams: jsonEditorRef.current?.getValue() ?? "{}",
@@ -18,21 +23,24 @@ export const useEditorsPane = ({ sqlEditorRef, jsonEditorRef }: Params) => {
 
   const handleEditorDidMount = useCallback(
     (editor: editor.IStandaloneCodeEditor) => {
-      /*addAction(editor, {
-        id: "execute-query",
-        label: "Execute query",
-        keybindings: [KeyMod.CtrlCmd | KeyCode.Enter],
+      editor.addCommand(KeyMod.Alt | KeyMod.Shift | KeyCode.KeyC, () => {
+        emitToggleSidebarEvent(ToggleSidebarEventVariants.CONNECTIONS);
+      });
+      editor.addCommand(KeyMod.Alt | KeyMod.Shift | KeyCode.KeyQ, () => {
+        emitToggleSidebarEvent(ToggleSidebarEventVariants.QUERIES);
+      });
+      editor.addAction({
+        id: "show-parameters",
+        label: "Show/Hide parameters",
+        keybindings: [KeyMod.Alt | KeyMod.Shift | KeyCode.KeyP],
         run: () => {
-          emitRunQueryEvent({
-            query: sqlEditorRef.current?.getEditor()?.getValue() ?? "",
-            params: jsonEditorRef.current?.getEditor()?.getValue() ?? "",
-          });
+          emitToggleParamsEvent();
         },
         contextMenuGroupId: "navigation",
         contextMenuOrder: 1.5,
-      });*/
+      });
     },
-    [sqlEditorRef.current, jsonEditorRef.current]
+    []
   );
 
   return {

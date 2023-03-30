@@ -22,6 +22,11 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+* {
+  outline: 0 !important;
+  user-select: none;
+}
+
 :root {
   --focus-border-rgb: 236, 168, 52;
   --focus-border: rgb(var(--focus-border-rgb));

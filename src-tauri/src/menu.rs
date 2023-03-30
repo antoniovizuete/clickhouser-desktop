@@ -44,13 +44,13 @@ fn build_query_submenu() -> Submenu {
 }
 
 fn build_view_submenu() -> Submenu {
-    let toggle_params = CustomMenuItem::new(TOGGLE_PARAMS.to_string(), "Parameters")
-        .accelerator("CmdOrCtrl+shift+P");
+    let toggle_params =
+        CustomMenuItem::new(TOGGLE_PARAMS.to_string(), "Parameters").accelerator("alt+shift+P");
     let toggle_connections =
         CustomMenuItem::new(TOGGLE_PANEL_CONNECTION.to_string(), "Connections")
-            .accelerator("CmdOrCtrl+shift+c");
+            .accelerator("alt+shift+c");
     let toggle_queries = CustomMenuItem::new(TOGGLE_PANEL_QUERY.to_string(), "Saved queries")
-        .accelerator("CmdOrCtrl+shift+q");
+        .accelerator("alt+shift+q");
 
     Submenu::new(
         "View",

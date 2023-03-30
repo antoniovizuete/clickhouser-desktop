@@ -87,7 +87,7 @@ export default function ActionBar({
             size={16}
             tooltip={showParams ? "Hide parameters" : "Show parameters"}
             tooltipPlacement="bottom"
-            shortcut="CmdOrCtrl+Shift+P"
+            shortcut="alt+Shift+P"
           />
         </section>
       </nav>

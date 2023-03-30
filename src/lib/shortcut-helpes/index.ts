@@ -30,10 +30,10 @@ const macosMapping: Record<string, MacOsKeys> = {
 };
 
 const macosOrder: MacOsKeys[] = [
-  SHIFT_KEY_MACOS,
-  CMD_KEY_MACOS,
   OPTION_KEY_MACOS,
+  SHIFT_KEY_MACOS,
   CONTROL_KEY_MACOS,
+  CMD_KEY_MACOS,
 ];
 
 const nonMacosMapping: Record<string, NonMacOsKeys> = {

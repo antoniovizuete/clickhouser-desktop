@@ -21,7 +21,7 @@ export default function App() {
   } = useCloseDialog();
 
   return (
-    <>
+    <div className="!outline-none h-full w-full">
       <Allotment vertical>
         <Allotment.Pane>
           <Allotment>
@@ -35,7 +35,7 @@ export default function App() {
                   <IconBarItem
                     icon="data-connection"
                     tooltip="Connections"
-                    shortcut="CmdOrCtrl+Shift+C"
+                    shortcut="alt+Shift+C"
                     onClick={() =>
                       sideBarDispatch({
                         type: SideBarAction.TOGGLE,
@@ -47,7 +47,7 @@ export default function App() {
                   <IconBarItem
                     icon="console"
                     tooltip="Saved queries"
-                    shortcut="CmdOrCtrl+Shift+Q"
+                    shortcut="alt+Shift+Q"
                     onClick={() =>
                       sideBarDispatch({
                         type: SideBarAction.TOGGLE,
@@ -88,6 +88,6 @@ export default function App() {
         onClose={handleOnClose}
         tabToBeClosed={tabToBeClosed}
       />
-    </>
+    </div>
   );
 }

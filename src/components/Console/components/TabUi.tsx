@@ -1,9 +1,9 @@
 import { Icon } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
+import { useState } from "react";
 import { useTabsContext } from "../../../contexts/useTabsContext";
 import { useSaveQuery } from "../../../events/save-query/useSaveQuery";
-
 import { Tab } from "../../../lib/tabs-handler";
 import ClickableIcon from "../../core/ClickableIcon";
 import EditableSpan from "../../core/EditableSpan";
@@ -25,21 +25,24 @@ export default function TabUi({
   onClickCloseTab,
   tab,
 }: Props) {
+  const [isEditing, setIsEditing] = useState(false);
   const { renameTab } = useTabsContext();
   const [saveQuery] = useSaveQuery();
-  const handleOnBlurEditableSpan = (e: React.FocusEvent<HTMLSpanElement>) => {
-    if (e.currentTarget.innerText !== tab.name) {
-      renameTab(e.currentTarget.innerText);
+  const handleOnConfirmEditableSpan = (value: string) => {
+    setIsEditing(false);
+    if (value !== tab.name) {
+      renameTab(value);
       saveQuery(
         {
           ...tab,
-          name: e.currentTarget.innerText,
+          name: value,
         },
         "Query renamed successfully",
         "Error renaming query"
       );
     }
   };
+
   return (
     <div className="flex flex-col justify-start items-start h-full">
       <div
@@ -58,7 +61,7 @@ export default function TabUi({
           }
         )}
       >
-        <div className={"w-full"} onClick={(e) => setActiveTabId(tab.id)}>
+        <div className={"w-full"} onClick={() => setActiveTabId(tab.id)}>
           <Tooltip2
             disabled={tab.name.length < 13}
             minimal
@@ -69,10 +72,10 @@ export default function TabUi({
               <Icon icon={tab.icon} />
               <EditableSpan
                 editable={isActive}
-                onBlur={handleOnBlurEditableSpan}
-              >
-                {tab.name}
-              </EditableSpan>
+                isEditing={isEditing}
+                onConfirm={handleOnConfirmEditableSpan}
+                value={tab.name}
+              />
             </div>
           </Tooltip2>
         </div>
