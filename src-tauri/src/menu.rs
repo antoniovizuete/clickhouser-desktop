@@ -17,6 +17,8 @@ pub fn build_menu() -> Menu {
         ))
         .add_item(CustomMenuItem::new("query".to_string(), "File"))
         .add_submenu(build_query_submenu())
+        .add_item(CustomMenuItem::new("edit".to_string(), "Edit"))
+        .add_submenu(build_edit_native_submenu())
         .add_item(CustomMenuItem::new("view-custom".to_string(), "View"))
         .add_submenu(build_view_submenu())
         .add_item(CustomMenuItem::new("run".to_string(), "Run"))
@@ -40,6 +42,19 @@ fn build_query_submenu() -> Submenu {
             .add_native_item(MenuItem::Separator)
             .add_item(close_tab)
             .add_item(close_window),
+    )
+}
+
+fn build_edit_native_submenu() -> Submenu {
+    Submenu::new(
+        "Edit",
+        Menu::new()
+            .add_native_item(MenuItem::Undo)
+            .add_native_item(MenuItem::Redo)
+            .add_native_item(MenuItem::Separator)
+            .add_native_item(MenuItem::Cut)
+            .add_native_item(MenuItem::Copy)
+            .add_native_item(MenuItem::Paste),
     )
 }
 
