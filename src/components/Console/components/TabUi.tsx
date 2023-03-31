@@ -26,9 +26,7 @@ export default function TabUi({
   tab,
 }: Props) {
   const [isEditing, setIsEditing] = useState(false);
-  const {
-    renameTab, //tabMapRef
-  } = useTabsContext();
+  const { renameTab } = useTabsContext();
   const [saveQuery] = useSaveQuery();
   const handleOnConfirmEditableSpan = (value: string) => {
     setIsEditing(false);

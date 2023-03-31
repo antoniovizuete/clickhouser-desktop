@@ -2,10 +2,10 @@ import { type } from "@tauri-apps/api/os";
 
 const isDarwin = async () => (await type()) === "Darwin";
 
-const CMD_KEY_MACOS = "⌘";
-const OPTION_KEY_MACOS = "⌥";
-const CONTROL_KEY_MACOS = "⌃";
-const SHIFT_KEY_MACOS = "⇧";
+export const CMD_KEY_MACOS = "⌘";
+export const OPTION_KEY_MACOS = "⌥";
+export const CONTROL_KEY_MACOS = "⌃";
+export const SHIFT_KEY_MACOS = "⇧";
 const CTRL_KEY = "ctrl";
 const ALT_KEY = "alt";
 const SHIFT_KEY = "shift";

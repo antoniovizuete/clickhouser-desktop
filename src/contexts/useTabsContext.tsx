@@ -70,7 +70,7 @@ export function TabsProvider({ children }: PropsWithChildren) {
 
   useCloseTabEvent().useCloseTabEventListener(
     (event) => {
-      if (state.tabs.length > 1) {
+      if (state.tabs.length > 0) {
         const tabToClose =
           event.payload?.tab ??
           state.tabs.find((t) => t.id === state.activeTabId);

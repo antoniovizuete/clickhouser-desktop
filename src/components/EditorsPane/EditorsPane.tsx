@@ -35,9 +35,16 @@ export default function EditorsPane({ showParams }: Props) {
   useEffect(() => {
     if (activeTab) {
       sqlEditorRef.current?.getEditor()?.setValue(activeTab.sql);
+      sqlEditorRef.current?.getEditor()?.focus();
       jsonEditorRef.current?.getEditor()?.setValue(activeTab.params);
     }
   }, [activeTab]);
+
+  useEffect(() => {
+    showParams
+      ? jsonEditorRef.current?.getEditor()?.focus()
+      : sqlEditorRef.current?.getEditor()?.focus();
+  }, [showParams]);
 
   return (
     <Allotment>

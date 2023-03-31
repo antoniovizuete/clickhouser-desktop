@@ -19,7 +19,7 @@ export default function ActionBar({
   showParams,
 }: ActionBarProps) {
   const { activeConnectionId } = useConnectionContext();
-  const { getActiveTab, sqlEditorRef, jsonEditorRef, addTab } =
+  const { getActiveTab, sqlEditorRef, jsonEditorRef, addTab, activeTabId } =
     useTabsContext();
   const [saveQuery] = useSaveQuery();
 
@@ -48,47 +48,51 @@ export default function ActionBar({
             tooltipPlacement="bottom"
             shortcut="CmdOrCtrl+N"
           />
-          <ClickableIcon
-            className={classNames(
-              "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
-              "text-stone-700 dark:text-stone-300",
-              { "cursor-not-allowed": !activeConnectionId }
-            )}
-            disabled={!activeConnectionId}
-            icon="play"
-            onClick={onClickRunQuery}
-            size={20}
-            tooltip="Run query"
-            tooltipPlacement="bottom"
-            shortcut="CmdOrCtrl+R"
-          />
+          {activeTabId && (
+            <>
+              <ClickableIcon
+                className={classNames(
+                  "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
+                  "text-stone-700 dark:text-stone-300",
+                  { "cursor-not-allowed": !activeConnectionId }
+                )}
+                disabled={!activeConnectionId}
+                icon="play"
+                onClick={onClickRunQuery}
+                size={20}
+                tooltip="Run query"
+                tooltipPlacement="bottom"
+                shortcut="CmdOrCtrl+R"
+              />
 
-          <ClickableIcon
-            className={classNames(
-              "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
-              "text-stone-600 dark:text-stone-400"
-            )}
-            icon="floppy-disk"
-            onClick={handleOnClickSave}
-            size={16}
-            tooltip="Save query"
-            tooltipPlacement="bottom"
-            shortcut="CmdOrCtrl+S"
-          />
+              <ClickableIcon
+                className={classNames(
+                  "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
+                  "text-stone-600 dark:text-stone-400"
+                )}
+                icon="floppy-disk"
+                onClick={handleOnClickSave}
+                size={16}
+                tooltip="Save query"
+                tooltipPlacement="bottom"
+                shortcut="CmdOrCtrl+S"
+              />
 
-          <ClickableIcon
-            className={classNames(
-              "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
-              "text-stone-600 dark:text-stone-400",
-              { "text-yellow-600 dark:text-yellow-500/400": showParams }
-            )}
-            icon="column-layout"
-            onClick={onClickParameters}
-            size={16}
-            tooltip={showParams ? "Hide parameters" : "Show parameters"}
-            tooltipPlacement="bottom"
-            shortcut="alt+Shift+P"
-          />
+              <ClickableIcon
+                className={classNames(
+                  "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
+                  "text-stone-600 dark:text-stone-400",
+                  { "text-yellow-600 dark:text-yellow-500/400": showParams }
+                )}
+                icon="column-layout"
+                onClick={onClickParameters}
+                size={16}
+                tooltip={showParams ? "Hide parameters" : "Show parameters"}
+                tooltipPlacement="bottom"
+                shortcut="alt+Shift+P"
+              />
+            </>
+          )}
         </section>
       </nav>
     </>

@@ -43,8 +43,8 @@ const getInitialState = (): TabsState => {
   const tab = getNewTab();
   tab.closeable = false;
   return {
-    tabs: [tab],
-    activeTabId: tab.id,
+    tabs: [],
+    activeTabId: "",
   };
 };
 
@@ -66,21 +66,15 @@ export const tabsReducer: Reducer<TabsState, TabsActions> = (
         activeTabId: newTab.id,
       };
     case TabAction.REMOVE_TAB:
-      const tabs = state.tabs
-        .filter((tab) => tab.id !== action.payload.id)
-        .map((tab, _, arr) => ({
-          ...tab,
-          closeable: arr.length === 1 ? false : true,
-        }));
-
+      const tabs = state.tabs.filter((tab) => tab.id !== action.payload.id);
       const activeTabId =
-        state.activeTabId === action.payload.id
+        state.activeTabId === action.payload.id && tabs.length > 0
           ? tabs[tabs.length - 1].id
           : state.activeTabId;
       return {
         ...state,
         tabs,
-        activeTabId,
+        activeTabId: tabs.length === 0 ? "" : activeTabId,
       };
     case TabAction.RENAME_TAB:
       return {
