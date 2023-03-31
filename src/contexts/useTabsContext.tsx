@@ -7,6 +7,7 @@ import {
   useReducer,
   useRef,
 } from "react";
+import { flushSync } from "react-dom";
 import { EditorRef } from "../components/EditorsPane/components/Editor";
 import { useCloseTabEvent } from "../events/close-tab/useCloseTabEvent";
 import { useNewQueryEvent } from "../events/new-query/useNewQueryEvent";
@@ -40,6 +41,7 @@ type TabsContextType = {
   }) => void;
   markAsChanged: (field: TouchableFields, value?: string) => void;
   markAsSaved: () => void;
+  tabListRef: RefObject<HTMLUListElement>;
 };
 
 const TabsContext = createContext<TabsContextType>({
@@ -57,10 +59,12 @@ const TabsContext = createContext<TabsContextType>({
   setQueryResult: () => {},
   markAsChanged: () => {},
   markAsSaved: () => {},
+  tabListRef: { current: null },
 });
 
 export function TabsProvider({ children }: PropsWithChildren) {
   const [state, dispatch] = useReducer(tabsReducer, initialTabsState);
+  const tabListRef = useRef<HTMLUListElement>(null);
 
   const { emitPreventCloseTabEvent } = usePreventCloseTabEvent();
 
@@ -90,7 +94,16 @@ export function TabsProvider({ children }: PropsWithChildren) {
   const sqlEditorRef = useRef<EditorRef>(null);
   const jsonEditorRef = useRef<EditorRef>(null);
 
-  const addTab = () => dispatch({ type: TabAction.ADD_TAB });
+  const addTab = () => {
+    flushSync(() => {
+      dispatch({ type: TabAction.ADD_TAB });
+    });
+    tabListRef.current?.lastElementChild?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "center",
+    });
+  };
 
   const restoreTab = (query: Query) =>
     dispatch({ type: TabAction.RESTORE_TAB, payload: { query } });
@@ -108,8 +121,16 @@ export function TabsProvider({ children }: PropsWithChildren) {
   const setLoading = (loading: boolean) =>
     dispatch({ type: TabAction.SET_LOADING, payload: { loading } });
 
-  const setActiveTabId = (id: string) =>
-    dispatch({ type: TabAction.SET_ACTIVE_TAB, payload: { id } });
+  const setActiveTabId = (id: string) => {
+    flushSync(() => {
+      dispatch({ type: TabAction.SET_ACTIVE_TAB, payload: { id } });
+    });
+    tabListRef.current?.querySelector(`[data-id="${id}"]`)?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "center",
+    });
+  };
 
   const setQueryResult = (params: {
     queryResult: PerformQueryResult;
@@ -141,6 +162,7 @@ export function TabsProvider({ children }: PropsWithChildren) {
     tabs,
     markAsChanged,
     markAsSaved,
+    tabListRef,
   };
 
   return (
