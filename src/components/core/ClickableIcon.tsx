@@ -1,14 +1,14 @@
 import { Icon, IconName } from "@blueprintjs/core";
 import { Placement, Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 import { useShortcutOnTooltip } from "../../hooks/useShortcutOnTooltip";
 
 type Props = {
   className?: string;
   disabled?: boolean;
   icon: IconName;
-  onClick?: () => void;
+  onClick?: MouseEventHandler<HTMLDivElement> | undefined;
   overrideIconOnMouseEnter?: IconName;
   shortcut?: string;
   size?: number;

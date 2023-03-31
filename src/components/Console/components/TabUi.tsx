@@ -1,7 +1,7 @@
 import { Icon } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import classNames from "classnames";
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 import { useTabsContext } from "../../../contexts/useTabsContext";
 import { useSaveQuery } from "../../../events/save-query/useSaveQuery";
 import { Tab } from "../../../lib/tabs-handler";
@@ -26,7 +26,9 @@ export default function TabUi({
   tab,
 }: Props) {
   const [isEditing, setIsEditing] = useState(false);
-  const { renameTab } = useTabsContext();
+  const {
+    renameTab, //tabMapRef
+  } = useTabsContext();
   const [saveQuery] = useSaveQuery();
   const handleOnConfirmEditableSpan = (value: string) => {
     setIsEditing(false);
@@ -42,9 +44,17 @@ export default function TabUi({
       );
     }
   };
+  const handleOnClickClose: MouseEventHandler<HTMLElement> = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    onClickCloseTab(tab);
+  };
 
   return (
-    <div className="flex flex-col justify-start items-start h-full">
+    <li
+      className="flex flex-col justify-start items-start h-full"
+      data-id={tab.id}
+    >
       <div
         className={classNames(
           "h-full px-2 flex flex-row justify-between items-center gap-2",
@@ -60,8 +70,9 @@ export default function TabUi({
               isActive,
           }
         )}
+        onClick={() => setActiveTabId(tab.id)}
       >
-        <div className={"w-full"} onClick={() => setActiveTabId(tab.id)}>
+        <div className={"w-full"}>
           <Tooltip2
             compact
             disabled={tab.name.length < 13}
@@ -89,12 +100,12 @@ export default function TabUi({
             )}
             icon={isTouched ? "record" : "cross"}
             overrideIconOnMouseEnter="cross"
-            onClick={() => onClickCloseTab(tab)}
+            onClick={handleOnClickClose}
           />
         )}
         {!tab.closeable && isTouched && <ClickableIcon icon="record" />}
         {!tab.closeable && !isTouched && <div className="w-6" />}
       </div>
-    </div>
+    </li>
   );
 }
