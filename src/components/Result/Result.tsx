@@ -3,13 +3,7 @@ import { useTabsContext } from "../../contexts/useTabsContext";
 import { useThemeContext } from "../../contexts/useThemeContext";
 import { isMessageResult, isStringResult } from "../../lib/clickhouse-clients";
 
-import {
-  CMD_KEY_MACOS,
-  OPTION_KEY_MACOS,
-  SHIFT_KEY_MACOS,
-} from "../../lib/shortcut-helpes";
-import Brand from "../core/Brand";
-import Shortcut from "./components/Shortcut";
+import Landing from "./components/Landing";
 import TableResult from "./components/TableResult";
 
 export default function Result() {
@@ -53,27 +47,7 @@ export default function Result() {
   }
 
   if (!result) {
-    return (
-      <NonIdealState
-        className={`${bpTheme} w-full`}
-        icon={<Icon icon="search" iconSize={80} className={bpTheme} />}
-        title={<Brand />}
-        description={
-          <div className="w-full flex flex-col justify-center items-center gap-3">
-            <span className="dark:text-gray-400 mb-2">
-              ClickHouse query runner
-            </span>
-            <Shortcut shortcut={[CMD_KEY_MACOS, "N"]}>New query</Shortcut>
-            <Shortcut shortcut={[OPTION_KEY_MACOS, SHIFT_KEY_MACOS, "C"]}>
-              Show/Hide connections
-            </Shortcut>
-            <Shortcut shortcut={[OPTION_KEY_MACOS, SHIFT_KEY_MACOS, "Q"]}>
-              Show/Hide saved queries
-            </Shortcut>
-          </div>
-        }
-      />
-    );
+    return <Landing />;
   }
 
   if (isStringResult(result)) {
