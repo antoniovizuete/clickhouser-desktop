@@ -32,14 +32,17 @@ export default function TabUi({
     setIsEditing(false);
     if (value !== tab.name) {
       renameTab(value);
-      saveQuery(
-        {
-          ...tab,
-          name: value,
-        },
-        "Query renamed successfully",
-        "Error renaming query"
-      );
+
+      if (!tab.isNew) {
+        saveQuery(
+          {
+            ...tab,
+            name: value,
+          },
+          "Query renamed successfully",
+          "Error renaming query"
+        );
+      }
     }
   };
   const handleOnClickClose: MouseEventHandler<HTMLElement> = (e) => {
