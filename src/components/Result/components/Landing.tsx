@@ -9,7 +9,7 @@ import Shortcut from "./Shortcut";
 
 export default function Landing() {
   return (
-    <main className="flex flex-col justify-center items-center h-full gap-2">
+    <main className="flex flex-col justify-center items-center h-full gap-2 select-none cursor-default">
       <Icon
         icon="search"
         iconSize={120}
