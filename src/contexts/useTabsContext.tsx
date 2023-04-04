@@ -10,6 +10,7 @@ import {
 import { flushSync } from "react-dom";
 import { EditorRef } from "../components/EditorsPane/components/Editor";
 import { useCloseTabEvent } from "../events/close-tab/useCloseTabEvent";
+import { useDeletedQueryEvent } from "../events/deleted-query/useDeletedQueryEvent";
 import { useNewQueryEvent } from "../events/new-query/useNewQueryEvent";
 import { usePreventCloseTabEvent } from "../events/prevent-close-tab/useClosingEvent";
 import { Query } from "../lib/backend-repos/query-repo";
@@ -89,6 +90,20 @@ export function TabsProvider({ children }: PropsWithChildren) {
   useNewQueryEvent().useNewQueryEventListener(() => {
     addTab();
   }, []);
+
+  useDeletedQueryEvent().useDeletedQueryEventListener(
+    (event) => {
+      const tabToDelete = state.tabs.find((t) => t.id === event.payload.id);
+
+      if (tabToDelete) {
+        dispatch({
+          type: TabAction.BECOME_TO_NEW,
+          payload: { id: tabToDelete.id },
+        });
+      }
+    },
+    [state.tabs]
+  );
 
   const { tabs, activeTabId } = state;
   const sqlEditorRef = useRef<EditorRef>(null);

@@ -11,6 +11,7 @@ export enum TabAction {
   SET_QUERY_RESULT = "SET_QUERY_RESULT",
   MARK_AS_CHANGED = "MARK_AS_CHANGED",
   MARK_AS_SAVED = "MARK_AS_SAVED",
+  BECOME_TO_NEW = "BECOME_TO_NEW",
 }
 
 export type Tab = {

@@ -2,6 +2,7 @@ import { Button, Classes, Dialog } from "@blueprintjs/core";
 import { useEffect, useState } from "react";
 import { useTabsContext } from "../../../contexts/useTabsContext";
 import { useThemeContext } from "../../../contexts/useThemeContext";
+import { useDeletedQueryEvent } from "../../../events/deleted-query/useDeletedQueryEvent";
 import { useSavedQueryEvent } from "../../../events/saved-query/useSavedQueryEvent";
 import { Query, queryRepo } from "../../../lib/backend-repos/query-repo";
 import { AppToaster } from "../../../lib/toaster/AppToaster";
@@ -14,6 +15,7 @@ export default function SavedQueriesSideBar() {
   const { bpTheme } = useThemeContext();
   const { restoreTab } = useTabsContext();
   const { useSavedQueryEventListener } = useSavedQueryEvent();
+  const { emitDeletedQueryEvent } = useDeletedQueryEvent();
 
   const [queries, setQueries] = useState<Query[]>([]);
   const [queryToRemove, setQueryToRemove] = useState<Query | undefined>();
@@ -48,9 +50,10 @@ export default function SavedQueriesSideBar() {
   const handleOnClickConfirmRemoveQuery = async () => {
     if (queryToRemove) {
       queryRepo.delete(queryToRemove.id);
+      emitDeletedQueryEvent({ id: queryToRemove.id });
       retrieveQueries();
       closeAlert();
-      AppToaster.top.warn(`Query "${queryToRemove.name}" removed`);
+      AppToaster.topRight.warn(`Query "${queryToRemove.name}" removed`);
     }
   };
   return (

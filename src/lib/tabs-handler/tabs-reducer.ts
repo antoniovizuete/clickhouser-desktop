@@ -37,7 +37,8 @@ type TabsActions =
       type: TabAction.MARK_AS_CHANGED;
       payload: { field: TouchableFields; value?: string };
     }
-  | { type: TabAction.MARK_AS_SAVED };
+  | { type: TabAction.MARK_AS_SAVED }
+  | { type: TabAction.BECOME_TO_NEW; payload: { id: string } };
 
 const getInitialState = (): TabsState => {
   const tab = getNewTab();
@@ -157,6 +158,24 @@ export const tabsReducer: Reducer<TabsState, TabsActions> = (
         ...state,
         tabs: tabsRestoring,
         activeTabId: restoredTab.id,
+      };
+
+    case TabAction.BECOME_TO_NEW:
+      const newId = crypto.randomUUID();
+      return {
+        ...state,
+        tabs: state.tabs.map((tab) =>
+          tab.id === action.payload.id
+            ? {
+                ...tab,
+                id: newId,
+                isNew: true,
+                touched: true,
+              }
+            : tab
+        ),
+        activeTabId:
+          action.payload.id === state.activeTabId ? newId : state.activeTabId,
       };
     default:
       return state;
