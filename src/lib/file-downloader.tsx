@@ -105,28 +105,27 @@ export async function download({
     defaultPath: `${tabName}.${extension}`,
   });
 
-  const toastKey = AppToaster.topRight.info({
-    message: (
-      <>
-        Exporting data to:
-        <br />
-        <Tag multiline intent="primary" className="font-mono">
-          {path}
-        </Tag>
-        <ProgressBar />
-      </>
-    ),
-  });
   if (path) {
-    await writeTextFile(path, exportData)
-      .then(() => {
-        AppToaster.topRight.success(`Exported to ${path}`);
-      })
-      .catch((e) => {
-        AppToaster.topRight.error(`Failed to export to ${path}`);
-      })
-      .finally(() => {
-        AppToaster.topRight.dismiss(toastKey);
-      });
+    const toastKey = AppToaster.topRight.info({
+      message: (
+        <>
+          Exporting data to:
+          <br />
+          <Tag multiline intent="primary" className="font-mono">
+            {path}
+          </Tag>
+          <ProgressBar />
+        </>
+      ),
+    });
+
+    try {
+      await writeTextFile(path, exportData);
+      AppToaster.topRight.success(`Exported to ${path}`);
+    } catch (e) {
+      AppToaster.topRight.error(`Failed to export to ${path}`);
+    } finally {
+      AppToaster.topRight.dismiss(toastKey);
+    }
   }
 }
