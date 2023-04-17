@@ -12,6 +12,7 @@ export enum TabAction {
   MARK_AS_CHANGED = "MARK_AS_CHANGED",
   MARK_AS_SAVED = "MARK_AS_SAVED",
   BECOME_TO_NEW = "BECOME_TO_NEW",
+  SORT_TABS = "SORT_TABS",
 }
 
 export type Tab = {

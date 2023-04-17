@@ -1,12 +1,15 @@
 import {
   createContext,
+  MutableRefObject,
   PropsWithChildren,
   RefObject,
   useCallback,
   useContext,
+  useMemo,
   useReducer,
   useRef,
 } from "react";
+import { OnDragEndResponder } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
 import { EditorRef } from "../components/EditorsPane/components/Editor";
 import { useCloseTabEvent } from "../events/close-tab/useCloseTabEvent";
@@ -42,7 +45,8 @@ type TabsContextType = {
   }) => void;
   markAsChanged: (field: TouchableFields, value?: string) => void;
   markAsSaved: () => void;
-  tabListRef: RefObject<HTMLUListElement>;
+  tabListRef: MutableRefObject<HTMLUListElement | undefined>;
+  sortTabs: OnDragEndResponder;
 };
 
 const TabsContext = createContext<TabsContextType>({
@@ -60,12 +64,13 @@ const TabsContext = createContext<TabsContextType>({
   setQueryResult: () => {},
   markAsChanged: () => {},
   markAsSaved: () => {},
-  tabListRef: { current: null },
+  tabListRef: { current: undefined },
+  sortTabs: () => {},
 });
 
 export function TabsProvider({ children }: PropsWithChildren) {
   const [state, dispatch] = useReducer(tabsReducer, initialTabsState);
-  const tabListRef = useRef<HTMLUListElement>(null);
+  const tabListRef = useRef<HTMLUListElement>();
 
   const { emitPreventCloseTabEvent } = usePreventCloseTabEvent();
 
@@ -162,23 +167,58 @@ export function TabsProvider({ children }: PropsWithChildren) {
 
   const markAsSaved = () => dispatch({ type: TabAction.MARK_AS_SAVED });
 
-  const contextValue: TabsContextType = {
-    activeTabId,
-    addTab,
-    getActiveTab,
-    jsonEditorRef,
-    restoreTab,
-    removeTab,
-    renameTab,
-    setActiveTabId,
-    setLoading,
-    setQueryResult,
-    sqlEditorRef,
-    tabs,
-    markAsChanged,
-    markAsSaved,
-    tabListRef,
+  const sortTabs: TabsContextType["sortTabs"] = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    dispatch({
+      type: TabAction.SORT_TABS,
+      payload: {
+        sourceIndex: result.source.index,
+        destinationIndex: result.destination.index,
+      },
+    });
   };
+
+  const contextValue: TabsContextType = useMemo(
+    () => ({
+      activeTabId,
+      addTab,
+      getActiveTab,
+      jsonEditorRef,
+      restoreTab,
+      removeTab,
+      renameTab,
+      setActiveTabId,
+      setLoading,
+      setQueryResult,
+      sqlEditorRef,
+      tabs,
+      markAsChanged,
+      markAsSaved,
+      tabListRef,
+      sortTabs,
+    }),
+    [
+      activeTabId,
+      addTab,
+      getActiveTab,
+      jsonEditorRef,
+      restoreTab,
+      removeTab,
+      renameTab,
+      setActiveTabId,
+      setLoading,
+      setQueryResult,
+      sqlEditorRef,
+      tabs,
+      markAsChanged,
+      markAsSaved,
+      tabListRef,
+      sortTabs,
+    ]
+  );
 
   return (
     <TabsContext.Provider value={contextValue}>{children}</TabsContext.Provider>
