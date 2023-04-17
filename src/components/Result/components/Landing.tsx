@@ -13,7 +13,7 @@ export default function Landing() {
       <Icon
         icon="search"
         iconSize={120}
-        className={"text-stone-300 dark:text-stone-700"}
+        className={"text-stone-300 dark:text-primary/10"}
       />
       <Brand className="text-4xl" />
       <h2 className="dark:text-gray-400 mb-10">ClickHouse query runner</h2>

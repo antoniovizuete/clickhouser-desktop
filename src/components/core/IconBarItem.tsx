@@ -31,9 +31,9 @@ export default function IconBarItem({
         className={classNames(
           "!outline-none",
           "w-full h-12 flex flex-row justify-center items-center py-6 px-2 border-r-4 hover:cursor-pointer group",
-          { "border-r-yellow-600 dark:border-r-yellow-600": isActive },
+          { "border-r-yellow-600 dark:border-r-primary": isActive },
           {
-            "border-r-transparent hover:border-r-yellow-300 hover:dark:border-r-yellow-700":
+            "border-r-transparent hover:border-r-yellow-500 hover:dark:border-r-primary/40":
               !isActive,
           }
         )}
@@ -41,13 +41,13 @@ export default function IconBarItem({
       >
         <Icon
           className={classNames(
-            "hover:scale-110 !outline-none",
+            "!outline-none",
             {
-              "text-yellow-600 dark:text-yellow-500/400 hover:dark:text-yellow-500":
+              "text-yellow-600 dark:text-primary/80 hover:dark:text-primary/100":
                 isActive,
             },
             {
-              "text-neutral-500 dark:text-stone-500 group-hover:text-yellow-500":
+              "hover:scale-110 text-neutral-500 group-hover:text-yellow-500 dark:text-stone-500 dark:group-hover:text-primary/40":
                 !isActive,
             }
           )}

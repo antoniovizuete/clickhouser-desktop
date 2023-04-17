@@ -14,7 +14,8 @@ module.exports = {
           light: colors.stone[300],
           DEFAULT: colors.stone[300],
           dark: colors.stone[600],
-        }
+        },
+        primary: "#FCFF74"
       },
 
     },
