@@ -38,7 +38,11 @@ type TabsActions =
       payload: { field: TouchableFields; value?: string };
     }
   | { type: TabAction.MARK_AS_SAVED }
-  | { type: TabAction.BECOME_TO_NEW; payload: { id: string } };
+  | { type: TabAction.BECOME_TO_NEW; payload: { id: string } }
+  | {
+      type: TabAction.SORT_TABS;
+      payload: { sourceIndex: number; destinationIndex: number };
+    };
 
 const getInitialState = (): TabsState => {
   const tab = getNewTab();
@@ -177,7 +181,13 @@ export const tabsReducer: Reducer<TabsState, TabsActions> = (
         activeTabId:
           action.payload.id === state.activeTabId ? newId : state.activeTabId,
       };
-    default:
-      return state;
+    case TabAction.SORT_TABS:
+      const tabsToSort = [...state.tabs];
+      const [removed] = tabsToSort.splice(action.payload.sourceIndex, 1);
+      tabsToSort.splice(action.payload.destinationIndex, 0, removed);
+      return {
+        ...state,
+        tabs: tabsToSort,
+      };
   }
 };
