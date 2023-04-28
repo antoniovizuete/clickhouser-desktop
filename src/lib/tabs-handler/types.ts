@@ -3,8 +3,12 @@ import { PerformQueryResult } from "../clickhouse-clients/perform-query/types";
 
 export enum TabAction {
   ADD_TAB = "ADD_TAB",
+  DUPLICATE_TAB = "DUPLICATE_TAB",
   RESTORE_TAB = "RESTORE_TAB",
-  REMOVE_TAB = "REMOVE_TAB",
+  CLOSE_TAB = "CLOSE_TAB",
+  CLOSE_OTHER_TABS = "CLOSE_OTHER_TABS",
+  CLOSE_TABS_TO_THE_RIGHT = "CLOSE_TO_THE_RIGHT",
+  CLOSE_ALL_TABS = "CLOSE_ALL_TABS",
   RENAME_TAB = "RENAME_TAB",
   SET_ACTIVE_TAB = "SET_ACTIVE_TAB",
   SET_LOADING = "SET_LOADING",

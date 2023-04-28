@@ -11,28 +11,36 @@ import {
 } from "react";
 import { OnDragEndResponder } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
-import { EditorRef } from "../components/EditorsPane/components/Editor";
-import { useCloseTabEvent } from "../events/close-tab/useCloseTabEvent";
-import { useDeletedQueryEvent } from "../events/deleted-query/useDeletedQueryEvent";
-import { useNewQueryEvent } from "../events/new-query/useNewQueryEvent";
-import { usePreventCloseTabEvent } from "../events/prevent-close-tab/useClosingEvent";
-import { Query } from "../lib/backend-repos/query-repo";
-import { PerformQueryResult } from "../lib/clickhouse-clients/perform-query/types";
+import { EditorRef } from "../../components/EditorsPane/components/Editor";
+import { useCloseTabEvent } from "../../events/close-tab/useCloseTabEvent";
+import { useDeletedQueryEvent } from "../../events/deleted-query/useDeletedQueryEvent";
+import { useNewQueryEvent } from "../../events/new-query/useNewQueryEvent";
+import { usePreventCloseTabEvent } from "../../events/prevent-close-tab/useClosingEvent";
+import { Query } from "../../lib/backend-repos/query-repo";
+import { PerformQueryResult } from "../../lib/clickhouse-clients/perform-query/types";
 import {
   initialTabsState,
   Tab,
   TabAction,
   tabsReducer,
-} from "../lib/tabs-handler";
-import { TouchableFields } from "../lib/tabs-handler/tabs-reducer";
+} from "../../lib/tabs-handler";
+import { TouchableFields } from "../../lib/tabs-handler/tabs-reducer";
+import {
+  CloseKind,
+  closeKindToTabActionIdDependantMap,
+  closeKindToTabActionNoIdDependantMap,
+  CloseTabOverloadParams,
+  isIdDependentCloseKind,
+} from "./closing-tabs";
 
 type TabsContextType = {
   getActiveTab: () => Tab | undefined;
   tabs: Tab[];
   activeTabId: string;
   addTab: () => void;
+  duplicateTab: (id: string) => void;
   restoreTab: (query: Query) => void;
-  removeTab: (id: string) => void;
+  closeTab: (params: CloseTabOverloadParams) => void;
   renameTab: (name: string) => void;
   setActiveTabId: (id: string) => void;
   sqlEditorRef: RefObject<EditorRef>;
@@ -54,8 +62,9 @@ const TabsContext = createContext<TabsContextType>({
   activeTabId: "",
   tabs: [],
   addTab: () => {},
+  duplicateTab: () => {},
   restoreTab: () => {},
-  removeTab: () => {},
+  closeTab: () => {},
   renameTab: () => {},
   setActiveTabId: () => {},
   sqlEditorRef: { current: null },
@@ -86,7 +95,10 @@ export function TabsProvider({ children }: PropsWithChildren) {
           return;
         }
 
-        removeTab(tabToClose?.id ?? state.activeTabId);
+        closeTab({
+          kind: CloseKind.CloseTab,
+          id: tabToClose?.id ?? state.activeTabId,
+        });
       }
     },
     [state.activeTabId, state.tabs]
@@ -114,15 +126,26 @@ export function TabsProvider({ children }: PropsWithChildren) {
   const sqlEditorRef = useRef<EditorRef>(null);
   const jsonEditorRef = useRef<EditorRef>(null);
 
-  const addTab = () => {
-    flushSync(() => {
-      dispatch({ type: TabAction.ADD_TAB });
-    });
+  const scrollToTheLast = useCallback(() => {
     tabListRef.current?.lastElementChild?.scrollIntoView({
       behavior: "smooth",
       block: "center",
       inline: "center",
     });
+  }, [tabListRef.current]);
+
+  const addTab = () => {
+    flushSync(() => {
+      dispatch({ type: TabAction.ADD_TAB });
+    });
+    scrollToTheLast();
+  };
+
+  const duplicateTab = (id: string) => {
+    flushSync(() =>
+      dispatch({ type: TabAction.DUPLICATE_TAB, payload: { id } })
+    );
+    scrollToTheLast();
   };
 
   const restoreTab = (query: Query) =>
@@ -132,8 +155,22 @@ export function TabsProvider({ children }: PropsWithChildren) {
     return tabs.find((t) => t.id === activeTabId);
   }, [activeTabId, tabs]);
 
-  const removeTab = (id: string) =>
-    dispatch({ type: TabAction.REMOVE_TAB, payload: { id } });
+  const closeTab = useCallback(
+    (params: CloseTabOverloadParams) => {
+      if (isIdDependentCloseKind(params)) {
+        const { kind, id } = params;
+        const tabAction = closeKindToTabActionIdDependantMap[kind];
+        dispatch({ type: tabAction, payload: { id } });
+      } else {
+        const { kind } = params;
+        const tabAction = closeKindToTabActionNoIdDependantMap[kind];
+        dispatch({
+          type: tabAction,
+        });
+      }
+    },
+    [dispatch]
+  );
 
   const renameTab = (name: string) =>
     dispatch({ type: TabAction.RENAME_TAB, payload: { name } });
@@ -185,10 +222,11 @@ export function TabsProvider({ children }: PropsWithChildren) {
     () => ({
       activeTabId,
       addTab,
+      closeTab,
+      duplicateTab,
       getActiveTab,
       jsonEditorRef,
       restoreTab,
-      removeTab,
       renameTab,
       setActiveTabId,
       setLoading,
@@ -203,10 +241,11 @@ export function TabsProvider({ children }: PropsWithChildren) {
     [
       activeTabId,
       addTab,
+      closeTab,
+      duplicateTab,
       getActiveTab,
       jsonEditorRef,
       restoreTab,
-      removeTab,
       renameTab,
       setActiveTabId,
       setLoading,

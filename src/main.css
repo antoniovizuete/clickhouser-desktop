@@ -61,6 +61,10 @@ body {
   box-shadow: 0 0 0 1px rgba(var(--focus-border), 0.5);
 }
 
+.bp4-popover2-transition-container {
+  z-index: 36;
+}
+
 .titlebar {
   height: 30px;
   background: #329ea3;

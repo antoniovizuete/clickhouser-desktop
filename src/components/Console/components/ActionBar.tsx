@@ -40,7 +40,7 @@ export default function ActionBar({
       </section>
       <section className="h-10 flex-grow-0 flex flex-row justify-start items-center gap-1 px-4 border-b bg-stone-50 dark:bg-neutral-900 border-b-border dark:border-b-border-dark">
         <ClickableIcon
-          className="hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600"
+          className="hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600 dark:hover:text-primary"
           icon="plus"
           onClick={() => addTab()}
           tooltip="New query"
@@ -51,7 +51,7 @@ export default function ActionBar({
           <>
             <ClickableIcon
               className={classNames(
-                "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
+                "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600 dark:hover:text-primary",
                 "text-stone-700 dark:text-stone-300",
                 { "cursor-not-allowed": !activeConnectionId }
               )}
@@ -66,7 +66,7 @@ export default function ActionBar({
 
             <ClickableIcon
               className={classNames(
-                "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
+                "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600 dark:hover:text-primary",
                 "text-stone-600 dark:text-stone-400"
               )}
               icon="floppy-disk"
@@ -79,9 +79,12 @@ export default function ActionBar({
 
             <ClickableIcon
               className={classNames(
-                "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600",
+                "hover:dark:bg-transparent hover:bg-transparent hover:text-yellow-600 dark:hover:text-primary",
                 "text-stone-600 dark:text-stone-400",
-                { "text-yellow-600 dark:text-yellow-500/400": showParams }
+                {
+                  "text-yellow-600 dark:hover:text-primary dark:text-yellow-500/400":
+                    showParams,
+                }
               )}
               icon="column-layout"
               onClick={onClickParameters}

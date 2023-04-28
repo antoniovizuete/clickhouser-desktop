@@ -8,6 +8,7 @@ import { useSaveQuery } from "../../../events/save-query/useSaveQuery";
 import { Tab } from "../../../lib/tabs-handler";
 import ClickableIcon from "../../core/ClickableIcon";
 import EditableSpan from "../../core/EditableSpan";
+import { useTabElementContextMenu } from "./useTabElementContextMenu";
 
 type Props = {
   index: number;
@@ -31,6 +32,9 @@ export default function TabElement({
   const [isEditing, setIsEditing] = useState(false);
   const { renameTab } = useTabsContext();
   const [saveQuery] = useSaveQuery();
+
+  const { handleOnContextMenu } = useTabElementContextMenu();
+
   const handleOnConfirmEditableSpan = (value: string) => {
     setIsEditing(false);
     if (value !== tab.name) {
@@ -60,6 +64,7 @@ export default function TabElement({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
+          onContextMenu={handleOnContextMenu}
         >
           <div
             className={classNames(

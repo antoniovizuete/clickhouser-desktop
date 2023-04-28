@@ -13,8 +13,12 @@ export type TouchableFields = Extract<keyof Tab, "sql" | "params">;
 
 type TabsActions =
   | { type: TabAction.ADD_TAB }
+  | { type: TabAction.DUPLICATE_TAB; payload: { id: string } }
   | { type: TabAction.RESTORE_TAB; payload: { query: Query } }
-  | { type: TabAction.REMOVE_TAB; payload: { id: string } }
+  | { type: TabAction.CLOSE_TAB; payload: { id: string } }
+  | { type: TabAction.CLOSE_OTHER_TABS; payload: { id: string } }
+  | { type: TabAction.CLOSE_TABS_TO_THE_RIGHT; payload: { id: string } }
+  | { type: TabAction.CLOSE_ALL_TABS }
   | { type: TabAction.RENAME_TAB; payload: { name: string } }
   | {
       type: TabAction.SET_ACTIVE_TAB;
@@ -70,7 +74,26 @@ export const tabsReducer: Reducer<TabsState, TabsActions> = (
         ],
         activeTabId: newTab.id,
       };
-    case TabAction.REMOVE_TAB:
+    case TabAction.DUPLICATE_TAB:
+      const tabToDuplicate = state.tabs.find(
+        (tab) => tab.id === action.payload.id
+      );
+      if (!tabToDuplicate) {
+        return state;
+      }
+      const duplicatedTab = getNewTab();
+      duplicatedTab.name = tabToDuplicate.name + " (copy)";
+      duplicatedTab.sql = tabToDuplicate.sql;
+      duplicatedTab.params = tabToDuplicate.params;
+      return {
+        ...state,
+        tabs: [
+          ...state.tabs.map((tab) => ({ ...tab, closeable: true })),
+          duplicatedTab,
+        ],
+        activeTabId: duplicatedTab.id,
+      };
+    case TabAction.CLOSE_TAB:
       const tabs = state.tabs.filter((tab) => tab.id !== action.payload.id);
       const activeTabId =
         state.activeTabId === action.payload.id && tabs.length > 0
@@ -81,6 +104,24 @@ export const tabsReducer: Reducer<TabsState, TabsActions> = (
         tabs,
         activeTabId: tabs.length === 0 ? "" : activeTabId,
       };
+    case TabAction.CLOSE_OTHER_TABS:
+      return {
+        ...state,
+        tabs: state.tabs.filter((tab) => tab.id === action.payload.id),
+        activeTabId: action.payload.id,
+      };
+    case TabAction.CLOSE_TABS_TO_THE_RIGHT:
+      return {
+        ...state,
+        tabs: state.tabs.filter(
+          (tab, index) =>
+            tab.id === action.payload.id ||
+            index < state.tabs.findIndex((t) => t.id === action.payload.id)
+        ),
+        activeTabId: action.payload.id,
+      };
+    case TabAction.CLOSE_ALL_TABS:
+      return getInitialState();
     case TabAction.RENAME_TAB:
       return {
         ...state,
