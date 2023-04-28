@@ -1,10 +1,8 @@
-import { TabAction } from "../../../lib/tabs-handler";
-
 export enum CloseKind {
-  CloseAllTabs = TabAction.CLOSE_ALL_TABS,
-  CloseOtherTabs = TabAction.CLOSE_OTHER_TABS,
-  CloseTab = TabAction.CLOSE_TAB,
-  CloseTabsToTheRight = TabAction.CLOSE_TABS_TO_THE_RIGHT,
+  CloseAllTabs = "CLOSE_ALL_TABS",
+  CloseOtherTabs = "CLOSE_OTHER_TABS",
+  CloseTab = "CLOSE_TAB",
+  CloseTabsToTheRight = "CLOSE_TABS_TO_THE_RIGHT",
 }
 
 export type CloseKindIdDependant = Extract<
