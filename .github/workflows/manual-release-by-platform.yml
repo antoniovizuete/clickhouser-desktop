@@ -9,7 +9,7 @@ on:
           - "macos-latest"
           - "self-hosted" #M1
           - "ubuntu-20.04"
-          - "window-latest"
+          - "windows-latest"
 
 jobs:
   setup:
