@@ -20,7 +20,7 @@ jobs:
       - id: setVariables
         run: echo "matrix=$input" >> $GITHUB_OUTPUT
         env:
-          input: ${{ inputs.platform }}
+          input: ${{ github.event.inputs.platform }}
   release:
     needs: setup
     strategy:
