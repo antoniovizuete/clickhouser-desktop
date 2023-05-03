@@ -34,11 +34,17 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev librsvg2-dev
-      - name: Install dependencies (windows ony)
+      - name: Env vars (windows only)
         if: needs.setup.outputs.matrix == 'windows-latest'
-        run: |
-          choco install openssl
-          (Get-Content C:\ProgramData\chocolatey\logs\choco.summary.log) -match 'Software installed to'
+        run: echo "VCPKG_ROOT=$env:VCPKG_INSTALLATION_ROOT" | Out-File -FilePath $env:GITHUB_ENV -Append
+      - name: Install openssl (windows only)
+        if: needs.setup.outputs.matrix == 'windows-latest'
+        run: vcpkg install openssl:x64-windows-static-md
+      # - name: Install dependencies (windows ony)
+      #   if: needs.setup.outputs.matrix == 'windows-latest'
+      #   run: |
+      #     choco install openssl
+      #     (Get-Content C:\ProgramData\chocolatey\logs\choco.summary.log) -match 'Software installed to'
 
       # - name: Rust setup
       #   uses: dtolnay/rust-toolchain@stable
