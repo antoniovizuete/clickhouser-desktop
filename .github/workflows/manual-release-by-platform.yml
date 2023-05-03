@@ -38,34 +38,35 @@ jobs:
         if: needs.setup.outputs.matrix == 'windows-latest'
         run: |
           choco install openssl
+          (Get-Content C:\ProgramData\chocolatey\logs\choco.summary.log) -match 'Software installed to'
 
-      - name: Rust setup
-        uses: dtolnay/rust-toolchain@stable
+      # - name: Rust setup
+      #   uses: dtolnay/rust-toolchain@stable
 
-      - name: Rust cache
-        uses: swatinem/rust-cache@v2
-        with:
-          workspaces: "./src-tauri -> target"
+      # - name: Rust cache
+      #   uses: swatinem/rust-cache@v2
+      #   with:
+      #     workspaces: "./src-tauri -> target"
 
-      - name: Sync node version and setup cache
-        uses: actions/setup-node@v3
-        with:
-          node-version: "lts/*"
-          cache: "npm" # Set this to npm, yarn or pnpm.
+      # - name: Sync node version and setup cache
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: "lts/*"
+      #     cache: "npm" # Set this to npm, yarn or pnpm.
 
-      - name: Install app dependencies and build web
-        # Remove `&& yarn build` if you build your frontend in `beforeBuildCommand`
-        run: npm install && npm run build # Change this to npm, yarn or pnpm.
+      # - name: Install app dependencies and build web
+      #   # Remove `&& yarn build` if you build your frontend in `beforeBuildCommand`
+      #   run: npm install # && npm run build # Change this to npm, yarn or pnpm.
 
-      - name: Build the app
-        uses: tauri-apps/tauri-action@v0
+      # - name: Build the app
+      #   uses: tauri-apps/tauri-action@v0
 
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          #tagName: ${{ github.ref_name }} # This only works if your workflow triggers on new tags.
-          tagName: v__VERSION__
-          releaseName: "clickhouser-desktop v__VERSION__" # tauri-action replaces \_\_VERSION\_\_ with the app version.
-          releaseBody: "See the assets to download and install this version."
-          releaseDraft: true
-          prerelease: false
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     #tagName: ${{ github.ref_name }} # This only works if your workflow triggers on new tags.
+      #     tagName: v__VERSION__
+      #     releaseName: "clickhouser-desktop v__VERSION__" # tauri-action replaces \_\_VERSION\_\_ with the app version.
+      #     releaseBody: "See the assets to download and install this version."
+      #     releaseDraft: true
+      #     prerelease: false
