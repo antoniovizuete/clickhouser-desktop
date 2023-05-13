@@ -15,13 +15,9 @@ pub fn build_menu() -> Menu {
             "ClickHouser",
             Menu::new().add_native_item(MenuItem::Quit),
         ))
-        .add_item(CustomMenuItem::new("query".to_string(), "File"))
         .add_submenu(build_query_submenu())
-        .add_item(CustomMenuItem::new("edit".to_string(), "Edit"))
         .add_submenu(build_edit_native_submenu())
-        .add_item(CustomMenuItem::new("view-custom".to_string(), "View"))
         .add_submenu(build_view_submenu())
-        .add_item(CustomMenuItem::new("run".to_string(), "Run"))
         .add_submenu(build_run_submenu())
 }
 
