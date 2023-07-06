@@ -64,7 +64,7 @@ export const useConnectionDialog = ({ onClose, ref }: Params) => {
     }
 
     try {
-      await save(data);
+      await save({ ...data, port: Number(data.port) });
       AppToaster.top.success("The connection has been saved successfully");
       close();
       reset();
